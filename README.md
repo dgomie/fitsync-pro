@@ -1,1 +1,0 @@
-# fitsync-pro
