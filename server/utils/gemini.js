@@ -15,4 +15,4 @@ async function generateAIresponse(prompt) {
 const test = "Create a workout plan for the week for a 30 year old user in moderate shape to increase strength by 2%. They can currenly do 50 pushups and 100 squats.";
 generateAIresponse(test);
 
-export default run
+export default generateAIresponse
