@@ -1,39 +1,62 @@
-const { Schema, model } = require("mongoose");
-const dateFormat = require("../utils/dateFormat");
+const { Schema, model } = require('mongoose');
 
-const workoutSchema = new Schema({
-  userId: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
+const exerciseSchema = new Schema({
+  name: { 
+    type: String, 
+    required: true 
   },
-  exercises: [
-    {
-      name: {
-        type: String,
-      },
-      sets: {
-        type: Number,
-      },
-      reps: {
-        type: Number,
-      },
-      weight: {
-        type: Number,
-      },
-    },
-  ],
-  duration: {
-    type: Number,
+  sets: { 
+    type: Number, 
+    required: true, 
+    min: 1 
   },
-  caloriesBurned: {
-    type: Number,
+  reps: { 
+    type: Number, 
+    required: true, 
+    min: 1 
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-    get: (timestamp) => dateFormat(timestamp),
+  weight: { 
+    type: Number, 
+    required: false, 
+    min: 0 
   },
 });
+
+const workoutSchema = new Schema(
+  {
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true,
+    },
+    exercises: [exerciseSchema],
+    duration: { 
+      type: Number, 
+      required: true, 
+      min: 1 
+    },
+    caloriesBurned: { 
+      type: Number, 
+      required: true, 
+      min: 0 
+    },
+  },
+  { timestamps: true }
+);
+
+workoutSchema.virtual("totalWeight").get(function () {
+  return this.exercises.reduce(
+    (total, exercise) =>
+      total + exercise.weight * exercise.reps * exercise.sets,
+    0
+  );
+});
+
+workoutSchema.methods.addExercise = function (exercise) {
+  this.exercises.push(exercise);
+  return this.save();
+};
 
 const Workout = model("Workout", workoutSchema);
 

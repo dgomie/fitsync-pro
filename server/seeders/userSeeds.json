@@ -1,52 +1,51 @@
-[
-  {
-    "username": "Brian Kernighan",
-    "email": "bkernighan@techfriends.dev",
-    "password": "password01"
-  },
-  {
-    "username": "Max Kanat-Alexander",
-    "email": "mkanatalexander@techfriends.dev",
-    "password": "password02"
-  },
-  {
-    "username": "Why The Lucky Stiff",
-    "email": "wtls@techfriends.dev",
-    "password": "password03"
-  },
-  {
-    "username": "Kent Beck",
-    "email": "kbeck@techfriends.dev",
-    "password": "password04"
-  },
-  {
-    "username": "Edward V. Berard",
-    "email": "evberard@techfriends.dev",
-    "password": "password05"
-  },
-  {
-    "username": "Alan Kay",
-    "email": "akay@techfriends.dev",
-    "password": "password06"
-  },
-  {
-    "username": "C.A.R. Hoare",
-    "email": "choare@techfriends.dev",
-    "password": "password07"
-  },
-  {
-    "username": "David Thomas",
-    "email": "dthomas@techfriends.dev",
-    "password": "password08"
-  },
-  {
-    "username": "Donald Knuth",
-    "email": "dknuth@techfriends.dev",
-    "password": "password09"
-  },
-  {
-    "username": "Lernantino",
-    "email": "lernantino@techfriends.dev",
-    "password": "password10"
-  }
-]
+  [
+    {
+      "username": "johnDoe",
+      "email": "john.doe@example.com",
+      "password": "password123",
+      "age": 30,
+      "weight": 75,
+      "activityLevel": "active",
+      "nutrition": {
+        "dailyCalories": 2500,
+        "macros": {
+          "protein": 150,
+          "carbs": 300,
+          "fat": 80
+        }
+      }
+    },
+    {
+      "username": "janeDoe",
+      "email": "jane.doe@example.com",
+      "password": "password123",
+      "age": 28,
+      "weight": 65,
+      "activityLevel": "very active",
+      "nutrition": {
+        "dailyCalories": 2200,
+        "macros": {
+          "protein": 120,
+          "carbs": 280,
+          "fat": 70
+        }
+      }
+    },
+    {
+      "username": "samSmith",
+      "email": "sam.smith@example.com",
+      "password": "password123",
+      "age": 35,
+      "weight": 85,
+      "activityLevel": "sedentary",
+      "nutrition": {
+        "dailyCalories": 2000,
+        "macros": {
+          "protein": 100,
+          "carbs": 250,
+          "fat": 60
+        }
+      }
+    }
+  ]
+
