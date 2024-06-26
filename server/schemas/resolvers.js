@@ -1,11 +1,48 @@
-const { User, Thought } = require('../models');
+const { User, Workout } = require('../models');
 const { signToken, AuthenticationError } = require('../utils/auth');
 
 const resolvers = {
   Query: {
+    users: async () => {
+      return await User.find();
+    },
+
+    user: async (parent, { userId }) => {
+      return await User.findById(userId);
+    }
   },
 
   Mutation: {
+    // Mutation to add a new user
+    addUser: async (parent, { userData }) => {
+      try {
+        const newUser = new User({
+          username: userData.username,
+          password: userData.password,
+          email: userData.email,
+     
+        });
+        await newUser.save();
+        return newUser;
+      } catch (error) {
+        console.error(error);
+        throw new Error('Failed to create user.');
+      }
+    },
+
+    // Mutation to remove a user by ID
+    removeUser: async (parent, { userId }) => {
+      try {
+        const deletedUser = await User.findByIdAndDelete(userId);
+        if (!deletedUser) {
+          throw new Error('User not found.');
+        }
+        return deletedUser;
+      } catch (error) {
+        console.error(error);
+        throw new Error('Failed to delete user.');
+      }
+    },
   },
 };
 

@@ -1,25 +1,42 @@
 const typeDefs = `
   type User {
-    _id: ID
-    username: String
-    email: String
-    password: String
-    thoughts: [Thought]!
+    _id: ID!
+    username: String!
+    email: String!
+    password: String!
+    age: Int
+    weight: Int
+    activityLevel: String
+    nutrition: Nutrition
+    workouts: [Workout]
   }
 
-  type Thought {
-    _id: ID
-    thoughtText: String
-    thoughtAuthor: String
-    createdAt: String
-    comments: [Comment]!
+  type Nutrition {
+    dailyCalories: Int
+    macros: Macros  
   }
 
-  type Comment {
-    _id: ID
-    commentText: String
-    commentAuthor: String
-    createdAt: String
+  type Macros {
+    protein: Int
+    carbs: Int
+    fat: Int
+  }
+
+  type Exercise {
+  name: String!
+  sets: Int!
+  reps: Int!
+  weight: Int
+}
+
+type Workout {
+  _id: ID!
+  userId: ID!
+  exercises: [Exercise!]!
+  duration: Int!
+  caloriesBurned: Int!
+  createdAt: String!
+  updatedAt: String!
   }
 
   type Auth {
@@ -29,22 +46,18 @@ const typeDefs = `
 
   type Query {
     users: [User]
-    user(username: String!): User
-    thoughts(username: String): [Thought]
-    thought(thoughtId: ID!): Thought
+    user(userId: ID!): User
   }
 
-  type Mutation {
-    addUser(username: String!, email: String!, password: String!): Auth
-    login(email: String!, password: String!): Auth
-    addThought(thoughtText: String!, thoughtAuthor: String!): Thought
-    addComment(
-      thoughtId: ID!
-      commentText: String!
-      commentAuthor: String!
-    ): Thought
-    removeThought(thoughtId: ID!): Thought
-    removeComment(thoughtId: ID!, commentId: ID!): Thought
+  input NewUserInput {
+    username: String!
+    password: String!
+    email: String!
+  }
+
+type Mutation {
+    addUser(userData: NewUserInput!): User
+    removeUser(userId: ID!): User
   }
 `;
 
