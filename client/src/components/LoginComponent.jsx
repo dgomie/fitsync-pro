@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { TextField, Box, Typography, Button } from '@mui/material'
 import { useNavigate } from 'react-router-dom';
+import userInfo from '../../../server/seeders/userSeeds.json' ;
 
 
 function LoginComponent() {
@@ -9,9 +10,18 @@ function LoginComponent() {
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
+    const loginValidation = (username, password) => {
+      const user = userInfo.find(user => user.username === username && user.password === password);
+      return user !== undefined;     
+    }
+
     const handleSubmit = (event) => {
       event.preventDefault(); 
-    //   add code to navigate to homepage if login info is correct
+      if (loginValidation(username, password)) {
+        navigate('/');
+      }else {
+        alert('Incorrect username or password!');
+      }
     };
   
     return (
