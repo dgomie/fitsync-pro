@@ -3,7 +3,6 @@ const typeDefs = `
     _id: ID!
     username: String!
     email: String!
-    dateOfBirth: String!
     age: Int
     weight: Int
     activityLevel: String
@@ -53,6 +52,8 @@ type Workout {
     username: String!
     password: String!
     email: String!
+    dateOfBirth: String!
+    activityLevel: String!
   }
 
   input UpdateUserInput {
