@@ -64,8 +64,14 @@ type Workout {
   activityLevel: String
 }
 
+type Auth {
+    token: ID!
+    user: User
+  }
+
 type Mutation {
-    addUser(userData: NewUserInput!): User
+    addUser(userData: NewUserInput!): Auth
+    login(email: String!, password: String!): Auth
     removeUser(userId: ID!): User
     updateUser(userId: ID!, updateData: UpdateUserInput!): User
   }
