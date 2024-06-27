@@ -19,7 +19,8 @@ const resolvers = {
           username: userData.username,
           password: userData.password,
           email: userData.email,
-     
+          dateOfBirth: userData.dateOfBirth,
+          activityLevel: userData.activityLevel
         });
         await newUser.save();
         return newUser;
@@ -50,5 +51,5 @@ const resolvers = {
   },
 };
 
-User.findById("667dd7a2e3b6eba338daa858").then(user => console.log(user.toJSON()));
+
 module.exports = resolvers;
