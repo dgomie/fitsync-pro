@@ -1,11 +1,19 @@
 
 import WelcomeComponent from "../components/WelcomeComponent";
+import { styled } from '@mui/material/styles';
+
+const WelcomeDiv = styled('div')({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height: '100vh',
+});
 
 function HomePage() {
     return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+    <WelcomeDiv>
     <WelcomeComponent />
-    </div>
+    </WelcomeDiv>
     );
   }
 
