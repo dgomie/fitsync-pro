@@ -13,7 +13,6 @@ const resolvers = {
   },
 
   Mutation: {
-    // Mutation to add a new user
     addUser: async (parent, { userData }) => {
       try {
         const newUser = new User({
@@ -30,7 +29,6 @@ const resolvers = {
       }
     },
 
-    // Mutation to remove a user by ID
     removeUser: async (parent, { userId }) => {
       try {
         const deletedUser = await User.findByIdAndDelete(userId);
@@ -45,7 +43,6 @@ const resolvers = {
     },
 
     updateUser: async (_, { userId, updateData }) => {
-      
       const updatedUser = await User.findOneAndUpdate({ _id: userId }, updateData, { new: true });
       return updatedUser;
     },
@@ -53,4 +50,5 @@ const resolvers = {
   },
 };
 
+User.findById("667dd7a2e3b6eba338daa858").then(user => console.log(user.toJSON()));
 module.exports = resolvers;

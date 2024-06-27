@@ -21,7 +21,7 @@ const userSchema = new Schema(
       minlength: 5,
     },
     dateOfBirth: {
-      type: Date,
+      type: String,
       required: true,
     },
     weight: {
@@ -82,6 +82,9 @@ userSchema.virtual("age").get(function () {
   }
   return age;
 });
+
+userSchema.set('toJSON', { virtuals: true });
+userSchema.set('toObject', { virtuals: true });
 
 const User = model("User", userSchema);
 
