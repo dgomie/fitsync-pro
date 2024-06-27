@@ -43,6 +43,13 @@ const resolvers = {
         throw new Error('Failed to delete user.');
       }
     },
+
+    updateUser: async (_, { userId, updateData }) => {
+      
+      const updatedUser = await User.findOneAndUpdate({ _id: userId }, updateData, { new: true });
+      return updatedUser;
+    },
+
   },
 };
 

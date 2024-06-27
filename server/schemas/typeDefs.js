@@ -55,9 +55,17 @@ type Workout {
     email: String!
   }
 
+  input UpdateUserInput {
+  username: String
+  email: String
+  weight: Int
+  activityLevel: String
+}
+
 type Mutation {
     addUser(userData: NewUserInput!): User
     removeUser(userId: ID!): User
+    updateUser(userId: ID!, updateData: UpdateUserInput!): User
   }
 `;
 
