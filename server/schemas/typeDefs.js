@@ -70,7 +70,7 @@ type Auth {
   }
 
 type Mutation {
-    addUser(userData: NewUserInput!): User
+    addUser(userData: NewUserInput!): Auth
     login(email: String!, password: String!): Auth
     removeUser(userId: ID!): User
     updateUser(userId: ID!, updateData: UpdateUserInput!): User
