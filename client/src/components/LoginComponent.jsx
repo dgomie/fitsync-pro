@@ -75,7 +75,7 @@ function LoginComponent() {
             </Typography>
             <Button type="submit" variant="contained" sx={{ mt: 1, backgroundColor: '#46563c', '&:hover': {
                 backgroundColor: '#869f76'
-            } }} onClick={() => navigate('Signup')}>
+            } }} onClick={() => navigate('/signUp')}>
               Register
             </Button>
           </Box>
