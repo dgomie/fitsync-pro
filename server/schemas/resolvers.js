@@ -22,7 +22,7 @@ const resolvers = {
         activityLevel: userData.activityLevel,
       });
       const token = signToken(newUser);
-      return { token, newUser };
+      return { token, user: newUser };
     },
 
     login: async (parent, { email, password }) => {
