@@ -22,7 +22,7 @@ function Copyright(props) {
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
+        FITSYNC-PRO
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -30,7 +30,7 @@ function Copyright(props) {
   );
 }
 
-// TODO remove, this demo shouldn't need to reset the theme.
+
 const defaultTheme = createTheme();
 
 export default function SignUp() {
@@ -124,7 +124,6 @@ export default function SignUp() {
                     name="activityLevel"
                     defaultValue=""
                   >
-                    <MenuItem value="">Select</MenuItem>
                     <MenuItem value="very active">Very Active</MenuItem>
                     <MenuItem value="active">Active</MenuItem>
                     <MenuItem value="sedentary">Sedentary</MenuItem>
