@@ -3,7 +3,7 @@
       "username": "johnDoe",
       "email": "john.doe@example.com",
       "password": "password123",
-      "dateOfBirth": "01-01-2000",
+      "dateOfBirth": "2000-01-01",
       "weight": 75,
       "activityLevel": "active",
       "nutrition": {
@@ -19,7 +19,7 @@
       "username": "janeDoe",
       "email": "jane.doe@example.com",
       "password": "password123",
-      "dateOfBirth": "01-01-1990",
+      "dateOfBirth": "1990-01-01",
       "weight": 65,
       "activityLevel": "very active",
       "nutrition": {
@@ -35,7 +35,7 @@
       "username": "samSmith",
       "email": "sam.smith@example.com",
       "password": "password123",
-      "dateOfBirth": "01-01-1980",
+      "dateOfBirth": "1980-01-01",
       "weight": 85,
       "activityLevel": "sedentary",
       "nutrition": {

@@ -17,6 +17,11 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
+import { useMutation } from '@apollo/client';
+import { ADD_USER } from '../utils/mutations';
+import Auth from '../utils/auth';
+
+
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -33,17 +38,28 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
-export default function SignUp() {
-  const handleSubmit = (event) => {
+const Signup = () => {
+
+  const [addUser] = useMutation(ADD_USER);
+
+  const handleFormSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-      username: data.get('username'),
-      dateOfBirth: data.get('dateOfBirth'),
-      activityLevel: data.get('activityLevel')
-    });
+    
+    const userData = {
+      username: event.target.username.value,
+      email: event.target.email.value,
+      password: event.target.password.value,
+      dateOfBirth: event.target.dateOfBirth.value,
+      activityLevel: event.target.activityLevel.value,
+    };
+
+    try {
+      const {data} = await addUser({ variables: { userData } });
+
+      Auth.login(data.addUser.token);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -67,7 +83,7 @@ export default function SignUp() {
           <Box
             component="form"
             noValidate
-            onSubmit={handleSubmit}
+            onSubmit={handleFormSubmit}
             sx={{ mt: 3 }}
           >
             <Grid container spacing={2}>
@@ -99,7 +115,7 @@ export default function SignUp() {
                   id="username"
                   label="username"
                   name="username"
-                  autoComplete="username"
+                  autoComplete="username"                
                 />
               </Grid>
               <Grid item xs={12}>
@@ -125,6 +141,7 @@ export default function SignUp() {
                     id="activityLevel"
                     name="activityLevel"
                     defaultValue=""
+
                   >
                     <MenuItem value="very active">Very Active</MenuItem>
                     <MenuItem value="active">Active</MenuItem>
@@ -140,6 +157,7 @@ export default function SignUp() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+
                 />
               </Grid>
               <Grid item xs={12}>
@@ -151,6 +169,7 @@ export default function SignUp() {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+
                 />
               </Grid>
               <Grid item xs={12}>
@@ -184,3 +203,5 @@ export default function SignUp() {
     </ThemeProvider>
   );
 }
+
+export default Signup
