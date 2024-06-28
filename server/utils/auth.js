@@ -11,8 +11,8 @@ module.exports = {
       code: 'UNAUTHENTICATED',
     },
   }),
-  signToken: function ({ email, username, _id }) {
-    const payload = { email, username, _id };
+  signToken: function ({ email, username, _id, age, activityLevel}) {
+    const payload = { email, username, _id, age, activityLevel};
     return jwt.sign({ data: payload }, secret, { expiresIn: expiration });
   },
 };
