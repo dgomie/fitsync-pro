@@ -40,7 +40,9 @@ export default function SignUp() {
     console.log({
       email: data.get('email'),
       password: data.get('password'),
-      username: data.get('username')
+      username: data.get('username'),
+      dateOfBirth: data.get('dateOfBirth'),
+      activityLevel: data.get('activityLevel')
     });
   };
 
