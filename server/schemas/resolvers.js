@@ -17,6 +17,8 @@ const resolvers = {
       const newUser = await User.create({
         username: userData.username,
         password: userData.password,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
         email: userData.email,
         dateOfBirth: userData.dateOfBirth,
         activityLevel: userData.activityLevel,
