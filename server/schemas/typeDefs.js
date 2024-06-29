@@ -1,6 +1,8 @@
 const typeDefs = `
   type User {
     _id: ID!
+    firstName: String!
+    lastName: String!
     username: String!
     email: String!
     age: Int
@@ -50,6 +52,8 @@ type Workout {
 
   input NewUserInput {
     username: String!
+    firstName: String!
+    lastName: String!
     password: String!
     email: String!
     dateOfBirth: String!
@@ -58,6 +62,8 @@ type Workout {
 
   input UpdateUserInput {
   username: String
+  firstName: String
+  lastName: String
   email: String
   dateOfBirth: String
   weight: Int

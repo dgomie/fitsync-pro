@@ -47,11 +47,14 @@ const Signup = () => {
     
     const userData = {
       username: event.target.username.value,
+      firstName: event.target.firstName.value,
+      lastName: event.target.lastName.value,
       email: event.target.email.value,
       password: event.target.password.value,
       dateOfBirth: event.target.dateOfBirth.value,
       activityLevel: event.target.activityLevel.value,
     };
+    console.log(userData)
 
     try {
       const {data} = await addUser({ variables: { userData } });
