@@ -1,5 +1,5 @@
-//import React from 'react';
-import { Container, Box, Typography, Grid, Link } from '@mui/material';
+import React from 'react';
+import { Container, Box, Typography, Grid, Link, Paper, Avatar } from '@mui/material';
 
 const AboutUs = () => {
     return (
@@ -8,14 +8,15 @@ const AboutUs = () => {
             flexDirection="column"
             justifyContent="center"
             alignItems="center"
-            minHeight="100vh"
+            minHeight="105vh"
             textAlign="center"
-            bgcolor="#f5f5f5"
+            bgcolor="#fafafa"
+            p={2}
         >
-            <Container maxWidth="md">
-                <Box py={4}>
+            <Container maxWidth="lg">
+                <Paper elevation={3} style={{ padding: '2rem', margin: '0 auto' }}>
                     <Typography variant="h2" component="header" gutterBottom>
-                        About Us
+                        About Fitsync-PRO
                     </Typography>
                     <Box component="main">
                         <Box mb={4} id="company-history">
@@ -23,7 +24,7 @@ const AboutUs = () => {
                                 Our History
                             </Typography>
                             <Typography variant="body1">
-                                We started our journey in...
+                                Fitsync-PRO started its journey in...
                             </Typography>
                         </Box>
                         <Box mb={4} id="mission-values">
@@ -31,26 +32,107 @@ const AboutUs = () => {
                                 Mission and Values
                             </Typography>
                             <Typography variant="body1">
-                                Our mission is to...
+                                Our mission is to promote a healthy and active lifestyle by providing
+                                innovative fitness solutions that inspire and motivate individuals to achieve their fitness goals.
                             </Typography>
                         </Box>
                         <Box mb={4} id="team">
                             <Typography variant="h4" component="h2" gutterBottom>
                                 Meet Our Team
                             </Typography>
-                            <Grid container spacing={2} justifyContent="center">
+                            <Grid container spacing={4} justifyContent="center">
                                 <Grid item xs={12} sm={6} md={4}>
-                                    <Box className="team-member" textAlign="center">
-                                        <img src="team-member1.jpg" alt="Team Member Name" style={{ width: '100%', borderRadius: '50%' }} />
-                                        <Typography variant="h6" component="h3">
-                                            Team Member Name
+                                    <Box textAlign="center">
+                                        <Avatar
+                                            alt="Daniel Gomez"
+                                            src="https://via.placeholder.com/150"
+                                            sx={{
+                                                width: { xs: 80, md: 100 },
+                                                height: { xs: 80, md: 100 },
+                                                margin: '0 auto',
+                                                transition: 'transform 0.3s',
+                                                '&:hover': {
+                                                    transform: 'scale(1.1)',
+                                                },
+                                            }}
+                                        />
+                                        <Typography variant="h6" component="h3" mt={2}>
+                                            Daniel Gomez
                                         </Typography>
                                         <Typography variant="body2">
-                                            Role
+                                            CEO
                                         </Typography>
                                     </Box>
                                 </Grid>
-                                {/* Repeat for other team members */}
+                                <Grid item xs={12} sm={6} md={4}>
+                                    <Box textAlign="center">
+                                        <Avatar
+                                            alt="Kayla Freeman"
+                                            src="https://via.placeholder.com/150"
+                                            sx={{
+                                                width: { xs: 80, md: 100 },
+                                                height: { xs: 80, md: 100 },
+                                                margin: '0 auto',
+                                                transition: 'transform 0.3s',
+                                                '&:hover': {
+                                                    transform: 'scale(1.1)',
+                                                },
+                                            }}
+                                        />
+                                        <Typography variant="h6" component="h3" mt={2}>
+                                            Kayla Freeman
+                                        </Typography>
+                                        <Typography variant="body2">
+                                            Chief Fitness Officer
+                                        </Typography>
+                                    </Box>
+                                </Grid>
+                                <Grid item xs={12} sm={6} md={4}>
+                                    <Box textAlign="center">
+                                        <Avatar
+                                            alt="Andre Santos"
+                                            src="https://via.placeholder.com/150"
+                                            sx={{
+                                                width: { xs: 80, md: 100 },
+                                                height: { xs: 80, md: 100 },
+                                                margin: '0 auto',
+                                                transition: 'transform 0.3s',
+                                                '&:hover': {
+                                                    transform: 'scale(1.1)',
+                                                },
+                                            }}
+                                        />
+                                        <Typography variant="h6" component="h3" mt={2}>
+                                            Andre Santos
+                                        </Typography>
+                                        <Typography variant="body2">
+                                            Head of Technology
+                                        </Typography>
+                                    </Box>
+                                </Grid>
+                                <Grid item xs={12} sm={6} md={4}>
+                                    <Box textAlign="center">
+                                        <Avatar
+                                            alt="Francisco Ortiz"
+                                            src="https://via.placeholder.com/150"
+                                            sx={{
+                                                width: { xs: 80, md: 100 },
+                                                height: { xs: 80, md: 100 },
+                                                margin: '0 auto',
+                                                transition: 'transform 0.3s',
+                                                '&:hover': {
+                                                    transform: 'scale(1.1)',
+                                                },
+                                            }}
+                                        />
+                                        <Typography variant="h6" component="h3" mt={2}>
+                                            Francisco Ortiz
+                                        </Typography>
+                                        <Typography variant="body2">
+                                            Marketing Director
+                                        </Typography>
+                                    </Box>
+                                </Grid>
                             </Grid>
                         </Box>
                         <Box mb={4} id="achievements">
@@ -58,7 +140,7 @@ const AboutUs = () => {
                                 Our Achievements
                             </Typography>
                             <Typography variant="body1">
-                                We are proud to have...
+                                We are proud to have helped thousands of individuals reach their fitness milestones and transform their lives through our innovative fitness programs and state-of-the-art technology.
                             </Typography>
                         </Box>
                         <Box mb={4} id="contact">
@@ -67,16 +149,18 @@ const AboutUs = () => {
                             </Typography>
                             <Typography variant="body1">
                                 For inquiries, please email us at{' '}
-                                <Link href="mailto:info@example.com">info@example.com</Link>.
+                                <Link href="mailto:info@fitsyncpro.com" underline="hover">
+                                    info@fitsyncpro.com
+                                </Link>.
                             </Typography>
                         </Box>
                     </Box>
                     <Box component="footer" py={2}>
-                        <Typography variant="body2">
-                            &copy; 2024 Your Company Name. All rights reserved.
+                        <Typography variant="body2" color="textSecondary">
+                            &copy; 2024 Fitsync-PRO. All rights reserved.
                         </Typography>
                     </Box>
-                </Box>
+                </Paper>
             </Container>
         </Box>
     );
