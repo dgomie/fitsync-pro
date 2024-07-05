@@ -1,15 +1,25 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SignUp from "../components/SignUp";
+import Auth from "../utils/auth"
 
+function SignUpPage() {
+    const navigate = useNavigate();
 
-function SignUpPage(){
-    return(
+    useEffect(() => {
+        const isLoggedIn = Auth.loggedIn();
+
+        if (isLoggedIn) {
+            navigate('/profile');
+        }
+    }, [navigate]);
+
+    return (
         <div>
-            <SignUp/>
-
+            <SignUp />
         </div>
-    )
+    );
 }
-
 
 
 export default SignUpPage;
