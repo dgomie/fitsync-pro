@@ -5,15 +5,23 @@ import EditIcon from '@mui/icons-material/Edit';
 
 function ProfilePageComponent() {
     const [username, setUsername] = useState('');
+
+    // profile picture
     const fileInputRef = useRef(null); // file input
     const [avatarUrl, setAvatarUrl] = useState(''); // avatar urls
-    const [isHovering, setIsHovering] = useState(false);
+    const [isHovering, setIsHovering] = useState(false); // setting state for hovers for profile picture
 
     useEffect(() => {
         const profile = AuthService.getProfile();
         setUsername(profile.data.username);
+        // gets users profile image from local storage
+        const savedAvatar = localStorage.getItem('avatarUrl'); // change later to save to backend
+        if (savedAvatar) {
+            setAvatarUrl(savedAvatar);
+        }
     }, []);
 
+    // profile picture handlers
     const handleAvatarClick = () => {
         fileInputRef.current.click();
     };
@@ -21,8 +29,13 @@ function ProfilePageComponent() {
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
-            const newAvatarUrl = URL.createObjectURL(file);
-            setAvatarUrl(newAvatarUrl);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const imageString = reader.result;
+                setAvatarUrl(imageString);
+                localStorage.setItem('avatarUrl', imageString); // change later to backend instead of local storage
+            };
+            reader.readAsDataURL(file);
         }
     };
 
