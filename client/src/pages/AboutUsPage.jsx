@@ -1,4 +1,4 @@
-import React from 'react';
+//import React from 'react';
 import { Container, Box, Typography, Grid, Link, Paper, Avatar } from '@mui/material';
 
 const AboutUs = () => {

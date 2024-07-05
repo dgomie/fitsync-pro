@@ -7,6 +7,7 @@ import LoginPage from './pages/loginPage.jsx';
 import SignUpPage from './pages/signUpPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
 import AboutUs from './pages/AboutUsPage.jsx';
+import GetStartedPage from './pages/GetStartedPage.jsx';
 
 
 const router = createBrowserRouter([
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
       {path: "about-us",
         element: <AboutUs/>
       },
+      {
+        path: "get-started",
+        element: <GetStartedPage />
+      }
     ],
   },
 ]);
