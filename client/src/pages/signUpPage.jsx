@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SignUp from "../components/SignUp";
-import Auth from "../utils/auth"
+import Auth from "../utils/auth";
 
 function SignUpPage() {
     const navigate = useNavigate();
