@@ -1,25 +1,18 @@
 import { useState } from 'react';
 
 import { TextField, Box, Typography, Button } from '@mui/material'
-import { useNavigate } from 'react-router-dom';
-// import userInfo from '../../../server/seeders/userSeeds.json' ;
+import { useNavigate, Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER } from '../utils/mutations';
 import Auth from '../utils/auth';
 
 function LoginComponent() {
-    // const [username, setUsername] = useState('');
-    // const [password, setPassword] = useState('');
     const [formState, setFormState] = useState({ username: '', password: '' });
     const [errorMessage, setErrorMessage] = useState('');
     const [login] = useMutation(LOGIN_USER);
 
     const navigate = useNavigate();
 
-    // const loginValidation = (username, password) => {
-    //   const user = userInfo.find(user => user.username === username && user.password === password);
-    //   return user !== undefined;     
-    // }
     const handleChange = (event) => {
       const { name, value } = event.target;
   
@@ -49,16 +42,9 @@ function LoginComponent() {
       password: '',
     });
   };
-      
-    //   if (loginValidation(username, password)) {
-    //     navigate('/');
-    //   }else {
-    //     alert('Incorrect username or password!');
-    //   }
-    // };
   
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '9rem' }}>
           <Typography variant="h4" component="h1" gutterBottom sx={{ textAlign: 'center' }}>
             Login
           </Typography>
@@ -103,7 +89,7 @@ function LoginComponent() {
             />
             <Button type="submit" variant="contained" sx={{ mt: 1, backgroundColor: '#46563c', '&:hover': {
                 backgroundColor: '#869f76'
-            } }}>
+            }, width: '10%', minWidth: '120px', marginTop: 3 }}>
               Login
             </Button>
             {errorMessage && (
@@ -111,15 +97,13 @@ function LoginComponent() {
                 {errorMessage}
               </Typography>
     )}
-            <Typography padding={1}>Not Yet A User?
+            <Typography sx={{ marginTop: 3 }}>Don't have an account?{' '}
+            <Link to="/signUp" style={{ color: '#46563c', fontWeight: 'bold', textDecoration: 'none', '&:hover': { color: '#869f76' } }}>
+    Sign Up
+  </Link>
             </Typography>
-            <Button type="submit" variant="contained" sx={{ mt: 1, backgroundColor: '#46563c', '&:hover': {
-                backgroundColor: '#869f76'
-            } }} onClick={() => navigate('/signUp')}>
-              Register
-            </Button>
           </Box>
-        </div>
+        </Box>
       );
   }
   
