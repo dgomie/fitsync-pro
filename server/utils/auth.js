@@ -11,6 +11,21 @@ module.exports = {
       code: 'UNAUTHENTICATED',
     },
   }),
+  verifyJWT: (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (authHeader) {
+      const token = authHeader.split(' ')[1]; // Assuming Bearer token
+      jwt.verify(token, process.env.SESSION_SECRET, (err, user) => {
+        if (err) {
+          return res.sendStatus(403); // Forbidden
+        }
+        req.user = user;
+        next();
+      });
+    } else {
+      res.sendStatus(401); // Unauthorized
+    }
+  },
   signToken: function ({ email, username, _id, age, activityLevel}) {
     const payload = { email, username, _id, age, activityLevel};
     return jwt.sign({ data: payload }, secret, { expiresIn: expiration });
