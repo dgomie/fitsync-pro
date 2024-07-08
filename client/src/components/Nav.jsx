@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, Typography, Button, ThemeProvider, createTheme, useMediaQuery, IconButton, Menu, MenuItem  } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, ThemeProvider, createTheme, useMediaQuery, IconButton, Menu, MenuItem } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
@@ -14,7 +14,7 @@ const theme = createTheme({
 
 function Nav() {
     const navigate = useNavigate(); // navigates pages
-    const location = useLocation(); 
+    const location = useLocation();
     const isLoggedIn = Auth.loggedIn(); // checks if user is logged in
     const matches = useMediaQuery(theme.breakpoints.down('sm')); // checks for screen size
     const [anchorEl, setAnchorEl] = useState(null);
@@ -31,7 +31,7 @@ function Nav() {
         <ThemeProvider theme={theme}>
             <AppBar position="fixed">
                 <Toolbar>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: 'white', cursor: 'pointer' }} onClick={() => navigate('/')}>
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: 'white', cursor: 'pointer', marginX: { sm: '0', md: '4rem' } }} onClick={() => navigate('/')}>
                         FitSync Pro
                     </Typography>
                     {matches ? (
@@ -46,12 +46,13 @@ function Nav() {
                                 <MenuIcon />
                             </IconButton>
                             <Menu
+                                id="menu-appbar"
                                 anchorEl={anchorEl}
+                                keepMounted
                                 anchorOrigin={{
-                                    vertical: 'top',
+                                    vertical: 'bottom',
                                     horizontal: 'right',
                                 }}
-                                keepMounted
                                 transformOrigin={{
                                     vertical: 'top',
                                     horizontal: 'right',
@@ -74,13 +75,13 @@ function Nav() {
                     ) : (
                         <>
                             {!isLoggedIn && location.pathname !== '/login' && (
-                                <Button sx={{ color: 'white' }} onClick={() => navigate('/login')}>Login</Button>
+                                <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => navigate('/login')}>Login</Button>
                             )}
                             {isLoggedIn && (
                                 <>
-                                    <Button sx={{ color: 'white' }}onClick={() => navigate('/about-us')}>About Us</Button>
-                                    <Button sx={{ color: 'white' }} onClick={() => navigate('/profile')}>Profile</Button>
-                                    <Button sx={{ color: 'white' }} onClick={() => { Auth.logout(); navigate('/'); }}>Logout</Button>
+                                    <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => navigate('/about-us')}>About Us</Button>
+                                    <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => navigate('/profile')}>Profile</Button>
+                                    <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => { Auth.logout(); navigate('/'); }}>Logout</Button>
                                 </>
                             )}
                         </>
