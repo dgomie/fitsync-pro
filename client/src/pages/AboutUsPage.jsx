@@ -60,7 +60,7 @@ const AboutUs = () => {
                                             Daniel Gomez
                                         </Typography>
                                         <Typography variant="body2">
-                                            CEO
+                                            Back-end Developer
                                         </Typography>
                                     </Box>
                                 </Grid>
@@ -83,7 +83,7 @@ const AboutUs = () => {
                                             Kayla Freeman
                                         </Typography>
                                         <Typography variant="body2">
-                                            Chief Fitness Officer
+                                            Front-end Developer
                                         </Typography>
                                     </Box>
                                 </Grid>
@@ -106,7 +106,7 @@ const AboutUs = () => {
                                             Andre Santos
                                         </Typography>
                                         <Typography variant="body2">
-                                            Head of Technology
+                                            Full-stack Developer
                                         </Typography>
                                     </Box>
                                 </Grid>
@@ -129,7 +129,7 @@ const AboutUs = () => {
                                             Francisco Ortiz
                                         </Typography>
                                         <Typography variant="body2">
-                                            Marketing Director
+                                            Designer & Developer
                                         </Typography>
                                     </Box>
                                 </Grid>
