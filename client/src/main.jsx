@@ -8,6 +8,7 @@ import SignUpPage from './pages/signUpPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
 import AboutUs from './pages/AboutUsPage.jsx';
 import GetStartedPage from './pages/GetStartedPage.jsx';
+import WorkoutPage from './pages/WorkoutPage.jsx';
 
 
 const router = createBrowserRouter([
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
       {
         path: "get-started",
         element: <GetStartedPage />
+      },
+      {
+        path: "workouts",
+        element: <WorkoutPage />
       }
     ],
   },
