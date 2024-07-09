@@ -1,6 +1,7 @@
 
 import { Grid, Paper, Typography } from '@mui/material';
 import fitnessImage from '../images/fitness-img-1.jpg';
+// TODO: optimize for small screens
 
 function WelcomeComponent() {
   return (
@@ -29,7 +30,7 @@ function WelcomeComponent() {
       <Grid item xs={6}>
         <Paper elevation={0} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
           <Typography variant="h6" component="h3" padding={2}>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum tenetur ea perferendis modi laboriosam earum eius.
+Transform your fitness journey with fitsync Pro. Whether you're aiming for strength, flexibility, or just a healthier lifestyle, we provide tailored workouts, progress tracking, and meal tracking. Join our community and start achieving your goals today!
           </Typography>
         </Paper>
       </Grid>
