@@ -45,10 +45,10 @@ const AboutUs = () => {
                                     <Box textAlign="center">
                                         <Avatar
                                             alt="Daniel Gomez"
-                                            src="https://via.placeholder.com/150"
+                                            src="/src/images/danscat.jpg"
                                             sx={{
-                                                width: { xs: 80, sm: 100 },
-                                                height: { xs: 80, sm: 100 },
+                                                width: { xs: 100, sm: 120 },
+                                                height: { xs: 100, sm: 120 },
                                                 margin: '0 auto',
                                                 transition: 'transform 0.3s',
                                                 '&:hover': {
@@ -68,10 +68,10 @@ const AboutUs = () => {
                                     <Box textAlign="center">
                                         <Avatar
                                             alt="Kayla Freeman"
-                                            src="https://via.placeholder.com/150"
+                                            src="/src/images/kaylacat.jpg"
                                             sx={{
-                                                width: { xs: 80, sm: 100 },
-                                                height: { xs: 80, sm: 100 },
+                                                width: { xs: 100, sm: 120 },
+                                                height: { xs: 100, sm: 120 },
                                                 margin: '0 auto',
                                                 transition: 'transform 0.3s',
                                                 '&:hover': {
@@ -91,10 +91,10 @@ const AboutUs = () => {
                                     <Box textAlign="center">
                                         <Avatar
                                             alt="Andre Santos"
-                                            src="https://via.placeholder.com/150"
+                                            src="/src/images/antonycat.jpg"
                                             sx={{
-                                                width: { xs: 80, sm: 100 },
-                                                height: { xs: 80, sm: 100 },
+                                                width: { xs: 100, sm: 120 },
+                                                height: { xs: 100, sm: 120 },
                                                 margin: '0 auto',
                                                 transition: 'transform 0.3s',
                                                 '&:hover': {
@@ -114,10 +114,10 @@ const AboutUs = () => {
                                     <Box textAlign="center">
                                         <Avatar
                                             alt="Francisco Ortiz"
-                                            src="https://via.placeholder.com/150"
+                                            src="/src/images/dogs.jpg"
                                             sx={{
-                                                width: { xs: 80, sm: 100 },
-                                                height: { xs: 80, sm: 100 },
+                                                width: { xs: 100, sm: 120 },
+                                                height: { xs: 100, sm: 120 },
                                                 margin: '0 auto',
                                                 transition: 'transform 0.3s',
                                                 '&:hover': {
