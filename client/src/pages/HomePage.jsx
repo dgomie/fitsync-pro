@@ -1,6 +1,7 @@
 
 import WelcomeComponent from "../components/WelcomeComponent";
 import { styled } from '@mui/material/styles';
+import GetStartedBtn from "../components/GetStartedBtn";
 
 const WelcomeDiv = styled('div')({
   display: 'flex',
@@ -11,9 +12,12 @@ const WelcomeDiv = styled('div')({
 
 function HomePage() {
     return (
+      <>
     <WelcomeDiv>
     <WelcomeComponent />
     </WelcomeDiv>
+    <GetStartedBtn />
+    </>
     );
   }
 
