@@ -5,7 +5,7 @@ const path = require("path");
 const { authMiddleware, verifyJWT } = require("./utils/auth");
 require('dotenv').config();
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-
+const cors = require('cors');
 const { typeDefs, resolvers } = require("./schemas");
 const db = require("./config/connection");
 
@@ -30,8 +30,10 @@ const startApolloServer = async () => {
     })
   );
 
+  app.use(cors());
+
   app.post("/api/generateWorkoutPlan", verifyJWT, async (req, res) => { // Make the callback async
-    const { age, currentShape } = req.body;
+    const { age, activityLevel, workoutType } = req.body;
     const genAI = new GoogleGenerativeAI(process.env.API_KEY);
   
     async function generateAIresponse(prompt) {
@@ -49,7 +51,7 @@ const startApolloServer = async () => {
     }
   
     try {
-      const workoutPlan = await generateAIresponse(`Create a strength workout plan for the week for a ${age} year old user in ${currentShape}.`);
+      const workoutPlan = await generateAIresponse(`Create a ${workoutType} workout plan for the week for a ${age} year old user in ${activityLevel}.`);
       if (workoutPlan) {
         res.json({ workoutPlan });
       } else {
