@@ -1,4 +1,4 @@
-//import React from 'react';
+import React from 'react';
 import { Container, Box, Typography, Grid, Link, Paper, Avatar } from '@mui/material';
 
 const AboutUs = () => {
@@ -11,10 +11,10 @@ const AboutUs = () => {
             minHeight="105vh"
             textAlign="center"
             bgcolor="#fafafa"
-            p={2}
+            p={{ xs: 2, sm: 4, md: 10 }}
         >
             <Container maxWidth="lg">
-                <Paper elevation={3} style={{ padding: '2rem', margin: '0 auto' }}>
+                <Paper elevation={3} sx={{ padding: { xs: 2, sm: 4, md: 6 }, margin: '0 auto' }}>
                     <Typography variant="h2" component="header" gutterBottom>
                         About Fitsync-PRO
                     </Typography>
@@ -47,8 +47,8 @@ const AboutUs = () => {
                                             alt="Daniel Gomez"
                                             src="https://via.placeholder.com/150"
                                             sx={{
-                                                width: { xs: 80, md: 100 },
-                                                height: { xs: 80, md: 100 },
+                                                width: { xs: 80, sm: 100 },
+                                                height: { xs: 80, sm: 100 },
                                                 margin: '0 auto',
                                                 transition: 'transform 0.3s',
                                                 '&:hover': {
@@ -70,8 +70,8 @@ const AboutUs = () => {
                                             alt="Kayla Freeman"
                                             src="https://via.placeholder.com/150"
                                             sx={{
-                                                width: { xs: 80, md: 100 },
-                                                height: { xs: 80, md: 100 },
+                                                width: { xs: 80, sm: 100 },
+                                                height: { xs: 80, sm: 100 },
                                                 margin: '0 auto',
                                                 transition: 'transform 0.3s',
                                                 '&:hover': {
@@ -93,8 +93,8 @@ const AboutUs = () => {
                                             alt="Andre Santos"
                                             src="https://via.placeholder.com/150"
                                             sx={{
-                                                width: { xs: 80, md: 100 },
-                                                height: { xs: 80, md: 100 },
+                                                width: { xs: 80, sm: 100 },
+                                                height: { xs: 80, sm: 100 },
                                                 margin: '0 auto',
                                                 transition: 'transform 0.3s',
                                                 '&:hover': {
@@ -116,8 +116,8 @@ const AboutUs = () => {
                                             alt="Francisco Ortiz"
                                             src="https://via.placeholder.com/150"
                                             sx={{
-                                                width: { xs: 80, md: 100 },
-                                                height: { xs: 80, md: 100 },
+                                                width: { xs: 80, sm: 100 },
+                                                height: { xs: 80, sm: 100 },
                                                 margin: '0 auto',
                                                 transition: 'transform 0.3s',
                                                 '&:hover': {
