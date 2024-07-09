@@ -137,7 +137,7 @@ const Signup = () => {
               <Grid item xs={12}>
                 <FormControl fullWidth>
                   <InputLabel id="activity-level-label">
-                    Activity Level
+                    Exercise Experience
                   </InputLabel>
                   <Select
                     labelId="activity-level-label"
@@ -146,9 +146,9 @@ const Signup = () => {
                     defaultValue=""
 
                   >
-                    <MenuItem value="very active">Very Active</MenuItem>
-                    <MenuItem value="active">Active</MenuItem>
-                    <MenuItem value="sedentary">Sedentary</MenuItem>
+                    <MenuItem value="beginner">Beginner</MenuItem>
+                    <MenuItem value="intermediate">Intermediate</MenuItem>
+                    <MenuItem value="advanced">Advanced</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
@@ -175,14 +175,6 @@ const Signup = () => {
 
                 />
               </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Checkbox value="allowExtraEmails" color="primary" />
-                  }
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-              </Grid>
             </Grid>
             <Button
               type="submit"
@@ -194,7 +186,7 @@ const Signup = () => {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/login" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>
