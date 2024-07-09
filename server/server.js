@@ -33,7 +33,7 @@ const startApolloServer = async () => {
   app.use(cors());
 
   app.post("/api/generateWorkoutPlan", verifyJWT, async (req, res) => { // Make the callback async
-    const { age, activityLevel, workoutType } = req.body;
+    const { age, activityLevel, workoutType, location } = req.body;
     const genAI = new GoogleGenerativeAI(process.env.API_KEY);
   
     async function generateAIresponse(prompt) {
@@ -51,7 +51,7 @@ const startApolloServer = async () => {
     }
   
     try {
-      const workoutPlan = await generateAIresponse(`Create a ${workoutType} workout plan for the week for a ${age} year old user in ${activityLevel}.`);
+      const workoutPlan = await generateAIresponse(`Create a ${location} ${workoutType} workout plan for the week for a ${age} year old user in ${activityLevel}.`);
       if (workoutPlan) {
         res.json({ workoutPlan });
       } else {

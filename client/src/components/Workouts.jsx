@@ -3,57 +3,83 @@ import { Grid, Button, CircularProgress, Card, CardContent, Typography, Select, 
 import axios from 'axios';
 
 function Workouts() {
-    const [data, setData] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [workoutType, setWorkoutType] = useState('');
-    // Add state for age and activityLevel
-    const [token, setToken] = useState('');
-    const [age, setAge] = useState(null);
-    const [activityLevel, setActivityLevel] = useState('');
+  const [data, setData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [workoutType, setWorkoutType] = useState('');
+  const [location, setLocation] = useState('');
+  const [token, setToken] = useState('');
+  const [age, setAge] = useState(null);
+  const [activityLevel, setActivityLevel] = useState('');
 
-    useEffect(() => {
-      const token = localStorage.getItem('id_token');
-      if (token) {
-        setToken(token)
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        console.log("payload:", payload);
-        const { age, activityLevel } = payload.data; // Assuming these fields are in the token payload
-        console.log("Age:", age, "Activity Level:", activityLevel);
-        // Update state with age and activityLevel
-        setAge(age);
-        setActivityLevel(activityLevel);
-      }
-    }, []);
+  useEffect(() => {
+    const token = localStorage.getItem('id_token');
+    if (token) {
+      setToken(token);
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      console.log("payload:", payload);
+      const { age, activityLevel } = payload.data; // Assuming these fields are in the token payload
+      console.log("Age:", age, "Activity Level:", activityLevel);
+      setAge(age);
+      setActivityLevel(activityLevel);
+    }
+  }, []);
 
-    const fetchWorkoutPlan = () => {
-      setIsLoading(true);
-      const postData = {
-        "age": age, // Use age from state
-        "currentShape": activityLevel, // Use activityLevel from state, assuming it maps to currentShape
-        "workoutType": workoutType // Use the selected workout type
-      };
+  const fetchWorkoutPlan = () => {
+    setIsLoading(true);
+    const postData = {
+      age: age,
+      currentShape: activityLevel,
+      workoutType: workoutType,
+      location: location,
+    };
 
     const endpoint = 'http://localhost:3001/api/generateWorkoutPlan';
 
-    axios.post(endpoint, postData, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }
-    })
-    .then(response => {
-      console.log(response);
-      setData(response.data);
-      setIsLoading(false);
-    })
-    .catch(error => {
-      console.error('There was an error!', error);
-      setIsLoading(false);
-    });
+    axios
+      .post(endpoint, postData, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        setData(response.data);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error('There was an error!', error);
+        setIsLoading(false);
+      });
   };
 
   const handleWorkoutTypeChange = (event) => {
     setWorkoutType(event.target.value);
+  };
+
+  const handleLocationChange = (event) => {
+    setLocation(event.target.value);
+  };
+
+  const renderWorkoutPlan = (plan) => {
+    const sections = plan.split('\n\n');
+    return sections.map((section, index) => {
+      const titleMatch = section.match(/^\*\*(.*)\*\*$/);
+      if (titleMatch) {
+        return <Typography variant="h6" key={index} style={{ marginTop: '20px' }}>{titleMatch[1]}</Typography>;
+      }
+      const listMatch = section.match(/^\*\s(.*)$/gm);
+      if (listMatch) {
+        return (
+          <ul key={index} style={{ marginLeft: '20px' }}>
+            {listMatch.map((item, i) => (
+              <li key={i}>{item.replace(/^\*\s/, '')}</li>
+            ))}
+          </ul>
+        );
+      }
+      return <Typography key={index} paragraph>{section}</Typography>;
+    });
   };
 
   return (
@@ -74,6 +100,20 @@ function Workouts() {
         </Select>
       </Grid>
       <Grid item>
+        <Select
+          value={location}
+          onChange={handleLocationChange}
+          displayEmpty
+          inputProps={{ 'aria-label': 'Without label' }}
+        >
+          <MenuItem value="" disabled>
+            Select Workout Location
+          </MenuItem>
+          <MenuItem value="home">Home</MenuItem>
+          <MenuItem value="gym">Gym</MenuItem>
+        </Select>
+      </Grid>
+      <Grid item>
         <Button variant="contained" color="primary" onClick={fetchWorkoutPlan}>
           Generate Workout Plan
         </Button>
@@ -81,15 +121,13 @@ function Workouts() {
       {isLoading ? (
         <CircularProgress />
       ) : data ? (
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item xs={12} sm={6} md={8}>
           <Card>
             <CardContent>
               <Typography variant="h5" component="div">
                 Workout Plan
               </Typography>
-              <Typography variant="body2">
-                {data.workoutPlan}
-              </Typography>
+              {renderWorkoutPlan(data.workoutPlan)}
             </CardContent>
           </Card>
         </Grid>
