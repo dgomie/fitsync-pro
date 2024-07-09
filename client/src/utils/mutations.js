@@ -25,3 +25,37 @@ export const ADD_USER = gql`
     }
   }
 `;
+
+export const REMOVE_USER = gql`
+  mutation removeUser($userId: ID!) {
+    removeUser(userId: $userId) {
+      _id
+      username
+    }
+  }
+`;
+
+export const UPDATE_USER = gql`
+  mutation updateUser($userId: ID!, $updateData: UserUpdateInput!) {
+    updateUser(userId: $userId, updateData: $updateData) {
+      _id
+      username
+    }
+  }
+`;
+
+export const CREATE_AI_PLAN = gql`
+  mutation createAIplan($userId: ID!, $plan: String!) {
+    createAIplan(userId: $userId, plan: $plan) {
+      _id
+      userId
+      plan
+    }
+  }
+`;
+
+export const DELETE_AI_PLAN = gql`
+  mutation deleteAIplan($id: ID!) {
+    deleteAIplan(id: $id)
+  }
+`;
