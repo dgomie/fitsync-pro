@@ -64,9 +64,9 @@ const resolvers = {
       );
       return updatedUser;
     },
-    createAIplan: async (_, { userId, plan }) => {
+    createAIplan: async (_, { userId, title, plan }) => {
       try {
-        const newAIplan = new PlansAI({ userId, plan });
+        const newAIplan = new PlansAI({ userId, title, plan });
         await newAIplan.save();
         return newAIplan;
       } catch (error) {

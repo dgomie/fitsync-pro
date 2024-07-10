@@ -23,6 +23,7 @@ export const GET_AI_PLANS = gql`
     aiPlans(userId: $userId) {
       _id
       userId
+      title
       plan
     }
   }

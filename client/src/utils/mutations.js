@@ -49,6 +49,7 @@ export const CREATE_AI_PLAN = gql`
     createAIplan(userId: $userId, plan: $plan) {
       _id
       userId
+      title
       plan
       createdAt
     }

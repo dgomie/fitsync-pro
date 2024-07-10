@@ -9,6 +9,10 @@ const AIplanSchema = new Schema(
       required: true,
       index: true,
     },
+    title: {
+      type: String,
+      required: true,
+    },
     plan: { 
       type: String, 
       required: true, 

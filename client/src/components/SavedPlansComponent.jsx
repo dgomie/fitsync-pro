@@ -50,7 +50,7 @@ function SavedPlansComponent() {
                   {plan.title}
                 </Typography>
                 <Typography color="textSecondary">
-                  {plan}
+                  {plan.plan}
                 </Typography>
               </CardContent>
             </Card>
