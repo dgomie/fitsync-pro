@@ -1,4 +1,4 @@
-const { User, Workout } = require("../models");
+const { User, Workout, PlansAI} = require("../models");
 const { signToken, AuthenticationError } = require("../utils/auth");
 
 const resolvers = {
@@ -10,6 +10,11 @@ const resolvers = {
     user: async (parent, { userId }) => {
       return await User.findById(userId);
     },
+    
+    aiPlans: async (parent, { userId }) => {
+      return await PlansAI.find({ userId: userId });
+    },
+    
   },
 
   Mutation: {
@@ -59,7 +64,15 @@ const resolvers = {
       );
       return updatedUser;
     },
-  },
-};
-
+    createAIplan: async (_, { userId, plan }) => {
+      const newAIplan = new PlansAI({ userId, plan });
+      await newAIplan.save();
+      return newAIplan;
+    },
+    deleteAIplan: async (_, { id }) => {
+      await PlansAI.findByIdAndDelete(id);
+      return `AIplan with ID ${id} was deleted successfully.`;
+    },
+  }
+}
 module.exports = resolvers;
