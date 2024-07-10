@@ -163,7 +163,7 @@ function AIHelperComponent() {
         </Button>
       </Grid>
       {isLoading ? (
-        <CircularProgress />
+        <CircularProgress color="success"  />
       ) : data ? (
         <Grid item xs={12} sm={6} md={8}>
         <Card>
