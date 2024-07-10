@@ -65,9 +65,14 @@ const resolvers = {
       return updatedUser;
     },
     createAIplan: async (_, { userId, plan }) => {
-      const newAIplan = new PlansAI({ userId, plan });
-      await newAIplan.save();
-      return newAIplan;
+      try {
+        const newAIplan = new PlansAI({ userId, plan });
+        await newAIplan.save();
+        return newAIplan;
+      } catch (error) {
+        console.error("Error creating AI plan:", error);
+        throw new Error("Failed to create AI plan.");
+      }
     },
     deleteAIplan: async (_, { id }) => {
       await PlansAI.findByIdAndDelete(id);

@@ -52,7 +52,6 @@ const Signup = () => {
       dateOfBirth: event.target.dateOfBirth.value,
       activityLevel: event.target.activityLevel.value,
     };
-    console.log(userData)
 
     try {
       const {data} = await addUser({ variables: { userData } });

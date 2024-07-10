@@ -72,11 +72,10 @@ type Workout {
 }
 
 type AIplan {
-  id: ID!
+  _id: ID!
   userId: ID!
   plan: String!
   createdAt: String!
-  updatedAt: String!
 }
 
 type Auth {
