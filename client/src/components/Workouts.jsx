@@ -174,7 +174,6 @@ function Workouts() {
           <Box display="flex" justifyContent="center" p={1}>
           <div>
       <Button variant="contained" color="primary" onClick={handleSave}>Save Plan</Button>
-      {/* Step 4: Conditionally render the confirmation message */}
       <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
         <Alert onClose={handleCloseSnackbar} severity={saveSuccess ? "success" : "error"}>
           {saveSuccess ? "Plan saved successfully!" : "Error saving plan."}
