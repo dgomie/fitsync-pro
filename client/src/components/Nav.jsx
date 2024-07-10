@@ -68,6 +68,7 @@ function Nav() {
                                         <MenuItem onClick={() => { handleClose(); navigate('/about-us'); }}>About Us</MenuItem>
                                         <MenuItem onClick={() => { handleClose(); navigate('/profile'); }}>Profile</MenuItem>
                                         <MenuItem onClick={() => { Auth.logout(); handleClose(); navigate('/'); }}>Logout</MenuItem>
+                                        <menuItem onClick={() => { handleClose(); navigate('/settings'); }}>Settings</menuItem>
                                     </>
                                 )}
                             </Menu>
@@ -82,6 +83,7 @@ function Nav() {
                                     <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => navigate('/about-us')}>About Us</Button>
                                     <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => navigate('/profile')}>Profile</Button>
                                     <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => { Auth.logout(); navigate('/'); }}>Logout</Button>
+                                    <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => navigate('/settings')}>Settings</Button>
                                 </>
                             )}
                         </>
