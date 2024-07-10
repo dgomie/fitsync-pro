@@ -13,7 +13,7 @@ function Workouts() {
   const [userId, setId] = useState('');
   const [age, setAge] = useState(null);
   const [activityLevel, setActivityLevel] = useState('');
-  const [createAIPlan] = useMutation(CREATE_AI_PLAN);
+  const [createAIplan] = useMutation(CREATE_AI_PLAN);
 
   useEffect(() => {
     const token = localStorage.getItem('id_token');
@@ -25,7 +25,6 @@ function Workouts() {
       setId(_id)
       setAge(age);
       setActivityLevel(activityLevel);
-      console.log("Age:", age, "Activity Level:", activityLevel, "id:", _id);
     }
   }, []);
 
@@ -67,12 +66,21 @@ function Workouts() {
   };
 
   const handleSave = () => {
-    createAIPlan({
+    console.log("Age:", age, "Activity Level:", activityLevel, "id:", userId);
+    console.log(data.workoutPlan)
+  
+    createAIplan({
       variables: {
         userId,
-        plan: data.workoutPlan,
+        plan: data.workoutPlan
       },
-    });
+    })
+      .then(response => {
+        console.log("Plan created successfully", response);
+      })
+      .catch(error => {
+        console.error("Error creating plan:", error.networkError ? error.networkError.result : error.message);
+      });
   };
 
   const renderWorkoutPlan = (plan) => {

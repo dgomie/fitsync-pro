@@ -50,6 +50,7 @@ export const CREATE_AI_PLAN = gql`
       _id
       userId
       plan
+      createdAt
     }
   }
 `;
