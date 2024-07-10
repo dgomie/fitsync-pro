@@ -1,4 +1,4 @@
-// THERE IS A HOVER GLITCH SOMETIMES TAKES OFF THE FILTER
+
 import { Grid, Paper, Avatar, Typography, Button, Box, useMediaQuery, useTheme } from '@mui/material';
 import AuthService from '../utils/auth';
 import { useState, useEffect, useRef } from 'react';
@@ -18,11 +18,6 @@ function ProfilePageComponent() {
     useEffect(() => {
         const profile = AuthService.getProfile();
         setUsername(profile.data.username);
-        // gets users profile image from local storage
-        const savedAvatar = localStorage.getItem('avatarUrl'); // change later to save to backend
-        if (savedAvatar) {
-            setAvatarUrl(savedAvatar);
-        }
     }, []);
 
     // profile picture handlers
@@ -30,14 +25,12 @@ function ProfilePageComponent() {
         fileInputRef.current.click();
     };
 
-    const handleFileChange = (event) => {
+    const handleFileChange = async (event) => {
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                const imageString = reader.result;
-                setAvatarUrl(imageString);
-                localStorage.setItem('avatarUrl', imageString); // change later to backend instead of local storage
+                setAvatarUrl(reader.result);
             };
             reader.readAsDataURL(file);
         }
@@ -62,6 +55,12 @@ function ProfilePageComponent() {
                                 '& .editIcon': {
                                     display: 'flex',
                                 },
+                                '&:hover': {
+                                    filter: 'grayscale(30%) brightness(70%)',
+                                    'svg': {
+                                        fill: '#696969'
+                                    }
+                                }
                             },
                         }}
                         onMouseEnter={() => setIsHovering(true)}
@@ -69,14 +68,9 @@ function ProfilePageComponent() {
                     >
                         <Avatar
                         alt="Profile Picture"
+                        className="avatar"
                             sx={{
                                 width: 100, height: 100, marginBottom: 2, cursor: 'pointer',
-                                '&:hover': {
-                                    filter: 'grayscale(30%) brightness(70%)',
-                                    'svg': {
-                                        fill: '#696969'
-                                    }
-                                }
                             }}
                             onClick={handleAvatarClick}
                             src={avatarUrl}

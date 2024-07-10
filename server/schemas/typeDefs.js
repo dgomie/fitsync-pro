@@ -48,6 +48,7 @@ type Workout {
   type Query {
     users: [User]
     user(userId: ID!): User
+    aiPlans(userId: ID!): [AIplan]
   }
 
   input NewUserInput {
@@ -70,6 +71,14 @@ type Workout {
   activityLevel: String
 }
 
+type AIplan {
+  id: ID!
+  userId: ID!
+  plan: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
 type Auth {
     token: ID!
     user: User
@@ -80,6 +89,8 @@ type Mutation {
     login(username: String!, password: String!): Auth
     removeUser(userId: ID!): User
     updateUser(userId: ID!, updateData: UpdateUserInput!): User
+    createAIplan(userId: ID!, plan: String!): AIplan
+    deleteAIplan(id: ID!): String
   }
 `;
 
