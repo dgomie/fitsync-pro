@@ -97,7 +97,7 @@ function Workouts() {
   };
 
   return (
-    <Grid container spacing={2} justifyContent="center">
+    <Grid container spacing={2} justifyContent="center" className='mt-5 pt-5'>
       <Grid item>
         <Select
           value={workoutType}
