@@ -119,6 +119,7 @@ function Workouts() {
           <MenuItem value="endurance">Endurance</MenuItem>
           <MenuItem value="strength">Strength</MenuItem>
           <MenuItem value="speed">Speed</MenuItem>
+          <MenuItem value="flexibility">Flexibility</MenuItem>
         </Select>
       </Grid>
       <Grid item>
