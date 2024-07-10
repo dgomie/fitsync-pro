@@ -23,7 +23,6 @@ function AIHelperComponent() {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
 
-
   useEffect(() => {
     const token = localStorage.getItem('id_token');
     if (token) {
@@ -75,12 +74,12 @@ function AIHelperComponent() {
   };
 
   const handleSave = () => {
-    console.log("Age:", age, "Activity Level:", activityLevel, "id:", userId);
-    console.log(data.workoutPlan)
-  
+    const title = `${location} ${workoutType} Workout`
+   
     createAIplan({
       variables: {
         userId,
+        title,
         plan: data.workoutPlan
       },
     })
@@ -137,10 +136,10 @@ function AIHelperComponent() {
           <MenuItem value="" disabled>
             Select Workout Type
           </MenuItem>
-          <MenuItem value="endurance">Endurance</MenuItem>
-          <MenuItem value="strength">Strength</MenuItem>
-          <MenuItem value="speed">Speed</MenuItem>
-          <MenuItem value="flexibility">Flexibility</MenuItem>
+          <MenuItem value="Endurance">Endurance</MenuItem>
+          <MenuItem value="Strength">Strength</MenuItem>
+          <MenuItem value="Speed">Speed</MenuItem>
+          <MenuItem value="Flexibility">Flexibility</MenuItem>
         </Select>
       </Grid>
       <Grid item>
@@ -153,8 +152,8 @@ function AIHelperComponent() {
           <MenuItem value="" disabled>
             Select Workout Location
           </MenuItem>
-          <MenuItem value="home">Home</MenuItem>
-          <MenuItem value="gym">Gym</MenuItem>
+          <MenuItem value="Home">Home</MenuItem>
+          <MenuItem value="Gym">Gym</MenuItem>
         </Select>
       </Grid>
       <Grid item>
