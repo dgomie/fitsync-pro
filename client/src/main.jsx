@@ -9,7 +9,7 @@ import ProfilePage from './pages/ProfilePage.jsx';
 import AboutUs from './pages/AboutUsPage.jsx';
 import GetStartedPage from './pages/GetStartedPage.jsx';
 import SettingsPage from './pages/settingsPage.jsx';
-import WorkoutPage from './pages/WorkoutPage.jsx'
+import AIHelperPage from './pages/AIHelperPage.jsx'
 
 
 const router = createBrowserRouter([
@@ -47,8 +47,8 @@ const router = createBrowserRouter([
         element: <SettingsPage />
       },
       {
-        path: "workouts",
-        element: <WorkoutPage />
+        path: "fit-ai",
+        element: <AIHelperPage />
       },
     ],
   },

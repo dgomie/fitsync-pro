@@ -67,7 +67,7 @@ function Nav() {
                                     <>
                                         <MenuItem onClick={() => { handleClose(); navigate('/about-us'); }}>About Us</MenuItem>
                                         <MenuItem onClick={() => { handleClose(); navigate('/profile'); }}>Profile</MenuItem>
-                                        <MenuItem onClick={() => { handleClose(); navigate('/workouts'); }}>Fit-AI</MenuItem>
+                                        <MenuItem onClick={() => { handleClose(); navigate('/fit-ai'); }}>Fit-AI</MenuItem>
                                         <MenuItem onClick={() => { handleClose(); navigate('/settings'); }}>Settings</MenuItem>
                                         <MenuItem onClick={() => { Auth.logout(); handleClose(); navigate('/'); }}>Logout</MenuItem>
                                         
@@ -84,7 +84,7 @@ function Nav() {
                                 <>
                                     <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => navigate('/about-us')}>About Us</Button>
                                     <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => navigate('/profile')}>Profile</Button>
-                                    <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => navigate('/workouts')}>Fit-AI</Button>
+                                    <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => navigate('/fit-ai')}>Fit-AI</Button>
                                     <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => navigate('/settings')}>Settings</Button>
                                     <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => { Auth.logout(); navigate('/'); }}>Logout</Button>
                                     
