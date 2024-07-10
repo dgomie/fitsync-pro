@@ -63,6 +63,7 @@ const userSchema = new Schema(
       },
     ],
   },
+
   {
     toJSON: { virtuals: true }, // Ensure virtuals are included in toJSON output
     toObject: { virtuals: true },

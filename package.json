@@ -9,7 +9,7 @@
     "install": "cd server && npm i && cd ../client && npm i",
     "seed": "cd server && npm run seed",
     "build": "cd client && npm run build",
-    "render-build":"npm install && npm run build"
+    "render-build": "npm install && npm run build"
   },
   "keywords": [],
   "author": "",
@@ -22,7 +22,10 @@
     "@emotion/styled": "^11.11.5",
     "@google/generative-ai": "^0.13.0",
     "@mui/material": "^5.15.20",
+    "axios": "^1.7.2",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
+    "multer": "^1.4.5-lts.1",
     "react": "^18.3.1",
     "vite": "^4.4.5"
   }

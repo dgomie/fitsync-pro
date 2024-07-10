@@ -8,6 +8,7 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const cors = require('cors');
 const { typeDefs, resolvers } = require("./schemas");
 const db = require("./config/connection");
+const upload = require('./config/multerconfig'); // import upload from the config
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -15,6 +16,20 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
 });
+
+// post route for uploading profile pictures
+app.post('/api/upload', verifyJWT, upload.single('avatar'), async (req, res) => {
+  if (req.file) {
+    const userId = req.userId; // Assuming you have a way to get the user's ID, e.g., from a session or token
+    const pictureUrl = `/uploads/${req.file.filename}`;
+    await updateUserProfilePicture(userId, pictureUrl);
+    res.json({ message: "File uploaded successfully", imageUrl: pictureUrl });
+  } else {
+    res.status(400).send('No file uploaded.');
+  }
+});
+
+app.use('/uploads', express.static('uploads'));
 
 // Create a new instance of an Apollo server with the GraphQL schema
 const startApolloServer = async () => {
