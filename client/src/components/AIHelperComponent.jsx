@@ -103,7 +103,9 @@ function AIHelperComponent() {
   };
 
   const renderWorkoutPlan = (plan) => {
-    const sections = plan.split('\n\n');
+    // Remove '##' from the start of the plan if it exists
+    const cleanedPlan = plan.replace(/^##/, '').trim();
+    const sections = cleanedPlan.split('\n\n');
     return sections.map((section, index) => {
       const titleMatch = section.match(/^\*\*(.*)\*\*$/);
       if (titleMatch) {
@@ -167,7 +169,7 @@ function AIHelperComponent() {
         <Card>
           <CardContent>
             <Typography variant="h5" component="div">
-              Workout Plan
+              Your Workout Plan
             </Typography>
             {renderWorkoutPlan(data.workoutPlan)}
           </CardContent>

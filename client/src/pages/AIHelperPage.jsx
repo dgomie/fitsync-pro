@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Auth from "../utils/auth";
-import AIHelperComponent from "../components/AIHelper";
+import AIHelperComponent from "../components/AIHelperComponent";
 
 const AIHelperPage = () => {
   const navigate = useNavigate();
