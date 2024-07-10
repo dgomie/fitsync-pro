@@ -10,6 +10,7 @@ const WelcomeDiv = styled('div')({
   height: '100vh',
 });
 
+
 function HomePage() {
     return (
       <>
