@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Grid, Button, CircularProgress, Card, CardContent, Typography, Select, MenuItem } from '@mui/material';
+import { Box, Grid, Button, CircularProgress, Card, CardContent, Typography, Select, MenuItem } from '@mui/material';
 import axios from 'axios';
 import { useMutation } from '@apollo/client';
 import { CREATE_AI_PLAN } from '../utils/mutations';
@@ -144,16 +144,18 @@ function Workouts() {
         <CircularProgress />
       ) : data ? (
         <Grid item xs={12} sm={6} md={8}>
-          <Card>
-            <CardContent>
-              <Typography variant="h5" component="div">
-                Workout Plan
-              </Typography>
-              {renderWorkoutPlan(data.workoutPlan)}
-            </CardContent>
-            <button onClick={handleSave}>Save Plan</button>
-          </Card>
-        </Grid>
+        <Card>
+          <CardContent>
+            <Typography variant="h5" component="div">
+              Workout Plan
+            </Typography>
+            {renderWorkoutPlan(data.workoutPlan)}
+          </CardContent>
+          <Box display="flex" justifyContent="center" p={1}>
+            <Button variant="contained" color="primary" onClick={handleSave}>Save Plan</Button>
+          </Box>
+        </Card>
+      </Grid>
       ) : null}
     </Grid>
   );
