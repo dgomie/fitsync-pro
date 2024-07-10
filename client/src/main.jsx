@@ -8,7 +8,7 @@ import SignUpPage from './pages/signUpPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
 import AboutUs from './pages/AboutUsPage.jsx';
 import GetStartedPage from './pages/GetStartedPage.jsx';
-import WorkoutPage from './pages/WorkoutPage.jsx';
+import SettingsPage from './pages/settingsPage.jsx';
 
 
 const router = createBrowserRouter([
@@ -25,28 +25,33 @@ const router = createBrowserRouter([
         path: "login",
         element: <LoginPage />
       },
-      {path: "signUp",
-        element: <SignUpPage/>
+      {
+        path: "signUp",
+        element: <SignUpPage />
       },
       {
         path: "profile",
         element: <ProfilePage />,
       },
-      {path: "about-us",
-        element: <AboutUs/>
+      {
+        path: "about-us",
+        element: <AboutUs />
       },
       {
         path: "get-started",
         element: <GetStartedPage />
       },
       {
-        path: "workouts",
-        element: <WorkoutPage />
-      }
+        path: "settings",
+        element: <SettingsPage />
+      },
     ],
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <RouterProvider router={router} />
-)
+);
+
+
+
