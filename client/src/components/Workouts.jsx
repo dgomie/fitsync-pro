@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Grid, Button, CircularProgress, Card, CardContent, Typography, Select, MenuItem } from '@mui/material';
 import axios from 'axios';
+import { useMutation } from '@apollo/client';
+import { CREATE_AI_PLAN } from '../utils/mutations';
 
 function Workouts() {
   const [data, setData] = useState(null);
@@ -8,8 +10,10 @@ function Workouts() {
   const [workoutType, setWorkoutType] = useState('');
   const [location, setLocation] = useState('');
   const [token, setToken] = useState('');
+  const [userId, setId] = useState('');
   const [age, setAge] = useState(null);
   const [activityLevel, setActivityLevel] = useState('');
+  const [createAIPlan] = useMutation(CREATE_AI_PLAN);
 
   useEffect(() => {
     const token = localStorage.getItem('id_token');
@@ -17,10 +21,11 @@ function Workouts() {
       setToken(token);
       const payload = JSON.parse(atob(token.split('.')[1]));
       console.log("payload:", payload);
-      const { age, activityLevel } = payload.data; // Assuming these fields are in the token payload
-      console.log("Age:", age, "Activity Level:", activityLevel);
+      const { _id, age, activityLevel } = payload.data; 
+      setId(_id)
       setAge(age);
       setActivityLevel(activityLevel);
+      console.log("Age:", age, "Activity Level:", activityLevel, "id:", _id);
     }
   }, []);
 
@@ -59,6 +64,15 @@ function Workouts() {
 
   const handleLocationChange = (event) => {
     setLocation(event.target.value);
+  };
+
+  const handleSave = () => {
+    createAIPlan({
+      variables: {
+        userId,
+        plan: data.workoutPlan,
+      },
+    });
   };
 
   const renderWorkoutPlan = (plan) => {
@@ -129,6 +143,7 @@ function Workouts() {
               </Typography>
               {renderWorkoutPlan(data.workoutPlan)}
             </CardContent>
+            <button onClick={handleSave}>Save Plan</button>
           </Card>
         </Grid>
       ) : null}
