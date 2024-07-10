@@ -1,12 +1,19 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Container, Box, Typography, TextField, Button, Paper, Grid, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, InputAdornment } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { useMutation } from '@apollo/client';
+import { REMOVE_USER } from '../utils/mutations';
+import Auth from '../utils/auth';
+import { useNavigate } from 'react-router-dom';
 
 const SettingsPage = () => {
+    const navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [removeUserMutation] = useMutation(REMOVE_USER);
+
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -16,22 +23,21 @@ const SettingsPage = () => {
         setOpen(false);
     };
 
+
     const handleDelete = () => {
-        // Call the API to delete the profile
-        fetch('/api/deleteProfile', { method: 'DELETE' })
+        const token = Auth.getToken()
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const userId = payload.data._id
+    
+        removeUserMutation({ variables: { userId } })
             .then(response => {
-                if (response.ok) {
-                    // Handle successful deletion (e.g., redirect to login page)
-                    console.log('Profile deleted');
-                } else {
-                    // Handle errors
-                    console.error('Failed to delete profile');
-                }
+            console.log('User removed:', response.data.removeUser);
+            Auth.logout(); 
+            navigate('/'); 
             })
-            .catch(error => {
-                console.error('Error:', error);
+            .catch(err => {
+            console.error('Error removing user:', err);
             });
-        setOpen(false);
     };
 
     const handleClickShowPassword = () => setShowPassword(!showPassword);
