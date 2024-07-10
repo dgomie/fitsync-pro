@@ -12,8 +12,8 @@ import { GET_AI_PLANS } from "../utils/queries";
 import Auth from "../utils/auth"
 
 function SavedPlansComponent() {
-    const token = Auth.getToken()
-    const { _id } = Auth.getProfile(token).data
+    const token = Auth.getToken();
+    const { _id } = Auth.getProfile(token).data;
     const { loading, error, data } = useQuery(GET_AI_PLANS, {
         variables: { userId: _id }, 
     });

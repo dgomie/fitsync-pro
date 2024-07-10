@@ -12,7 +12,7 @@ const resolvers = {
     },
     
     aiPlans: async (parent, { userId }) => {
-      return await PlansAI.find({ userId: userId });
+      return await PlansAI.find({ userId: userId }).sort({ createdAt: -1 });
     },
     
   },
