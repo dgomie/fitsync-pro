@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
-import { Box, Grid, Button, CircularProgress, Card, CardContent, Typography, Select, MenuItem } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Snackbar, Box, Grid, Button, CircularProgress, Card, CardContent, Typography, Select, MenuItem } from '@mui/material';
 import axios from 'axios';
 import { useMutation } from '@apollo/client';
 import { CREATE_AI_PLAN } from '../utils/mutations';
+import MuiAlert from '@mui/material/Alert';
 
 function Workouts() {
   const [data, setData] = useState(null);
@@ -14,6 +15,14 @@ function Workouts() {
   const [age, setAge] = useState(null);
   const [activityLevel, setActivityLevel] = useState('');
   const [createAIplan] = useMutation(CREATE_AI_PLAN);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+
+
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
 
   useEffect(() => {
     const token = localStorage.getItem('id_token');
@@ -76,11 +85,21 @@ function Workouts() {
       },
     })
       .then(response => {
+        setSaveSuccess(true);
+        setOpenSnackbar(true);
         console.log("Plan created successfully", response);
       })
       .catch(error => {
+        setSaveSuccess(false);
         console.error("Error creating plan:", error.networkError ? error.networkError.result : error.message);
       });
+  };
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackbar(false);
   };
 
   const renderWorkoutPlan = (plan) => {
@@ -153,7 +172,15 @@ function Workouts() {
             {renderWorkoutPlan(data.workoutPlan)}
           </CardContent>
           <Box display="flex" justifyContent="center" p={1}>
-            <Button variant="contained" color="primary" onClick={handleSave}>Save Plan</Button>
+          <div>
+      <Button variant="contained" color="primary" onClick={handleSave}>Save Plan</Button>
+      {/* Step 4: Conditionally render the confirmation message */}
+      <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+        <Alert onClose={handleCloseSnackbar} severity={saveSuccess ? "success" : "error"}>
+          {saveSuccess ? "Plan saved successfully!" : "Error saving plan."}
+        </Alert>
+      </Snackbar>
+    </div>
           </Box>
         </Card>
       </Grid>
