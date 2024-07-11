@@ -12,7 +12,7 @@ const AIHelperPage = () => {
     setIsLoggedIn(Auth.loggedIn());
 
     if (!isLoggedIn) {
-      navigate("/login");
+      navigate("/");
     }
   }, [navigate, isLoggedIn]);
 
