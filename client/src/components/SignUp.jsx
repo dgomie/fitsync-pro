@@ -143,9 +143,9 @@ const Signup = () => {
                     defaultValue=""
 
                   >
-                    <MenuItem value="beginner">Beginner</MenuItem>
-                    <MenuItem value="intermediate">Intermediate</MenuItem>
-                    <MenuItem value="advanced">Advanced</MenuItem>
+                    <MenuItem value="Beginner">Beginner</MenuItem>
+                    <MenuItem value="Intermediate">Intermediate</MenuItem>
+                    <MenuItem value="Advanced">Advanced</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
