@@ -1,47 +1,41 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, Button, ThemeProvider, createTheme, useMediaQuery, IconButton, Menu, MenuItem, useScrollTrigger } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, ThemeProvider, createTheme, useMediaQuery, IconButton, Menu, MenuItem, useScrollTrigger, Box } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Auth from '../utils/auth';
-
 const theme = createTheme({
     palette: {
         primary: {
-            main: '#93a87e'
+            main: '#93A87E'
         }
     }
 });
-
 const BlurOnScroll = ({ children }) => {
     const trigger = useScrollTrigger({
         disableHysteresis: true,
         threshold: 0
     });
-
     return React.cloneElement(children, {
+        elevation: trigger ? 4 : 0,
         sx: {
-            background: trigger ? 'rgba(255, 255, 255, 0.8)' : 'transparent',
+            background: trigger ? 'rgba(255, 255, 255, 0.8)' : 'rgba(147, 168, 126, 1)', // original color when not scrolled
             backdropFilter: trigger ? 'blur(10px)' : 'none',
             transition: 'background 0.3s, backdrop-filter 0.3s',
         },
     });
 };
-
 function Nav() {
     const navigate = useNavigate(); // navigates pages
     const location = useLocation();
     const isLoggedIn = Auth.loggedIn(); // checks if user is logged in
     const matches = useMediaQuery(theme.breakpoints.down('sm')); // checks for screen size
     const [anchorEl, setAnchorEl] = useState(null);
-
     const handleMenu = (event) => {
         setAnchorEl(event.currentTarget);
     }; // hamburger menu handler
-
     const handleClose = () => {
         setAnchorEl(null);
     }; // closing hamburger menu handler
-
     return (
         <ThemeProvider theme={theme}>
             <BlurOnScroll>
@@ -110,5 +104,4 @@ function Nav() {
         </ThemeProvider>
     );
 }
-
 export default Nav;
