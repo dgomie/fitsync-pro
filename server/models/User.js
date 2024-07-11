@@ -1,5 +1,6 @@
 const { Schema, model } = require("mongoose");
 const bcrypt = require("bcrypt");
+const PlansAI = require("./PlansAI")
 
 const userSchema = new Schema(
   {
@@ -70,6 +71,9 @@ const userSchema = new Schema(
   }
 );
 
+userSchema.set('toJSON', { virtuals: true });
+userSchema.set('toObject', { virtuals: true });
+
 userSchema.pre("save", async function (next) {
   if (this.isNew || this.isModified("password")) {
     const saltRounds = 10;
@@ -94,8 +98,16 @@ userSchema.virtual("age").get(function () {
   return age;
 });
 
-userSchema.set('toJSON', { virtuals: true });
-userSchema.set('toObject', { virtuals: true });
+userSchema.pre('findOneAndDelete', async function(next) {
+  const docToDelete = await this.model.findOne(this.getFilter());
+  if (docToDelete) {
+    // Assuming the Plan model references the User model with a field named 'userId'
+    await PlansAI.deleteMany({ userId: docToDelete._id });
+  }
+  next();
+});
+
+
 
 const User = model("User", userSchema);
 
