@@ -14,6 +14,10 @@ import {
   DialogTitle,
   IconButton,
   InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
+  FormControl
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useMutation, useQuery } from "@apollo/client";
@@ -30,6 +34,8 @@ const SettingsComponent = () => {
   const [firstName, setFirstName] = useState("First Name");
   const [lastName, setLastName] = useState("Last Name");
   const [email, setEmail] = useState("Email");
+  const [activityLevel, setActivityLevel] = useState("");
+  const [userId, setUserId] = useState("")
 
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -38,7 +44,6 @@ const SettingsComponent = () => {
 
   const token = Auth.getToken();
   const { _id } = Auth.getProfile(token).data;
- 
 
   const { loading, error, data } = useQuery(GET_USER, {
     variables: { userId: _id },
@@ -46,19 +51,16 @@ const SettingsComponent = () => {
 
   useEffect(() => {
     if (data) {
-      console.log("DATA", data.user.firstName);
       setFirstName(data.user.firstName);
       setLastName(data.user.lastName);
       setEmail(data.user.email);
+      setActivityLevel(data.user.activityLevel)
+      setUserId(data.user._id)
     }
   }, [data]);
-  
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>An error occurred: {error.message}</p>;
-  console.log("DATA", data);
-
-  
-  
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -69,9 +71,6 @@ const SettingsComponent = () => {
   };
 
   const handleDelete = () => {
-    const token = Auth.getToken();
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    const userId = payload.data._id;
 
     removeUserMutation({ variables: { userId } })
       .then((response) => {
@@ -82,6 +81,34 @@ const SettingsComponent = () => {
       .catch((err) => {
         console.error("Error removing user:", err);
       });
+  };
+
+  const handleUpdateProfile = async () => { 
+    console.log("userId:", userId)
+    const updateData = {
+      firstName,
+      lastName,
+      email,
+      activityLevel
+    }
+    try {
+      const response = await updateUser({
+        variables: { userId, updateData },
+      });
+      console.log('Update successful', response);
+    } catch (error) {
+      console.log("Error details:", error);
+  
+      if (error.graphQLErrors) {
+        error.graphQLErrors.forEach(({ message, locations, path }) =>
+          console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`)
+        );
+      }
+      
+      if (error.networkError) {
+        console.log(`[Network error]: ${error.networkError}`);
+      }
+    }
   };
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
@@ -109,45 +136,61 @@ const SettingsComponent = () => {
             Settings
           </Typography>
           <Box component="main" sx={{ width: "100%" }}>
-            <Box mb={4}>
-              <Typography variant="h4" component="h2" gutterBottom>
-                Profile Information
-              </Typography>
-              <Grid container spacing={2}>
-  <Grid item xs={12} sm={6}>
-    <TextField
-      fullWidth
-      label="First Name"
-      variant="outlined"
-      value={firstName} // Use value prop for controlled component
-      onChange={(e) => setFirstName(e.target.value)} // Update state on change
-    />
-  </Grid>
-  <Grid item xs={12} sm={6}>
-    <TextField
-      fullWidth
-      label="Last Name"
-      variant="outlined"
-      value={lastName} // Use value prop for controlled component
-      onChange={(e) => setLastName(e.target.value)} // Update state on change
-    />
-  </Grid>
-  <Grid item xs={12}>
-    <TextField
-      fullWidth
-      label="Email"
-      variant="outlined"
-      value={email} // Use value prop for controlled component
-      onChange={(e) => setEmail(e.target.value)} // Update state on change
-    />
-  </Grid>
-</Grid>
-              <Box mt={2}>
-                <Button variant="contained" color="primary">
-                  Update Profile
-                </Button>
-              </Box>
-            </Box>
+          <Box mb={4}>
+      <Typography variant="h4" component="h2" gutterBottom>
+        Profile Information
+      </Typography>
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label="First Name"
+            variant="outlined"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label="Last Name"
+            variant="outlined"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            label="Email"
+            variant="outlined"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <FormControl fullWidth variant="outlined">
+            <InputLabel id="exercise-experience-select-label">Exercise Experience</InputLabel>
+            <Select
+              labelId="exercise-experience-label"
+              id="exercise-experience-select"
+              value={activityLevel}
+              onChange={(e) => setActivityLevel(e.target.value)}
+              label="Exercise Experience"
+            >
+              <MenuItem value="Beginner">Beginner</MenuItem>
+              <MenuItem value="Intermediate">Intermediate</MenuItem>
+              <MenuItem value="Advanced">Advanced</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+      </Grid>
+      <Box mt={2}>
+        <Button variant="contained" color="primary" onClick={handleUpdateProfile}>
+          Update Profile
+        </Button>
+      </Box>
+    </Box>
             <Box mb={4}>
               <Typography variant="h4" component="h2" gutterBottom>
                 Change Password
