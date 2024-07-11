@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Container,
   Box,
@@ -35,7 +35,8 @@ const SettingsComponent = () => {
   const [lastName, setLastName] = useState("Last Name");
   const [email, setEmail] = useState("Email");
   const [activityLevel, setActivityLevel] = useState("");
-  const [userId, setUserId] = useState("")
+  const [userId, setUserId] = useState("");
+  const [updateSuccess, setUpdateSuccess] = useState(false);
 
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -84,7 +85,6 @@ const SettingsComponent = () => {
   };
 
   const handleUpdateProfile = async () => { 
-    console.log("userId:", userId)
     const updateData = {
       firstName,
       lastName,
@@ -96,18 +96,10 @@ const SettingsComponent = () => {
         variables: { userId, updateData },
       });
       console.log('Update successful', response);
+      setUpdateSuccess(true);
+      setTimeout(() => setUpdateSuccess(false), 5000);
     } catch (error) {
       console.log("Error details:", error);
-  
-      if (error.graphQLErrors) {
-        error.graphQLErrors.forEach(({ message, locations, path }) =>
-          console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`)
-        );
-      }
-      
-      if (error.networkError) {
-        console.log(`[Network error]: ${error.networkError}`);
-      }
     }
   };
 
@@ -189,6 +181,9 @@ const SettingsComponent = () => {
         <Button variant="contained" color="primary" onClick={handleUpdateProfile}>
           Update Profile
         </Button>
+        <div>
+      {updateSuccess && <div className="mt-1">Profile updated successfully!</div>}
+    </div>
       </Box>
     </Box>
             <Box mb={4}>
