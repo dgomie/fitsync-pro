@@ -45,10 +45,11 @@ export const UPDATE_USER = gql`
 `;
 
 export const CREATE_AI_PLAN = gql`
-  mutation createAIplan($userId: ID!, $plan: String!) {
-    createAIplan(userId: $userId, plan: $plan) {
+  mutation createAIplan($userId: ID!, $title: String!, $plan: String!) {
+    createAIplan(userId: $userId, title: $title, plan: $plan) {
       _id
       userId
+      title
       plan
       createdAt
     }
