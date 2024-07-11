@@ -1111,6 +1111,17 @@ a:hover {
   border-radius: calc(0.18rem - 1px) calc(0.18rem - 1px) 0 0;
 }
 
+.cardHoverEffect {
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Smooth transition for transform and shadow */
+}
+
+.cardHoverEffect:hover {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); /* Example hover effect */
+  transform: scale(1.05); /* Slightly increase size */
+  cursor: pointer; /* Change cursor to pointer */
+}
+
+
 form {
   width: 100%;
 }

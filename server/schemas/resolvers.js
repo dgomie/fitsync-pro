@@ -12,7 +12,7 @@ const resolvers = {
     },
     
     aiPlans: async (parent, { userId }) => {
-      return await PlansAI.find({ userId: userId });
+      return await PlansAI.find({ userId: userId }).sort({ createdAt: -1 });
     },
     
   },
@@ -64,10 +64,15 @@ const resolvers = {
       );
       return updatedUser;
     },
-    createAIplan: async (_, { userId, plan }) => {
-      const newAIplan = new PlansAI({ userId, plan });
-      await newAIplan.save();
-      return newAIplan;
+    createAIplan: async (_, { userId, title, plan }) => {
+      try {
+        const newAIplan = new PlansAI({ userId, title, plan });
+        await newAIplan.save();
+        return newAIplan;
+      } catch (error) {
+        console.error("Error creating AI plan:", error);
+        throw new Error("Failed to create AI plan.");
+      }
     },
     deleteAIplan: async (_, { id }) => {
       await PlansAI.findByIdAndDelete(id);

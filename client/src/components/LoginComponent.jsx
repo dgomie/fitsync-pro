@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { TextField, Box, Typography, Button } from '@mui/material'
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER } from '../utils/mutations';
 import Auth from '../utils/auth';
@@ -10,8 +10,6 @@ function LoginComponent() {
     const [formState, setFormState] = useState({ username: '', password: '' });
     const [errorMessage, setErrorMessage] = useState('');
     const [login] = useMutation(LOGIN_USER);
-
-    const navigate = useNavigate();
 
     const handleChange = (event) => {
       const { name, value } = event.target;

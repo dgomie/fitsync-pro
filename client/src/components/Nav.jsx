@@ -38,69 +38,67 @@ function Nav() {
     }; // closing hamburger menu handler
     return (
         <ThemeProvider theme={theme}>
-            <BlurOnScroll>
-                <AppBar position="fixed">
-                    <Toolbar>
-                        <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: 'white', cursor: 'pointer', marginX: { sm: '0', md: '4rem' } }} onClick={() => navigate('/')}>
-                            FitSync Pro
-                        </Typography>
-                        {matches ? (
-                            <>
-                                <IconButton
-                                    color="inherit"
-                                    aria-label="open drawer"
-                                    edge="end"
-                                    onClick={handleMenu}
-                                    sx={{ color: 'white' }}
-                                >
-                                    <MenuIcon />
-                                </IconButton>
-                                <Menu
-                                    id="menu-appbar"
-                                    anchorEl={anchorEl}
-                                    keepMounted
-                                    anchorOrigin={{
-                                        vertical: 'bottom',
-                                        horizontal: 'right',
-                                    }}
-                                    transformOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'right',
-                                    }}
-                                    open={Boolean(anchorEl)}
-                                    onClose={handleClose}
-                                >
-                                    {!isLoggedIn && location.pathname !== '/login' && (
-                                        <MenuItem onClick={() => { handleClose(); navigate('/login'); }}>Login</MenuItem>
-                                    )}
-                                    {isLoggedIn && (
-                                        <>
-                                            <MenuItem onClick={() => { handleClose(); navigate('/about-us'); }}>About Us</MenuItem>
-                                            <MenuItem onClick={() => { handleClose(); navigate('/profile'); }}>Profile</MenuItem>
-                                            <MenuItem onClick={() => { Auth.logout(); handleClose(); navigate('/'); }}>Logout</MenuItem>
-                                            <MenuItem onClick={() => { handleClose(); navigate('/settings'); }}>Settings</MenuItem>
-                                        </>
-                                    )}
-                                </Menu>
-                            </>
-                        ) : (
-                            <>
+            <AppBar position="fixed">
+                <Toolbar>
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: 'white', cursor: 'pointer', marginX: { sm: '0', md: '4rem' } }} onClick={() => navigate('/')}>
+                        FitSync Pro
+                    </Typography>
+                    {matches ? (
+                        <>
+                            <IconButton
+                                color="inherit"
+                                aria-label="open drawer"
+                                edge="end"
+                                onClick={handleMenu}
+                                sx={{ color: 'white' }}
+                            >
+                                <MenuIcon />
+                            </IconButton>
+                            <Menu
+                                id="menu-appbar"
+                                anchorEl={anchorEl}
+                                keepMounted
+                                anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'right',
+                                }}
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                open={Boolean(anchorEl)}
+                                onClose={handleClose}
+                            >
                                 {!isLoggedIn && location.pathname !== '/login' && (
-                                    <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => navigate('/login')}>Login</Button>
+                                    <MenuItem onClick={() => { handleClose(); navigate('/login'); }}>Login</MenuItem>
                                 )}
                                 {isLoggedIn && (
                                     <>
-                                        <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => navigate('/about-us')}>About Us</Button>
-                                        <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => navigate('/profile')}>Profile</Button>
-                                        <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => { Auth.logout(); navigate('/'); }}>Logout</Button>
-                                        <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => navigate('/settings')}>Settings</Button>
+                                        <MenuItem onClick={() => { handleClose(); navigate('/about-us'); }}>About Us</MenuItem>
+                                        <MenuItem onClick={() => { handleClose(); navigate('/profile'); }}>Profile</MenuItem>
+                                        <MenuItem onClick={() => { Auth.logout(); handleClose(); navigate('/'); }}>Logout</MenuItem>
+                                        <menuItem onClick={() => { handleClose(); navigate('/settings'); }}>Settings</menuItem>
                                     </>
                                 )}
-                            </>
-                        )}
-                    </Toolbar>
-                </AppBar>
-            </BlurOnScroll>
+                            </Menu>
+                        </>
+                    ) : (
+                        <>
+                            {!isLoggedIn && location.pathname !== '/login' && (
+                                <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => navigate('/login')}>Login</Button>
+                            )}
+                            {isLoggedIn && (
+                                <>
+                                    <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => navigate('/about-us')}>About Us</Button>
+                                    <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => navigate('/profile')}>Profile</Button>
+                                    <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => { Auth.logout(); navigate('/'); }}>Logout</Button>
+                                    <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => navigate('/settings')}>Settings</Button>
+                                </>
+                            )}
+                        </>
+                    )}
+                </Toolbar>
+            </AppBar>
         </ThemeProvider>
     );
 }

@@ -14,6 +14,10 @@ export const GET_USER = gql`
     user(userId: $userId) {
       _id
       username
+      email
+      firstName
+      lastName
+      activityLevel
     }
   }
 `;
@@ -23,6 +27,7 @@ export const GET_AI_PLANS = gql`
     aiPlans(userId: $userId) {
       _id
       userId
+      title
       plan
     }
   }

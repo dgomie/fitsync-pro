@@ -72,11 +72,11 @@ type Workout {
 }
 
 type AIplan {
-  id: ID!
+  _id: ID!
   userId: ID!
+  title: String!
   plan: String!
   createdAt: String!
-  updatedAt: String!
 }
 
 type Auth {
@@ -89,7 +89,7 @@ type Mutation {
     login(username: String!, password: String!): Auth
     removeUser(userId: ID!): User
     updateUser(userId: ID!, updateData: UpdateUserInput!): User
-    createAIplan(userId: ID!, plan: String!): AIplan
+    createAIplan(userId: ID!, plan: String!, title: String!): AIplan
     deleteAIplan(id: ID!): String
   }
 `;
