@@ -16,11 +16,11 @@ const AIHelperPage = () => {
   }, [navigate]);
 
   return (
-    <div style={{ marginTop: "80px", display: "flex", flexDirection: "row", justifyContent: "space-around", alignItems: "center" }}>
+    <div style={{ marginTop: "80px" }}>
       <div style={{ flex: 1 }}>
         <SavedPlansComponent />
       </div>
-      <div style={{ flex: 3 }}>
+      <div style={{ flex: 3, marginBottom: "80px" }}>
         <AIHelperComponent />
       </div>
     </div>

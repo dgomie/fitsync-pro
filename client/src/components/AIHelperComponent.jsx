@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Snackbar, Box, Grid, Button, CircularProgress, Card, CardContent, Typography, Select, MenuItem } from '@mui/material';
+import { Snackbar, Box, Button, CircularProgress, Card, CardContent, Typography, Select, MenuItem } from '@mui/material';
 import axios from 'axios';
 import { useMutation } from '@apollo/client';
 import { CREATE_AI_PLAN } from '../utils/mutations';
@@ -37,6 +37,7 @@ function AIHelperComponent() {
   }, []);
 
   const fetchWorkoutPlan = () => {
+    event.preventDefault();
     setIsLoading(true);
     const postData = {
       age: age,
@@ -102,7 +103,6 @@ function AIHelperComponent() {
   };
 
   const renderWorkoutPlan = (plan) => {
-    // Remove '##' from the start of the plan if it exists
     const cleanedPlan = plan.replace(/^##/, '').trim();
     const sections = cleanedPlan.split('\n\n');
     return sections.map((section, index) => {
@@ -125,46 +125,51 @@ function AIHelperComponent() {
   };
 
   return (
-    <Grid container spacing={2} justifyContent="center" className='mt-5 pt-5'>
-      <Grid item>
-        <Select
-          value={workoutType}
-          onChange={handleWorkoutTypeChange}
-          displayEmpty
-          inputProps={{ 'aria-label': 'Without label' }}
-        >
-          <MenuItem value="" disabled>
-            Select Workout Type
-          </MenuItem>
-          <MenuItem value="Endurance">Endurance</MenuItem>
-          <MenuItem value="Strength">Strength</MenuItem>
-          <MenuItem value="Speed">Speed</MenuItem>
-          <MenuItem value="Flexibility">Flexibility</MenuItem>
-        </Select>
-      </Grid>
-      <Grid item>
-        <Select
-          value={location}
-          onChange={handleLocationChange}
-          displayEmpty
-          inputProps={{ 'aria-label': 'Without label' }}
-        >
-          <MenuItem value="" disabled>
-            Select Workout Location
-          </MenuItem>
-          <MenuItem value="Home">Home</MenuItem>
-          <MenuItem value="Gym">Gym</MenuItem>
-        </Select>
-      </Grid>
-      <Grid item>
-        <Button variant="contained" color="primary" onClick={fetchWorkoutPlan}>
-          Generate Workout Plan
-        </Button>
-      </Grid>
-      {isLoading ? (
-        <CircularProgress color="success"  />
-      ) : data ? (
-        <Grid item xs={12} sm={6} md={8}>
+    <form onSubmit={fetchWorkoutPlan}>
+  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 5, pt: 5 }}>
+    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+    <label style={{ marginRight: '8px' }}>Workout Type:</label>
+    <Select
+      value={workoutType}
+      onChange={handleWorkoutTypeChange}
+      displayEmpty
+      inputProps={{ 'aria-label': 'Without label' }}
+      sx={{ mb: 2 }}
+    >
+      <MenuItem value="" disabled>
+        Select Workout Type
+      </MenuItem>
+      <MenuItem value="Endurance">Endurance</MenuItem>
+      <MenuItem value="Strength">Strength</MenuItem>
+      <MenuItem value="Speed">Speed</MenuItem>
+      <MenuItem value="Flexibility">Flexibility</MenuItem>
+    </Select>
+    </Box>
+
+    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+  <label style={{ marginRight: '8px' }}>Workout Location:</label>
+  <Select
+    value={location}
+    onChange={handleLocationChange}
+    displayEmpty
+    inputProps={{ 'aria-label': 'Without label' }}
+  >
+    <MenuItem value="" disabled>
+      Select Workout Location
+    </MenuItem>
+    <MenuItem value="Home">Home</MenuItem>
+    <MenuItem value="Gym">Gym</MenuItem>
+  </Select>
+</Box>
+
+    <Button type="submit" variant="contained" color="primary" sx={{ mb: 2 }}>
+      Generate Workout Plan
+    </Button>
+
+    {isLoading ? (
+      <CircularProgress color="success" />
+    ) : data ? (
+      <Box sx={{ width: '100%', maxWidth: 600 }}>
         <Card>
           <CardContent>
             <Typography variant="h5" component="div">
@@ -173,20 +178,18 @@ function AIHelperComponent() {
             {renderWorkoutPlan(data.workoutPlan)}
           </CardContent>
           <Box display="flex" justifyContent="center" p={1}>
-          <div>
-      <Button variant="contained" color="primary" onClick={handleSave}>Save Plan</Button>
-      <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
-        <Alert onClose={handleCloseSnackbar} severity={saveSuccess ? "success" : "error"}>
-          {saveSuccess ? "Plan saved successfully!" : "Error saving plan."}
-        </Alert>
-      </Snackbar>
-    </div>
+            <Button variant="contained" color="primary" onClick={handleSave}>Save Plan</Button>
+            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+              <Alert onClose={handleCloseSnackbar} severity={saveSuccess ? "success" : "error"}>
+                {saveSuccess ? "Plan saved successfully!" : "Error saving plan."}
+              </Alert>
+            </Snackbar>
           </Box>
         </Card>
-      </Grid>
-      ) : null}
-    </Grid>
-  );
+      </Box>
+    ) : null}
+  </Box>
+</form> );
 }
 
 export default AIHelperComponent;

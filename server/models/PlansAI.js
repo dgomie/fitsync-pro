@@ -29,7 +29,7 @@ AIplanSchema.pre('save', function(next) {
   const formattedDate = `${month}/${day}/${year}`;
 
   // Append the current date to the title
-  this.title = `${this.title} ${formattedDate}`;
+  this.title = `${this.title} - ${formattedDate}`;
 
   next();
 });
