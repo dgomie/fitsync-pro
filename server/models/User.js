@@ -63,6 +63,9 @@ const userSchema = new Schema(
         ref: "Workout",
       },
     ],
+    profilePicture: {
+      type: String,
+    },
   },
 
   {

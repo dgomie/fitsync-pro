@@ -8,7 +8,9 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const cors = require('cors');
 const { typeDefs, resolvers } = require("./schemas");
 const db = require("./config/connection");
-const upload = require('./config/multerconfig'); // import upload from the config
+const bodyParser = require('body-parser');
+
+const User = require('./models/User');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -17,19 +19,8 @@ const server = new ApolloServer({
   resolvers,
 });
 
-// post route for uploading profile pictures
-app.post('/api/upload', verifyJWT, upload.single('avatar'), async (req, res) => {
-  if (req.file) {
-    const userId = req.userId; // Assuming you have a way to get the user's ID, e.g., from a session or token
-    const pictureUrl = `/uploads/${req.file.filename}`;
-    await updateUserProfilePicture(userId, pictureUrl);
-    res.json({ message: "File uploaded successfully", imageUrl: pictureUrl });
-  } else {
-    res.status(400).send('No file uploaded.');
-  }
-});
-
 app.use('/uploads', express.static('uploads'));
+app.use(bodyParser.json({ limit: '50mb' }));
 
 // Create a new instance of an Apollo server with the GraphQL schema
 const startApolloServer = async () => {
@@ -74,6 +65,23 @@ const startApolloServer = async () => {
       }
     } catch (error) {
       res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  app.post('/upload', async(req, res) => {
+    console.log(req.body)
+    const { avatarUrl, userId } = req.body; 
+    console.log(avatarUrl);
+    try{
+      const updatedUser = await User.findByIdAndUpdate(userId, { profilePicture: avatarUrl }, { new: true });
+      console.log(updatedUser);
+      if (!updatedUser) {
+        return res.status(404).send({ message: 'User not found' });
+      }
+
+      res.status(200).send(updatedUser);
+    } catch (error) {
+      res.status(500).send({ message: 'Error updating user profile picture', error: error.message });
     }
   });
 
