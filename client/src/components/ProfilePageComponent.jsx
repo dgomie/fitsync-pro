@@ -6,6 +6,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 function ProfilePageComponent() {
     const [username, setUsername] = useState('');
+    const [userId, setUserId] = useState('');
 
     // profile picture
     const fileInputRef = useRef(null); // file input
@@ -18,6 +19,7 @@ function ProfilePageComponent() {
     useEffect(() => {
         const profile = AuthService.getProfile();
         setUsername(profile.data.username);
+        setUserId(profile.data._id);
     }, []);
 
     // profile picture handlers
@@ -25,14 +27,38 @@ function ProfilePageComponent() {
         fileInputRef.current.click();
     };
 
+    const uploadImage = async (imageString) => {
+        // console.log(imageString)
+        fetch('http://localhost:3001/upload', {
+            method: 'POST',
+            crossDomain: true,
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            },
+            body: JSON.stringify({
+                avatarUrl: imageString,
+                userId
+            })
+        }).then((res) => res.json())
+            .then((data) => console.log(data))
+            .catch(err => {
+                console.log(err)
+            });
+    }
+
     const handleFileChange = async (event) => {
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                setAvatarUrl(reader.result);
+                // console.log(typeof reader.result);
+                const imageString = reader.result;
+                setAvatarUrl(imageString);
+                uploadImage(imageString);
             };
-            reader.readAsDataURL(file);
+           reader.readAsDataURL(file);
         }
     };
 
@@ -40,62 +66,63 @@ function ProfilePageComponent() {
     return (
         <Grid container spacing={2} padding={2} sx={{ marginTop: '5rem', justifyContent: matches ? 'center' : 'flex-start' }}>
             <Grid item xs={12} md={4}>
-            <Paper elevation={3} sx={{ padding: 2, borderRadius: '5%' }}>
-                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <input
-                        type="file"
-                        ref={fileInputRef}
-                        onChange={handleFileChange}
-                        style={{ display: 'none' }}
-                        accept="image/*"
-                    />
-                    <Box
-                        sx={{ position: 'relative', width: 100, height: 100,
-                            '&:hover': {
-                                '& .editIcon': {
-                                    display: 'flex',
-                                },
-                                '&:hover': {
-                                    filter: 'grayscale(30%) brightness(70%)',
-                                    'svg': {
-                                        fill: '#696969'
-                                    }
-                                }
-                            },
-                        }}
-                        onMouseEnter={() => setIsHovering(true)}
-                        onMouseLeave={() => setIsHovering(false)}
-                    >
-                        <Avatar
-                        alt="Profile Picture"
-                        className="avatar"
+                <Paper elevation={3} sx={{ padding: 2, borderRadius: '5%' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            onChange={handleFileChange}
+                            style={{ display: 'none' }}
+                            accept="image/*"
+                        />
+                        <Box
                             sx={{
-                                width: 100, height: 100, marginBottom: 2, cursor: 'pointer',
+                                position: 'relative', width: 100, height: 100,
+                                '&:hover': {
+                                    '& .editIcon': {
+                                        display: 'flex',
+                                    },
+                                    '&:hover': {
+                                        filter: 'grayscale(30%) brightness(70%)',
+                                        'svg': {
+                                            fill: '#696969'
+                                        }
+                                    }
+                                },
                             }}
-                            onClick={handleAvatarClick}
-                            src={avatarUrl}
+                            onMouseEnter={() => setIsHovering(true)}
+                            onMouseLeave={() => setIsHovering(false)}
                         >
-                            {!avatarUrl && <EditIcon />}
-                        </Avatar>
-                        {avatarUrl && isHovering && (
-                            <EditIcon
-                                className="editIcon"
+                            <Avatar
+                                alt="Profile Picture"
+                                className="avatar"
                                 sx={{
-                                    position: 'absolute',
-                                    top: '50%',
-                                    left: '50%',
-                                    transform: 'translate(-50%, -50%)',
-                                    width: 24,
-                                    height: 24,
-                                    color: 'white',
-                                    zIndex: 2,
-                                    cursor: 'pointer'
+                                    width: 100, height: 100, marginBottom: 2, cursor: 'pointer',
                                 }}
-                            />
-                        )}
-                    </Box> 
-                </Box>
-                <Typography variant="h6" sx={{ textAlign: 'center', padding: '1rem', fontWeight: 'bold' }}>{username}</Typography>
+                                onClick={handleAvatarClick}
+                                src={avatarUrl}
+                            >
+                                {!avatarUrl && <EditIcon />}
+                            </Avatar>
+                            {avatarUrl && isHovering && (
+                                <EditIcon
+                                    className="editIcon"
+                                    sx={{
+                                        position: 'absolute',
+                                        top: '50%',
+                                        left: '50%',
+                                        transform: 'translate(-50%, -50%)',
+                                        width: 24,
+                                        height: 24,
+                                        color: 'white',
+                                        zIndex: 2,
+                                        cursor: 'pointer'
+                                    }}
+                                />
+                            )}
+                        </Box>
+                    </Box>
+                    <Typography variant="h6" sx={{ textAlign: 'center', padding: '1rem', fontWeight: 'bold' }}>{username}</Typography>
                 </Paper>
             </Grid>
             <Grid item xs={12} md={8} container spacing={2}>
@@ -104,12 +131,12 @@ function ProfilePageComponent() {
                         <Box sx={{ textAlign: 'center', height: '300px' }}>
                             <Typography variant="h6" sx={{ fontWeight: 'bold' }}>My Workouts</Typography>
                             <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-                            <Typography sx={{ color: 'grey', opacity: 0.5 }}>No current workouts...</Typography>
-                            <Button variant="contained" sx={{
-                                mt: 1, backgroundColor: '#46563c', '&:hover': {
-                                    backgroundColor: '#869f76',
-                                }
-                            }}>+ add workouts</Button>
+                                <Typography sx={{ color: 'grey', opacity: 0.5 }}>No current workouts...</Typography>
+                                <Button variant="contained" sx={{
+                                    mt: 1, backgroundColor: '#46563c', '&:hover': {
+                                        backgroundColor: '#869f76',
+                                    }
+                                }}>+ add workouts</Button>
                             </Box>
                         </Box>
                     </Paper>
@@ -117,7 +144,7 @@ function ProfilePageComponent() {
                 <Grid item xs={12}>
                     <Paper elevation={3} sx={{ padding: 2 }}>
                         <Box sx={{ textAlign: 'center', height: '300px', }}>
-                            <Typography variant="h6" sx={{ fontWeight: 'bold'}}>My Meals</Typography>
+                            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>My Meals</Typography>
                             <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
                                 <Typography sx={{ color: 'grey', opacity: 0.5 }}>No current meals...</Typography>
                                 <Button variant="contained" sx={{

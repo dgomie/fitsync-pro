@@ -10,6 +10,7 @@ const typeDefs = `
     activityLevel: String
     nutrition: Nutrition
     workouts: [Workout]
+    profilePicture: String
   }
 
   type Nutrition {
@@ -69,6 +70,7 @@ type Workout {
   dateOfBirth: String
   weight: Int
   activityLevel: String
+  profilePicture: String
 }
 
 type AIplan {
