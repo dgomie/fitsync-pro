@@ -15,6 +15,7 @@ import axios from "axios";
 import { useMutation } from "@apollo/client";
 import { CREATE_AI_PLAN } from "../utils/mutations";
 import MuiAlert from "@mui/material/Alert";
+import { usePlans } from "../context/plans-context"; // Import the context
 
 function AIHelperComponent() {
   const [data, setData] = useState(null);
@@ -28,6 +29,7 @@ function AIHelperComponent() {
   const [createAIplan] = useMutation(CREATE_AI_PLAN);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const { plans, setPlans } = usePlans(); // Use the context
 
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -57,9 +59,9 @@ function AIHelperComponent() {
     };
 
     const hostUrl = import.meta.env.VITE_HOST_URL;
-    const apiUrl = import.meta.env.VITE_AI_ENDPOINT_URL
-    const endpoint = `${hostUrl}${apiUrl}`
-    
+    const apiUrl = import.meta.env.VITE_AI_ENDPOINT_URL;
+    const endpoint = `${hostUrl}${apiUrl}`;
+
     axios
       .post(endpoint, postData, {
         headers: {
@@ -100,6 +102,8 @@ function AIHelperComponent() {
         setSaveSuccess(true);
         setOpenSnackbar(true);
         console.log("Plan created successfully", response);
+        const newPlan = response.data.createAIplan;
+        setPlans((prevPlans) => [...prevPlans, newPlan]); // Update the plans context
       })
       .catch((error) => {
         setSaveSuccess(false);
