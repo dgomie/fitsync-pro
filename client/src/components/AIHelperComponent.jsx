@@ -55,10 +55,11 @@ function AIHelperComponent() {
       workoutType: workoutType,
       location: location,
     };
-    const urlEndpoint = import.meta.env.VITE_AI_ENDPOINT_URL
+
     const hostUrl = import.meta.env.VITE_HOST_URL;
-    const endpoint = `${hostUrl}${urlEndpoint}`
-    console.log("api endpoint:", endpoint)
+    const apiUrl = import.meta.env.VITE_AI_ENDPOINT_URL
+    const endpoint = `${hostUrl}${apiUrl}`
+    
     axios
       .post(endpoint, postData, {
         headers: {

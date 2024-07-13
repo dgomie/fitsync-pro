@@ -17,28 +17,12 @@ function ProfilePageComponent() {
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.down('sm'));
     
-    // Function to fetch user image
-    function getImage(userId) {
-        console.log(userId);
-        if (!userId) return;
-
-        fetch(`http://localhost:3001/profileImage/${userId}`, {
-            method: 'GET',
-        })
-        .then((res) => res.json())
-        .then((data) => {
-            // console.log(data);
-            setAvatarUrl(data.data.profilePicture);
-        })
-        .catch((error) => console.error('Error fetching image:', error));
-    }
  
     useEffect(() => {
             const profile = AuthService.getProfile();
             setUsername(profile.data.username);
             setUserId(profile.data._id);
             getImage(profile.data._id);
-            // console.log(profile);
       }, []);
 
 
@@ -47,9 +31,23 @@ function ProfilePageComponent() {
         fileInputRef.current.click();
     };
 
+    // Function to fetch user image
+    function getImage(userId) {
+        if (!userId) return;
+        const hostUrl = import.meta.env.VITE_HOST_URL;
+        fetch(`${hostUrl}/profileImage/${userId}`, {
+            method: 'GET',
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            setAvatarUrl(data.data.profilePicture);
+        })
+        .catch((error) => console.error('Error fetching image:', error));
+    }
+
     const uploadImage = async (imageString) => {
-        // console.log(imageString)
-        fetch('http://localhost:3001/upload', {
+        const hostUrl = import.meta.env.VITE_HOST_URL;
+        fetch(`${hostUrl}/upload`, {
             method: 'POST',
             crossDomain: true,
             headers: {
@@ -73,7 +71,6 @@ function ProfilePageComponent() {
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                // console.log(typeof reader.result);
                 const imageString = reader.result;
                 setAvatarUrl(imageString);
                 uploadImage(imageString);
