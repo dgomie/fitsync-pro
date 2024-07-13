@@ -4,6 +4,7 @@ import AuthService from '../utils/auth';
 import { useState, useEffect, useRef } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 
+
 function ProfilePageComponent() {
     const [username, setUsername] = useState('');
     const [userId, setUserId] = useState('');
@@ -15,12 +16,31 @@ function ProfilePageComponent() {
 
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.down('sm'));
+    
+    // Function to fetch user image
+    function getImage(userId) {
+        console.log(userId);
+        if (!userId) return;
 
+        fetch(`http://localhost:3001/profileImage/${userId}`, {
+            method: 'GET',
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            // console.log(data);
+            setAvatarUrl(data.data.profilePicture);
+        })
+        .catch((error) => console.error('Error fetching image:', error));
+    }
+ 
     useEffect(() => {
-        const profile = AuthService.getProfile();
-        setUsername(profile.data.username);
-        setUserId(profile.data._id);
-    }, []);
+            const profile = AuthService.getProfile();
+            setUsername(profile.data.username);
+            setUserId(profile.data._id);
+            getImage(profile.data._id);
+            // console.log(profile);
+      }, []);
+
 
     // profile picture handlers
     const handleAvatarClick = () => {
