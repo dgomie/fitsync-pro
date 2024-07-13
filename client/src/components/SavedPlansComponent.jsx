@@ -24,13 +24,9 @@ function SavedPlansComponent() {
     }
   }, [data]);
 
+
   if (loading) return <CircularProgress />;
   if (error) return <p>Error :(</p>;
-
-  // Calculate the current plans to display
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentPlans = plans.slice(indexOfFirstItem, indexOfLastItem);
 
   const handleOpenModal = (plan) => {
     setSelectedPlan(plan);
@@ -42,7 +38,7 @@ function SavedPlansComponent() {
       deleteAIplan({ variables: { id: selectedPlan._id } })
         .then(response => {
           console.log('Plan deleted successfully:', response);
-          const deletedPlanId = response.data.deleteAIplan._id;
+          const deletedPlanId = response.data.deleteAIplan;
           const updatedPlans = plans.filter(plan => plan._id !== deletedPlanId);
           setPlans(updatedPlans);
           handleCloseModal();
@@ -102,7 +98,7 @@ function SavedPlansComponent() {
         <Typography variant="h6" component="h2" align="center">
           Your Saved Workouts
         </Typography>
-        {currentPlans.map((plan) => (
+        {plans.map((plan) => (
           <Grid item key={plan._id} onClick={() => handleOpenModal(plan)}>
             <Card className='cardHoverEffect'>
               <CardContent>

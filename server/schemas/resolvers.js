@@ -76,7 +76,7 @@ const resolvers = {
     },
     deleteAIplan: async (_, { id }) => {
       await PlansAI.findByIdAndDelete(id);
-      return `AIplan with ID ${id} was deleted successfully.`;
+      return id;
     },
   }
 }
