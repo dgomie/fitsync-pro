@@ -69,9 +69,9 @@ const startApolloServer = async () => {
   });
 
   app.post('/upload', async(req, res) => {
-    console.log(req.body)
+    // console.log(req.body)
     const { avatarUrl, userId } = req.body; 
-    console.log(avatarUrl);
+    // console.log(avatarUrl);
     try{
       const updatedUser = await User.findByIdAndUpdate(userId, { profilePicture: avatarUrl }, { new: true });
       console.log(updatedUser);
@@ -82,6 +82,23 @@ const startApolloServer = async () => {
       res.status(200).send(updatedUser);
     } catch (error) {
       res.status(500).send({ message: 'Error updating user profile picture', error: error.message });
+    }
+  });
+
+  app.get('/profileImage/:id', async (req, res) => {
+    const { id } = req.params; // id is now the avatarUrl passed in the URL
+  
+    try {
+      const user = await User.findOne({ _id: id });
+      // console.log(user.profilePicture, "profilepic")
+      if (!user) {
+        return res.status(404).json({ status: 'error', message: 'User not found' });
+      }
+  
+      res.status(200).json({ status: 'ok', data: user });
+    } catch (err) {
+      console.error('Error fetching user:', err);
+      res.status(500).json({ status: 'error', message: err.message });
     }
   });
 
