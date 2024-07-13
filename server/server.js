@@ -69,12 +69,10 @@ const startApolloServer = async () => {
   });
 
   app.post('/upload', async(req, res) => {
-    // console.log(req.body)
     const { avatarUrl, userId } = req.body; 
-    // console.log(avatarUrl);
+
     try{
       const updatedUser = await User.findByIdAndUpdate(userId, { profilePicture: avatarUrl }, { new: true });
-      console.log(updatedUser);
       if (!updatedUser) {
         return res.status(404).send({ message: 'User not found' });
       }
@@ -90,7 +88,6 @@ const startApolloServer = async () => {
   
     try {
       const user = await User.findOne({ _id: id });
-      // console.log(user.profilePicture, "profilepic")
       if (!user) {
         return res.status(404).json({ status: 'error', message: 'User not found' });
       }
