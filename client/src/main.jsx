@@ -1,5 +1,6 @@
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { PlansProvider } from './context/plans-context.jsx';
 
 import App from './App.jsx'
 import HomePage from './pages/HomePage';
@@ -60,7 +61,10 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <RouterProvider router={router} />
+  <PlansProvider>
+      <RouterProvider router={router} />
+  </PlansProvider>
+
 );
 
 

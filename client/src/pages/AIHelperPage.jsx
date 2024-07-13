@@ -22,11 +22,11 @@ const AIHelperPage = () => {
 
   return (
     <div style={{ marginTop: "80px" }}>
-      <div style={{ flex: 1 }}>
-        <SavedPlansComponent />
-      </div>
       <div style={{ flex: 3, marginBottom: "80px" }}>
         <AIHelperComponent />
+      </div>
+      <div style={{ flex: 1 }}>
+        <SavedPlansComponent />
       </div>
     </div>
   );
