@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, Button, ThemeProvider, createTheme, useMediaQuery, IconButton, Menu, MenuItem, useScrollTrigger, Box } from '@mui/material';
+import { useState } from 'react';
+import { AppBar, Toolbar, Typography, Button, ThemeProvider, createTheme, useMediaQuery, IconButton, Menu, MenuItem} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Auth from '../utils/auth';
@@ -10,20 +10,7 @@ const theme = createTheme({
         }
     }
 });
-const BlurOnScroll = ({ children }) => {
-    const trigger = useScrollTrigger({
-        disableHysteresis: true,
-        threshold: 0
-    });
-    return React.cloneElement(children, {
-        elevation: trigger ? 4 : 0,
-        sx: {
-            background: trigger ? 'rgba(255, 255, 255, 0.8)' : 'rgba(147, 168, 126, 1)', // original color when not scrolled
-            backdropFilter: trigger ? 'blur(10px)' : 'none',
-            transition: 'background 0.3s, backdrop-filter 0.3s',
-        },
-    });
-};
+
 function Nav() {
     const navigate = useNavigate(); // navigates pages
     const location = useLocation();
@@ -75,9 +62,12 @@ function Nav() {
                                 {isLoggedIn && (
                                     <>
                                         <MenuItem onClick={() => { handleClose(); navigate('/about-us'); }}>About Us</MenuItem>
+                                        <MenuItem onClick={() => { handleClose(); navigate('/workout'); }}>Workout</MenuItem>
+                                        <MenuItem onClick={() => { handleClose(); navigate('/fit-ai'); }}>Fit-AI</MenuItem>
                                         <MenuItem onClick={() => { handleClose(); navigate('/profile'); }}>Profile</MenuItem>
+                                        <MenuItem onClick={() => { handleClose(); navigate('/settings'); }}>Settings</MenuItem>
                                         <MenuItem onClick={() => { Auth.logout(); handleClose(); navigate('/'); }}>Logout</MenuItem>
-                                        <menuItem onClick={() => { handleClose(); navigate('/settings'); }}>Settings</menuItem>
+                                        
                                     </>
                                 )}
                             </Menu>
@@ -90,9 +80,12 @@ function Nav() {
                             {isLoggedIn && (
                                 <>
                                     <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => navigate('/about-us')}>About Us</Button>
+                                    <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => navigate('/workout')}>Workout</Button>
+                                    <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => navigate('/fit-ai')}>Fit-AI</Button>
                                     <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => navigate('/profile')}>Profile</Button>
-                                    <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => { Auth.logout(); navigate('/'); }}>Logout</Button>
                                     <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => navigate('/settings')}>Settings</Button>
+                                    <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => { Auth.logout(); navigate('/'); }}>Logout</Button>
+                                    
                                 </>
                             )}
                         </>
