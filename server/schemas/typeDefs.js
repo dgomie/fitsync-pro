@@ -34,7 +34,7 @@ const typeDefs = `
 type Workout {
   _id: ID!
   userId: ID!
-  exercises: [Exercise!]!
+  workoutTitle: String!
   duration: Int!
   caloriesBurned: Int!
   createdAt: String!
@@ -50,6 +50,7 @@ type Workout {
     users: [User]
     user(userId: ID!): User
     aiPlans(userId: ID!): [AIplan]
+    workouts(userId: ID!): [Workout!]!
   }
 
   input NewUserInput {
@@ -73,6 +74,27 @@ type Workout {
   profilePicture: String
 }
 
+input ExerciseInput {
+  name: String!
+  sets: Int!
+  reps: Int!
+  weight: Int
+}
+
+input CreateWorkoutInput {
+  userId: ID!
+  workoutTitle: String!
+  duration: Int!
+  caloriesBurned: Int!
+}
+
+input UpdateWorkoutInput {
+  workoutTitle: String
+  duration: Int
+  caloriesBurned: Int
+}
+
+
 type AIplan {
   _id: ID!
   userId: ID!
@@ -92,7 +114,10 @@ type Mutation {
     removeUser(userId: ID!): User
     updateUser(userId: ID!, updateData: UpdateUserInput!): User
     createAIplan(userId: ID!, plan: String!, title: String!): AIplan
-    deleteAIplan(id: ID!): String
+    deleteAIplan(id: ID!): ID!
+    createWorkout(input: CreateWorkoutInput!): Workout
+    deleteWorkout(id: ID!): ID!
+    updateWorkout(id: ID!, input: UpdateWorkoutInput!): Workout
   }
 `;
 
