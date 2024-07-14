@@ -1,13 +1,108 @@
-
-import { Grid, Paper, Avatar, Typography, Button, Box, useMediaQuery, useTheme } from '@mui/material';
+// on reload we need the workouts to stay and save with user
+import React from 'react';
+import { Grid, Paper, Avatar, Typography, Box, useMediaQuery, useTheme, TextField, Button } from '@mui/material';
 import AuthService from '../utils/auth';
 import { useState, useEffect, useRef } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
 
+// chart js
+import { Line } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+
+function WorkoutGraph({ workouts }) {
+    const [chartData, setChartData] = useState({
+      labels: [],
+      datasets: [
+        {
+          label: 'Number of Workouts',
+          data: [],
+          borderColor: 'rgb(70, 86, 60)',
+          backgroundColor: 'rgba(134, 159, 118, 0.5)',
+        },
+      ],
+    });
+
+    const options = {
+      scales: {
+        x: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Number of Workouts'
+            }
+          },
+        y:
+        {
+            type: 'linear', 
+            ticks: {
+              stepSize: 1,
+              min: 1, 
+              max: 30, 
+              callback: function(value) {
+                if (value % 1 === 0) { 
+                  return value;
+                }
+              }
+            },
+          title: {
+            display: true,
+            text: 'Date'
+          }
+        },
+      },
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: 'Last 30 Days'
+        }
+      }
+    };
+  
+    return <Line data={chartData} options={options} />;
+}
 
 function ProfilePageComponent() {
     const [username, setUsername] = useState('');
     const [userId, setUserId] = useState('');
+    
+    // Date states for calender
+    const [newEventTitle, setNewEventTitle] = React.useState('');
+    const [newEventDate, setNewEventDate] = React.useState('');
+    const [events, setEvents] = React.useState('');
+    const [dateError, setDateError] = useState('');
+
+    const [workouts, setWorkouts] = useState([]);
+
+    // event handler that checks for date validation when adding a workout to the calender
+    const handleAddEvent = () => {
+        const currentDate = new Date();
+        const currentYear = new Date().getFullYear();
+        const eventYear = newEventDate.split('-')[0];
+        const newEvent = { title: newEventTitle, date: newEventDate };
+        const eventDate = new Date(newEventDate);
+
+        if (eventDate < currentDate) {
+            setDateError('Invalid date');
+            return; 
+        }
+
+        setEvents([...events, newEvent]);
+        // Reset form
+        if (parseInt(eventYear, 10) !== currentYear) {
+            setDateError('You can only add workouts for the current year.');
+            return;
+        }
+        setDateError('');
+        setNewEventTitle('');
+        setNewEventDate('');
+    };
 
     // profile picture
     const fileInputRef = useRef(null); // file input
@@ -16,14 +111,14 @@ function ProfilePageComponent() {
 
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.down('sm'));
-    
- 
+
+
     useEffect(() => {
-            const profile = AuthService.getProfile();
-            setUsername(profile.data.username);
-            setUserId(profile.data._id);
-            getImage(profile.data._id);
-      }, []);
+        const profile = AuthService.getProfile();
+        setUsername(profile.data.username);
+        setUserId(profile.data._id);
+        getImage(profile.data._id);
+    }, []);
 
 
     // profile picture handlers
@@ -38,13 +133,14 @@ function ProfilePageComponent() {
         fetch(`${hostUrl}/profileImage/${userId}`, {
             method: 'GET',
         })
-        .then((res) => res.json())
-        .then((data) => {
-            setAvatarUrl(data.data.profilePicture);
-        })
-        .catch((error) => console.error('Error fetching image:', error));
+            .then((res) => res.json())
+            .then((data) => {
+                setAvatarUrl(data.data.profilePicture);
+            })
+            .catch((error) => console.error('Error fetching image:', error));
     }
 
+    // function to upload user image
     const uploadImage = async (imageString) => {
         const hostUrl = import.meta.env.VITE_HOST_URL;
         fetch(`${hostUrl}/upload`, {
@@ -66,6 +162,7 @@ function ProfilePageComponent() {
             });
     }
 
+    // handler for file changes
     const handleFileChange = async (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -75,12 +172,36 @@ function ProfilePageComponent() {
                 setAvatarUrl(imageString);
                 uploadImage(imageString);
             };
-           reader.readAsDataURL(file);
+            reader.readAsDataURL(file);
         }
     };
 
 
     return (
+        <>
+        {/* FullCalendar styling (does not use material ui) */}
+        <style>
+        {`
+        .fc .fc-button-primary {
+            background-color: #46563c; /* New primary button color */
+            border-color: #46563c; /* New primary button border color */
+            color: white; /* Text color */
+        }
+        .fc .fc-button-primary:hover {
+            background-color: #869f76; /* New hover state color */
+            border-color: #869f76; /* New hover state border color */
+        }
+        .fc-daygrid-day-number {
+            color: #46563c !important;
+        }
+        .fc .fc-col-header-cell-cushion {
+            color: #46563c;
+        }
+        .fc .fc-day-today {
+            background-color: #ddf2d1 !important;
+        }
+        `}
+    </style> 
         <Grid container spacing={2} padding={2} sx={{ marginTop: '5rem', justifyContent: matches ? 'center' : 'flex-start' }}>
             <Grid item xs={12} md={4}>
                 <Paper elevation={3} sx={{ padding: 2, borderRadius: '5%' }}>
@@ -135,47 +256,58 @@ function ProfilePageComponent() {
                                         zIndex: 2,
                                         cursor: 'pointer'
                                     }}
-                                    onClick={handleAvatarClick}
+
                                 />
                             )}
                         </Box>
                     </Box>
                     <Typography variant="h6" sx={{ textAlign: 'center', padding: '1rem', fontWeight: 'bold' }}>{username}</Typography>
+                    <WorkoutGraph workouts={workouts} /> 
                 </Paper>
             </Grid>
             <Grid item xs={12} md={8} container spacing={2}>
                 <Grid item xs={12}>
                     <Paper elevation={3} sx={{ padding: 2 }}>
-                        <Box sx={{ textAlign: 'center', height: '300px' }}>
-                            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>My Workouts</Typography>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-                                <Typography sx={{ color: 'grey', opacity: 0.5 }}>No current workouts...</Typography>
-                                <Button variant="contained" sx={{
-                                    mt: 1, backgroundColor: '#46563c', '&:hover': {
-                                        backgroundColor: '#869f76',
-                                    }
-                                }}>+ add workouts</Button>
-                            </Box>
-                        </Box>
-                    </Paper>
-                </Grid>
-                <Grid item xs={12}>
-                    <Paper elevation={3} sx={{ padding: 2 }}>
-                        <Box sx={{ textAlign: 'center', height: '300px', }}>
-                            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>My Meals</Typography>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-                                <Typography sx={{ color: 'grey', opacity: 0.5 }}>No current meals...</Typography>
-                                <Button variant="contained" sx={{
-                                    mt: 1, backgroundColor: '#46563c', '&:hover': {
-                                        backgroundColor: '#869f76'
-                                    }
-                                }}>+ add meals</Button>
-                            </Box>
+                        <FullCalendar
+                            key={events.length}
+                            plugins={[dayGridPlugin]}
+                            initialView="dayGridMonth"
+                            weekends={true}
+                            events={events}
+                        />
+                        <Box component="form" onSubmit={(e) => e.preventDefault()} sx={{ marginTop: 2 }}>
+                            <TextField
+                                label="Workout Title"
+                                type="title"
+                                value={newEventTitle}
+                                onChange={(e) => setNewEventTitle(e.target.value)}
+                                sx={{ margin: '1rem' }}
+                            />
+                            <TextField
+                                label="Workout Date"
+                                type="date"
+                                value={newEventDate}
+                                onChange={(e) => setNewEventDate(e.target.value)}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                sx={{ margin: '1rem', maxWidth: '17rem', width: '17rem' }}
+                                helperText={dateError}
+                            />
+                            <Button onClick={handleAddEvent} sx={{ 
+                                margin: '1rem', 
+                                marginTop: '1.5rem', 
+                                backgroundColor: '#46563c', 
+                                '&:hover': {
+                                backgroundColor: '#869f76'
+                                }, 
+                                color: 'white' }}> + Add Workout</Button>
                         </Box>
                     </Paper>
                 </Grid>
             </Grid>
         </Grid>
+        </>
     );
 }
 
