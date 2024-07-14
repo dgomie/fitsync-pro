@@ -1,7 +1,8 @@
 
 import WelcomeComponent from "../components/WelcomeComponent";
 import { styled } from '@mui/material/styles';
-import GetStartedBtn from "../components/GetStartedBtn";
+import GetStartedPage from "../components/GetStarted";
+import { useRef } from 'react';
 
 const WelcomeDiv = styled('div')({
   display: 'flex',
@@ -12,12 +13,19 @@ const WelcomeDiv = styled('div')({
 
 
 function HomePage() {
+  const getStartedRef = useRef(null);
+  const scrollToGetStarted = () => {
+    getStartedRef.current?.scrollIntoView({ behavior: 'smooth' });
+
+  };
     return (
       <>
     <WelcomeDiv>
-    <WelcomeComponent />
+    <WelcomeComponent scrollToGetStarted={scrollToGetStarted}/>
     </WelcomeDiv>
-    <GetStartedBtn />
+    <div ref={getStartedRef}>
+        <GetStartedPage />
+      </div>
     </>
     );
   }
