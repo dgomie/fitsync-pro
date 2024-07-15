@@ -1135,6 +1135,11 @@ a:hover {
   cursor: pointer; /* Change cursor to pointer */
 }
 
+.planButtons { 
+  display: 'flex';
+  justify-content: 'center';
+  margin-top: '20px' 
+}
 
 
 

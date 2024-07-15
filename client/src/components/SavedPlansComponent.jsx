@@ -25,6 +25,20 @@ function SavedPlansComponent() {
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [deleteAIplan] = useMutation(DELETE_AI_PLAN);
   const { plans, setPlans } = usePlans(); // Use the context
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentPlans = plans.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handleNextPage = () => {
+    setCurrentPage(currentPage + 1);
+  };
+
+  const handlePreviousPage = () => {
+    setCurrentPage(currentPage - 1);
+  };
 
   useEffect(() => {
     if (data && data.aiPlans) {
@@ -110,7 +124,7 @@ function SavedPlansComponent() {
   };
 
   return (
-    <>
+    <div className="mb-4">
       <Box
         container
         spacing={2}
@@ -121,19 +135,51 @@ function SavedPlansComponent() {
         <Typography variant="h6" component="h2" align="center">
           Your Saved Workouts
         </Typography>
-        <div className="scroll-container">
-        {plans.map((plan) => (
-          <Box item key={plan._id} onClick={() => handleOpenModal(plan)}>
-            <Card className="cardHoverEffect plan-card">
-              <CardContent>
-                <Typography variant="body2" component="h2">
-                  {plan.title}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Box>
-        ))}
-        </div>
+        {currentPlans.length > 0 ? (
+          <>
+          <div className="scroll-container">
+            {currentPlans.map((plan) => (
+              <Box item key={plan._id} onClick={() => handleOpenModal(plan)}>
+                <Card className="cardHoverEffect plan-card">
+                  <CardContent>
+                    <Typography variant="body2" component="h2">
+                      {plan.title}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Box>
+            ))}
+          </div>
+           <div
+           style={{
+             display: "flex",
+             justifyContent: "center",
+             marginTop: "20px",
+           }}
+         >
+           <Button onClick={handlePreviousPage} disabled={currentPage === 1}>
+             Previous
+           </Button>
+           <Button
+             onClick={handleNextPage}
+             disabled={currentPage === Math.ceil(plans.length / itemsPerPage)}
+           >
+             Next
+           </Button>
+         </div>
+         </>
+
+        ) : (
+          <div
+            className="scroll-container"
+            style={{ justifyContent: "center", display: "flex" }}
+          >
+            <Typography variant="subtitle1" align="center">
+              You have no saved Fit-AI workouts.
+            </Typography>
+          </div>
+        )}
+       
       </Box>
       <Modal
         open={openModal}
@@ -162,7 +208,7 @@ function SavedPlansComponent() {
           </Box>
         </Box>
       </Modal>
-    </>
+    </div>
   );
 }
 
