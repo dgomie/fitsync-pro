@@ -61,3 +61,31 @@ export const DELETE_AI_PLAN = gql`
     deleteAIplan(id: $id)
   }
 `;
+
+export const CREATE_WORKOUT = gql`
+  mutation createWorkout($input: WorkoutInput!) {
+    createWorkout(input: $input) {
+      _id
+      workoutTitle
+      duration
+      caloriesBurned
+    }
+  }
+`;
+
+export const DELETE_WORKOUT = gql`
+  mutation deleteWorkout($id: ID!) {
+    deleteWorkout(id: $id)
+  }
+`;
+
+export const UPDATE_WORKOUT = gql`
+  mutation updateWorkout($id: ID!, $input: WorkoutInput!) {
+    updateWorkout(id: $id, input: $input) {
+      _id
+      workoutTitle
+      duration
+      caloriesBurned
+    }
+  }
+`;

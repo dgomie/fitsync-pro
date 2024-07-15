@@ -14,6 +14,10 @@ const resolvers = {
     aiPlans: async (parent, { userId }) => {
       return await PlansAI.find({ userId: userId }).sort({ createdAt: -1 });
     },
+
+    workouts: async (parent, { userId }) => {
+      return await Workout.find({ userId: userId }).sort({ createdAt: -1 });
+    },
     
   },
 
@@ -77,6 +81,34 @@ const resolvers = {
     deleteAIplan: async (_, { id }) => {
       await PlansAI.findByIdAndDelete(id);
       return id;
+    },
+    createWorkout: async (_, { input }) => {
+      try {
+        const newWorkout = new Workout(input);
+        const savedWorkout = await newWorkout.save();
+        return savedWorkout;
+      } catch (error) {
+        console.error(error);
+        throw new Error('Failed to create workout');
+      }
+    },
+
+    deleteWorkout: async (_, { id }) => {
+      await Workout.findByIdAndDelete(id);
+      return id;
+    },
+
+    updateWorkout: async (_, { id, input }) => {
+      try {
+        const updatedWorkout = await Workout.findByIdAndUpdate(id, input, { new: true });
+        if (!updatedWorkout) {
+          throw new Error('Workout not found');
+        }
+        return updatedWorkout;
+      } catch (error) {
+        console.error(error);
+        throw new Error('Failed to update workout');
+      }
     },
   }
 }
