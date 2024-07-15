@@ -35,8 +35,9 @@ type Workout {
   _id: ID!
   userId: ID!
   workoutTitle: String!
-  duration: Int!
-  caloriesBurned: Int!
+  dateOfWorkout: String!
+  duration: Int
+  caloriesBurned: Int
   createdAt: String!
   updatedAt: String!
   }
@@ -82,14 +83,16 @@ input ExerciseInput {
 }
 
 input CreateWorkoutInput {
-  userId: ID!
+  userId: String!
   workoutTitle: String!
-  duration: Int!
-  caloriesBurned: Int!
+  dateOfWorkout: String!
+  duration: Int
+  caloriesBurned: Int
 }
 
 input UpdateWorkoutInput {
   workoutTitle: String
+  dateOfWorkout: String
   duration: Int
   caloriesBurned: Int
 }

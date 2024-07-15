@@ -67,6 +67,7 @@ export const CREATE_WORKOUT = gql`
     createWorkout(input: $input) {
       _id
       workoutTitle
+      dateofWorkout
       duration
       caloriesBurned
     }
@@ -84,6 +85,7 @@ export const UPDATE_WORKOUT = gql`
     updateWorkout(id: $id, input: $input) {
       _id
       workoutTitle
+      dateofWorkout
       duration
       caloriesBurned
     }
