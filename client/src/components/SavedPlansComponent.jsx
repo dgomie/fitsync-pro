@@ -157,12 +157,13 @@ function SavedPlansComponent() {
              marginTop: "20px",
            }}
          >
-           <Button onClick={handlePreviousPage} disabled={currentPage === 1}>
+           <Button onClick={handlePreviousPage} disabled={currentPage === 1} color="success">
              Previous
            </Button>
            <Button
              onClick={handleNextPage}
              disabled={currentPage === Math.ceil(plans.length / itemsPerPage)}
+             color="success"
            >
              Next
            </Button>
