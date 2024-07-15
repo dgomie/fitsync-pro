@@ -13,6 +13,7 @@ import {
   FormControl,
   FormHelperText,
   TextField,
+  Paper
 } from "@mui/material";
 import axios from "axios";
 import { useMutation } from "@apollo/client";
@@ -195,6 +196,7 @@ function AIHelperComponent() {
   };
 
   return (
+    <Paper elevation={3} sx={{ padding: 2, borderRadius: '15px' }}>
     <form onSubmit={handleSubmit}>
       <Box
         sx={{
@@ -311,7 +313,7 @@ function AIHelperComponent() {
           <CircularProgress color="success" />
         ) : data ? (
           <Box sx={{ width: "100%", maxWidth: 600 }}>
-            <Card>
+            <Card elevation={3} sx={{ padding: 2, borderRadius: '15px' }}>
               <CardContent>
                 <Typography variant="h5" component="div">
                   Your Workout Plan
@@ -328,7 +330,7 @@ function AIHelperComponent() {
                 </Button>
                 <Snackbar
                   open={openSnackbar}
-                  autoHideDuration={6000}
+                  autoHideDuration={3000}
                   onClose={handleCloseSnackbar}
                 >
                   <Alert
@@ -346,6 +348,7 @@ function AIHelperComponent() {
         ) : null}
       </Box>
     </form>
+    </Paper>
   );
 }
 

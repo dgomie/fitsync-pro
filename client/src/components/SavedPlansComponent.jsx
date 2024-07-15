@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import {
-  Grid,
+  Paper,
   Card,
   CardContent,
   Typography,
@@ -142,13 +142,14 @@ function SavedPlansComponent() {
   };
 
   return (
-    <div className="mb-4">
+    <Paper Paper elevation={3} sx={{ padding: 2, borderRadius: '15px', marginBottom: '25px' }}>
       <Box
         container
         spacing={2}
         justifyContent="center"
         className="mt-5 pt-5"
         direction="column"
+        Paper elevation={3} sx={{ padding: 2, borderRadius: '15px' }}
       >
         <Typography variant="h6" component="h2" align="center">
           Your Saved Workouts
@@ -228,7 +229,7 @@ function SavedPlansComponent() {
           </Box>
         </Box>
       </Modal>
-    </div>
+    </Paper>
   );
 }
 
