@@ -25,7 +25,7 @@ function AIHelperComponent() {
   const [isLoading, setIsLoading] = useState(false);
   const [workoutType, setWorkoutType] = useState("");
   const [location, setLocation] = useState("");
-  const [week, setWeek] = useState("");
+  const [week, setWeek] = useState(1);
   const [bodyPart, setBodyPart] = useState("");
   const [token, setToken] = useState("");
   const [userId, setId] = useState("");
@@ -299,7 +299,7 @@ function AIHelperComponent() {
             style={{ marginRight: "8px", marginBottom: "2px" }}
           />
           {errors.week && (
-            <FormHelperText>Please select an option.</FormHelperText>
+            <FormHelperText>Please select an week.</FormHelperText>
           )}
         </FormControl>
 

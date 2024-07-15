@@ -22,7 +22,7 @@ const AIHelperPage = () => {
 
   return (
     <div style={{ marginTop: "80px" }}>
-      <div style={{ flex: 3, marginBottom: "80px" }}>
+      <div style={{ flex: 3, marginBottom: "40px" }}>
         <AIHelperComponent />
       </div>
       <div style={{ flex: 1 }}>
