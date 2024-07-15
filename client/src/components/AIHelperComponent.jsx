@@ -24,6 +24,7 @@ function AIHelperComponent() {
   const [isLoading, setIsLoading] = useState(false);
   const [workoutType, setWorkoutType] = useState("");
   const [location, setLocation] = useState("");
+  const [feeling, setFeelingType] = useState("");
   const [token, setToken] = useState("");
   const [userId, setId] = useState("");
   const [age, setAge] = useState(null);
@@ -59,6 +60,7 @@ function AIHelperComponent() {
       currentShape: activityLevel,
       workoutType: workoutType,
       location: location,
+      feeling: feeling
     };
 
     const hostUrl = import.meta.env.VITE_HOST_URL;
@@ -86,6 +88,11 @@ function AIHelperComponent() {
   const handleWorkoutTypeChange = (event) => {
     setWorkoutType(event.target.value);
     if (event.target.value) setErrors(prev => ({ ...prev, workoutType: false }));
+  };
+
+  const handleFeelingTypeChange = (event) => {
+    setFeelingType(event.target.value);
+    if (event.target.value) setErrors(prev => ({ ...prev, feelingType: false }));
   };
 
   const handleLocationChange = (event) => {
@@ -128,10 +135,10 @@ function AIHelperComponent() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    let newErrors = { workoutType: !workoutType, location: !location };
+    let newErrors = { workoutType: !workoutType, location: !location, feeling: !feeling };
     setErrors(newErrors);
 
-    if (!newErrors.workoutType && !newErrors.location) {
+    if (!newErrors.workoutType && !newErrors.location && !newErrors.feeling) {
       fetchWorkoutPlan()
     } else {
       console.log('Validation failed');
@@ -170,9 +177,9 @@ function AIHelperComponent() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mb: 2 }}>
+      <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mb: 1 }}>
         <InputLabel style={{ marginRight: "8px" }}>Workout Type:</InputLabel>
-        <FormControl error={errors.workoutType} sx={{ mb: 2 }}>
+        <FormControl error={errors.workoutType}>
           <Select
             value={workoutType}
             onChange={handleWorkoutTypeChange}
@@ -206,13 +213,30 @@ function AIHelperComponent() {
           </Select>
           {errors.location && <FormHelperText>Please select a workout location.</FormHelperText>}
         </FormControl>
+
+        <InputLabel style={{ marginRight: "8px", marginBottom: "2px"}}>How Do You Feel:</InputLabel>
+        <FormControl error={errors.feeling}>
+          <Select
+            value={feeling}
+            onChange={handleFeelingTypeChange}
+            displayEmpty
+            inputProps={{ "aria-label": "Without label" }}
+          >
+            <MenuItem value="" disabled>Select An Option</MenuItem>
+            <MenuItem value="energized">Energized</MenuItem>
+            <MenuItem value="gym">Tired</MenuItem>
+            <MenuItem value="injured">Injured</MenuItem>
+            <MenuItem value="sick">Sick</MenuItem>
+          </Select>
+          {errors.feeling && <FormHelperText>Please select an option.</FormHelperText>}
+        </FormControl>
      
       
       <Button
         type="submit"
         variant="contained"
         color="success"
-        sx={{ mt: 2 }}
+        sx={{ m: 2 }}
       >
         Generate Workout Plan
       </Button>
