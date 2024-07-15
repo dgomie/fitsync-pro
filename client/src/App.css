@@ -972,6 +972,20 @@ a:hover {
   display: flex !important;
 }
 
+/* CSS */
+.scroll-container {
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 20px; /* Adjust based on your design */
+}
+
+.plan-card {
+  width: 300px; /* Adjust based on your design */
+  margin-right: 20px; /* Space between cards */
+  /* Add more styling for your cards here */
+}
+
 .btn {
   text-align: center;
   display: inline-block;
@@ -1120,6 +1134,13 @@ a:hover {
   transform: scale(1.05); /* Slightly increase size */
   cursor: pointer; /* Change cursor to pointer */
 }
+
+.planButtons { 
+  display: 'flex';
+  justify-content: 'center';
+  margin-top: '20px' 
+}
+
 
 
 form {

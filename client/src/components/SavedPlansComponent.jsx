@@ -9,6 +9,7 @@ import {
   CircularProgress,
   Button,
 } from "@mui/material";
+import { FitnessCenter, DirectionsRun, Speed, SportsGymnastics } from '@mui/icons-material';
 import { useQuery, useMutation } from "@apollo/client";
 import { GET_AI_PLANS } from "../utils/queries";
 import { DELETE_AI_PLAN } from "../utils/mutations";
@@ -25,6 +26,20 @@ function SavedPlansComponent() {
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [deleteAIplan] = useMutation(DELETE_AI_PLAN);
   const { plans, setPlans } = usePlans(); // Use the context
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentPlans = plans.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handleNextPage = () => {
+    setCurrentPage(currentPage + 1);
+  };
+
+  const handlePreviousPage = () => {
+    setCurrentPage(currentPage - 1);
+  };
 
   useEffect(() => {
     if (data && data.aiPlans) {
@@ -95,6 +110,23 @@ function SavedPlansComponent() {
     setSelectedPlan(null);
   };
 
+  const getIconForPlanTitle = (title) => {
+    const words = title.split(' '); 
+    const keyword = words[1];
+    switch (keyword) {
+      case 'Endurance':
+        return <DirectionsRun />;
+      case 'Strength':
+        return <FitnessCenter />;
+      case 'Speed':
+        return <Speed />;
+      case 'Flexibility':
+        return <SportsGymnastics />;
+      default:
+        return null; // or a default icon
+    }
+  };
+
   const style = {
     position: "absolute",
     top: "50%",
@@ -110,8 +142,8 @@ function SavedPlansComponent() {
   };
 
   return (
-    <>
-      <Grid
+    <div className="mb-4">
+      <Box
         container
         spacing={2}
         justifyContent="center"
@@ -121,18 +153,54 @@ function SavedPlansComponent() {
         <Typography variant="h6" component="h2" align="center">
           Your Saved Workouts
         </Typography>
-        {plans.map((plan) => (
-          <Grid item key={plan._id} onClick={() => handleOpenModal(plan)}>
-            <Card className="cardHoverEffect">
-              <CardContent>
-                <Typography variant="h5" component="h2">
-                  {plan.title}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+        {currentPlans.length > 0 ? (
+          <>
+          <div className="scroll-container">
+            {currentPlans.map((plan) => (
+              <Box item key={plan._id} onClick={() => handleOpenModal(plan)}>
+                <Card className="cardHoverEffect plan-card">
+                  <CardContent style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <Typography>{getIconForPlanTitle(plan.title)}</Typography>
+                    <Typography variant="body2" component="h3">
+                      {plan.title}    
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Box>
+            ))}
+          </div>
+           <div
+           style={{
+             display: "flex",
+             justifyContent: "center",
+             marginTop: "20px",
+           }}
+         >
+           <Button onClick={handlePreviousPage} disabled={currentPage === 1} color="success">
+             Previous
+           </Button>
+           <Button
+             onClick={handleNextPage}
+             disabled={currentPage === Math.ceil(plans.length / itemsPerPage)}
+             color="success"
+           >
+             Next
+           </Button>
+         </div>
+         </>
+
+        ) : (
+          <div
+            className="scroll-container"
+            style={{ justifyContent: "center", display: "flex" }}
+          >
+            <Typography variant="subtitle1" align="center">
+              You have no saved Fit-AI workouts.
+            </Typography>
+          </div>
+        )}
+       
+      </Box>
       <Modal
         open={openModal}
         onClose={handleCloseModal}
@@ -160,7 +228,7 @@ function SavedPlansComponent() {
           </Box>
         </Box>
       </Modal>
-    </>
+    </div>
   );
 }
 

@@ -10,18 +10,23 @@ import {
   Typography,
   Select,
   MenuItem,
+  FormControl,
+  FormHelperText,
+  TextField,
 } from "@mui/material";
 import axios from "axios";
 import { useMutation } from "@apollo/client";
 import { CREATE_AI_PLAN } from "../utils/mutations";
 import MuiAlert from "@mui/material/Alert";
-import { usePlans } from "../context/plans-context"; // Import the context
+import { usePlans } from "../context/plans-context";
 
 function AIHelperComponent() {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [workoutType, setWorkoutType] = useState("");
   const [location, setLocation] = useState("");
+  const [week, setWeek] = useState(1);
+  const [bodyPart, setBodyPart] = useState("");
   const [token, setToken] = useState("");
   const [userId, setId] = useState("");
   const [age, setAge] = useState(null);
@@ -29,7 +34,8 @@ function AIHelperComponent() {
   const [createAIplan] = useMutation(CREATE_AI_PLAN);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const { plans, setPlans } = usePlans(); // Use the context
+  const { plans, setPlans } = usePlans();
+  const [errors, setErrors] = useState({ workoutType: false, location: false });
 
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -52,10 +58,12 @@ function AIHelperComponent() {
     event.preventDefault();
     setIsLoading(true);
     const postData = {
-      age: age,
-      currentShape: activityLevel,
-      workoutType: workoutType,
-      location: location,
+      age,
+      activityLevel,
+      workoutType,
+      location,
+      week,
+      bodyPart
     };
 
     const hostUrl = import.meta.env.VITE_HOST_URL;
@@ -82,10 +90,23 @@ function AIHelperComponent() {
 
   const handleWorkoutTypeChange = (event) => {
     setWorkoutType(event.target.value);
+    if (event.target.value)
+      setErrors((prev) => ({ ...prev, workoutType: false }));
+  };
+
+  const handleBodyPartChange = (event) => {
+    setBodyPart(event.target.value);
+    if (event.target.value) setErrors((prev) => ({ ...prev, bodyPart: false }));
+  };
+
+  const handleWeekChange = (event) => {
+    setWeek(event.target.value);
+    if (event.target.value) setErrors((prev) => ({ ...prev, week: false }));
   };
 
   const handleLocationChange = (event) => {
     setLocation(event.target.value);
+    if (event.target.value) setErrors((prev) => ({ ...prev, location: false }));
   };
 
   const handleSave = () => {
@@ -121,6 +142,28 @@ function AIHelperComponent() {
     setOpenSnackbar(false);
   };
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    let newErrors = {
+      workoutType: !workoutType,
+      location: !location,
+      week: !week,
+      bodyPart: !bodyPart,
+    };
+    setErrors(newErrors);
+
+    if (
+      !newErrors.workoutType &&
+      !newErrors.location &&
+      !newErrors.week &&
+      !newErrors.bodyPart
+    ) {
+      fetchWorkoutPlan();
+    } else {
+      console.log("Validation failed");
+    }
+  };
+
   const renderWorkoutPlan = (plan) => {
     const cleanedPlan = plan.replace(/^##/, "").trim();
     const sections = cleanedPlan.split("\n\n");
@@ -152,24 +195,22 @@ function AIHelperComponent() {
   };
 
   return (
-    <form onSubmit={fetchWorkoutPlan}>
+    <form onSubmit={handleSubmit}>
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          mt: 5,
-          pt: 5,
+          mb: 1,
         }}
       >
-        <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-          <InputLabel style={{ marginRight: "8px" }}>Workout Type:</InputLabel>
+        <InputLabel style={{ marginRight: "8px" }}>Workout Type:</InputLabel>
+        <FormControl error={errors.workoutType}>
           <Select
             value={workoutType}
             onChange={handleWorkoutTypeChange}
             displayEmpty
             inputProps={{ "aria-label": "Without label" }}
-            sx={{ mb: 2 }}
           >
             <MenuItem value="" disabled>
               Select Workout Type
@@ -179,12 +220,24 @@ function AIHelperComponent() {
             <MenuItem value="Speed">Speed</MenuItem>
             <MenuItem value="Flexibility">Flexibility</MenuItem>
           </Select>
-        </Box>
+          {errors.workoutType && (
+            <FormHelperText>Please select a workout type.</FormHelperText>
+          )}
+        </FormControl>
+      </Box>
 
-        <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-          <InputLabel style={{ marginRight: "8px" }}>
-            Workout Location:
-          </InputLabel>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          mb: 2,
+        }}
+      >
+        <InputLabel style={{ marginRight: "8px" }}>
+          Workout Location:
+        </InputLabel>
+        <FormControl error={errors.location}>
           <Select
             value={location}
             onChange={handleLocationChange}
@@ -199,14 +252,58 @@ function AIHelperComponent() {
             <MenuItem value="Park">Park</MenuItem>
             <MenuItem value="Office">Office</MenuItem>
           </Select>
-        </Box>
+          {errors.location && (
+            <FormHelperText>Please select a workout location.</FormHelperText>
+          )}
+        </FormControl>
 
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          sx={{ mb: 2 }}
-        >
+        <InputLabel style={{ marginRight: "8px" }}>
+          Target Muscle Group:
+        </InputLabel>
+        <FormControl error={errors.bodyPart}>
+          <Select
+            value={bodyPart}
+            onChange={handleBodyPartChange}
+            displayEmpty
+            inputProps={{ "aria-label": "Without label" }}
+          >
+            <MenuItem value="" disabled>
+              Select Target Muscle Group
+            </MenuItem>
+            <MenuItem value="upper body">Upper Body</MenuItem>
+            <MenuItem value="lower body">Lower Body</MenuItem>
+            <MenuItem value="arms">Arms</MenuItem>
+            <MenuItem value="legs">Legs</MenuItem>
+            <MenuItem value="core">Core</MenuItem>
+          </Select>
+          {errors.bodyPart && (
+            <FormHelperText>Please select a target muscle group.</FormHelperText>
+          )}
+        </FormControl>
+
+        <InputLabel style={{ marginRight: "8px", marginBottom: "2px" }}>
+          Week Number:
+        </InputLabel>
+        <FormControl error={errors.week}>
+          <TextField
+            type="number"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            variant="outlined"
+            value={week}
+            onChange={handleWeekChange}
+            error={errors.week}
+            helperText={errors.week ? "Please select a week number." : ""}
+            inputProps={{ min: "1", max: "100", "aria-label": "Without label" }}
+            style={{ marginRight: "8px", marginBottom: "2px" }}
+          />
+          {errors.week && (
+            <FormHelperText>Please select an week.</FormHelperText>
+          )}
+        </FormControl>
+
+        <Button type="submit" variant="contained" color="success" sx={{ m: 2 }}>
           Generate Workout Plan
         </Button>
 
