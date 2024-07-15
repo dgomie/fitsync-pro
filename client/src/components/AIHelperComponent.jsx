@@ -10,12 +10,14 @@ import {
   Typography,
   Select,
   MenuItem,
+  FormControl,
+  FormHelperText
 } from "@mui/material";
 import axios from "axios";
 import { useMutation } from "@apollo/client";
 import { CREATE_AI_PLAN } from "../utils/mutations";
 import MuiAlert from "@mui/material/Alert";
-import { usePlans } from "../context/plans-context"; // Import the context
+import { usePlans } from "../context/plans-context"; 
 
 function AIHelperComponent() {
   const [data, setData] = useState(null);
@@ -29,7 +31,8 @@ function AIHelperComponent() {
   const [createAIplan] = useMutation(CREATE_AI_PLAN);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const { plans, setPlans } = usePlans(); // Use the context
+  const { plans, setPlans } = usePlans(); 
+  const [errors, setErrors] = useState({ workoutType: false, location: false });
 
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -82,10 +85,12 @@ function AIHelperComponent() {
 
   const handleWorkoutTypeChange = (event) => {
     setWorkoutType(event.target.value);
+    if (event.target.value) setErrors(prev => ({ ...prev, workoutType: false }));
   };
 
   const handleLocationChange = (event) => {
     setLocation(event.target.value);
+    if (event.target.value) setErrors(prev => ({ ...prev, location: false }));
   };
 
   const handleSave = () => {
@@ -121,6 +126,18 @@ function AIHelperComponent() {
     setOpenSnackbar(false);
   };
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    let newErrors = { workoutType: !workoutType, location: !location };
+    setErrors(newErrors);
+
+    if (!newErrors.workoutType && !newErrors.location) {
+      fetchWorkoutPlan()
+    } else {
+      console.log('Validation failed');
+    }
+  };
+
   const renderWorkoutPlan = (plan) => {
     const cleanedPlan = plan.replace(/^##/, "").trim();
     const sections = cleanedPlan.split("\n\n");
@@ -152,63 +169,54 @@ function AIHelperComponent() {
   };
 
   return (
-    <form onSubmit={fetchWorkoutPlan}>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          mt: 5,
-          pt: 5,
-        }}
-      >
-        <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-          <InputLabel style={{ marginRight: "8px" }}>Workout Type:</InputLabel>
+    <form onSubmit={handleSubmit}>
+      <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mb: 2 }}>
+        <InputLabel style={{ marginRight: "8px" }}>Workout Type:</InputLabel>
+        <FormControl error={errors.workoutType} sx={{ mb: 2 }}>
           <Select
             value={workoutType}
             onChange={handleWorkoutTypeChange}
             displayEmpty
             inputProps={{ "aria-label": "Without label" }}
-            sx={{ mb: 2 }}
           >
-            <MenuItem value="" disabled>
-              Select Workout Type
-            </MenuItem>
+            <MenuItem value="" disabled>Select Workout Type</MenuItem>
             <MenuItem value="Endurance">Endurance</MenuItem>
             <MenuItem value="Strength">Strength</MenuItem>
             <MenuItem value="Speed">Speed</MenuItem>
             <MenuItem value="Flexibility">Flexibility</MenuItem>
           </Select>
-        </Box>
+          {errors.workoutType && <FormHelperText>Please select a workout type.</FormHelperText>}
+        </FormControl>
+      </Box>
 
-        <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-          <InputLabel style={{ marginRight: "8px" }}>
-            Workout Location:
-          </InputLabel>
+      <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mb: 2 }}>
+        <InputLabel style={{ marginRight: "8px" }}>Workout Location:</InputLabel>
+        <FormControl error={errors.location}>
           <Select
             value={location}
             onChange={handleLocationChange}
             displayEmpty
             inputProps={{ "aria-label": "Without label" }}
           >
-            <MenuItem value="" disabled>
-              Select Workout Location
-            </MenuItem>
+            <MenuItem value="" disabled>Select Workout Location</MenuItem>
             <MenuItem value="Home">Home</MenuItem>
             <MenuItem value="Gym">Gym</MenuItem>
             <MenuItem value="Park">Park</MenuItem>
             <MenuItem value="Office">Office</MenuItem>
           </Select>
-        </Box>
-
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          sx={{ mb: 2 }}
-        >
-          Generate Workout Plan
-        </Button>
+          {errors.location && <FormHelperText>Please select a workout location.</FormHelperText>}
+        </FormControl>
+     
+      
+      <Button
+        type="submit"
+        variant="contained"
+        color="success"
+        sx={{ mt: 2 }}
+      >
+        Generate Workout Plan
+      </Button>
+    
 
         {isLoading ? (
           <CircularProgress color="success" />
@@ -247,7 +255,7 @@ function AIHelperComponent() {
             </Card>
           </Box>
         ) : null}
-      </Box>
+       </Box>
     </form>
   );
 }
