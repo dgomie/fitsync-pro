@@ -116,13 +116,12 @@ const SettingsComponent = () => {
       alignItems="center"
       minHeight="100vh"
       textAlign="center"
-      bgcolor="#fafafa"
       p={{ xs: 2, sm: 4, md: 6 }}
     >
       <Container maxWidth="md">
         <Paper
           elevation={3}
-          sx={{ padding: { xs: 2, sm: 4, md: 6 }, margin: "0 auto" }}
+          sx={{ padding: { xs: 2, sm: 4, md: 6 }, marginTop: "50px" }}
         >
           <Typography variant="h2" component="header" gutterBottom>
             Settings

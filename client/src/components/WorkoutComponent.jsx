@@ -33,7 +33,6 @@ const WorkoutComponent = () => {
             alignItems="center"
             textAlign="center"
             sx={{
-                background: '#f5f5f5', // Light background color
                 minHeight: '100vh',
                 p: 2,
                 color: 'black',

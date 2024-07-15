@@ -10,11 +10,11 @@ const AboutUs = () => {
             alignItems="center"
             minHeight="105vh"
             textAlign="center"
-            bgcolor="#fafafa"
+
             p={{ xs: 2, sm: 4, md: 10 }}
         >
             <Container maxWidth="lg">
-                <Paper elevation={3} sx={{ padding: { xs: 2, sm: 4, md: 6 }, margin: '0 auto' }}>
+                <Paper elevation={3} sx={{ padding: { xs: 2, sm: 4, md: 6 }, marginTop: '20px' }}>
                     <Typography variant="h2" component="header" gutterBottom>
                         About Fitsync-PRO
                     </Typography>
