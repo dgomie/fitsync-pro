@@ -32,3 +32,16 @@ export const GET_AI_PLANS = gql`
     }
   }
 `;
+
+export const GET_WORKOUTS_BY_USER = gql`
+  query workouts($userId: ID!) {
+    workouts(userId: $userId) {
+      _id
+      userId
+      workoutTitle
+      duration
+      caloriesBurned
+      createdAt
+    }
+  }
+`;

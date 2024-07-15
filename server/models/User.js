@@ -1,6 +1,7 @@
 const { Schema, model } = require("mongoose");
 const bcrypt = require("bcrypt");
 const PlansAI = require("./PlansAI")
+const Workout = require("./Workout")
 
 const userSchema = new Schema(
   {
@@ -106,6 +107,7 @@ userSchema.pre('findOneAndDelete', async function(next) {
   if (docToDelete) {
     // Assuming the Plan model references the User model with a field named 'userId'
     await PlansAI.deleteMany({ userId: docToDelete._id });
+    await Workout.deleteMany({ userId: docToDelete._id})
   }
   next();
 });
