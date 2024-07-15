@@ -111,7 +111,7 @@ function SavedPlansComponent() {
 
   return (
     <>
-      <Grid
+      <Box
         container
         spacing={2}
         justifyContent="center"
@@ -121,18 +121,20 @@ function SavedPlansComponent() {
         <Typography variant="h6" component="h2" align="center">
           Your Saved Workouts
         </Typography>
+        <div className="scroll-container">
         {plans.map((plan) => (
-          <Grid item key={plan._id} onClick={() => handleOpenModal(plan)}>
-            <Card className="cardHoverEffect">
+          <Box item key={plan._id} onClick={() => handleOpenModal(plan)}>
+            <Card className="cardHoverEffect plan-card">
               <CardContent>
-                <Typography variant="h5" component="h2">
+                <Typography variant="body2" component="h2">
                   {plan.title}
                 </Typography>
               </CardContent>
             </Card>
-          </Grid>
+          </Box>
         ))}
-      </Grid>
+        </div>
+      </Box>
       <Modal
         open={openModal}
         onClose={handleCloseModal}
