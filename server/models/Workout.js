@@ -34,28 +34,25 @@ const workoutSchema = new Schema(
       type: String,
       required: true,
     },
+    dateOfWorkout: {
+      type: String,
+      required: true,
+    },
     // exercises: [exerciseSchema],
     duration: { 
       type: Number, 
-      required: true, 
+      required: false, 
       min: 1 
     },
     caloriesBurned: { 
       type: Number, 
-      required: true, 
+      required: false, 
       min: 0 
     },
   },
   { timestamps: true }
 );
 
-// workoutSchema.virtual("totalWeight").get(function () {
-//   return this.exercises.reduce(
-//     (total, exercise) =>
-//       total + exercise.weight * exercise.reps * exercise.sets,
-//     0
-//   );
-// });
 
 // workoutSchema.methods.addExercise = function (exercise) {
 //   this.exercises.push(exercise);
