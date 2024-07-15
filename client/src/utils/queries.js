@@ -39,6 +39,7 @@ export const GET_WORKOUTS_BY_USER = gql`
       _id
       userId
       workoutTitle
+      dateOfWorkout
       duration
       caloriesBurned
       createdAt
