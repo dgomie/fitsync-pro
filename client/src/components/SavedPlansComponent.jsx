@@ -79,10 +79,11 @@ function SavedPlansComponent() {
     const cleanedPlan = plan.replace(/^##/, "").trim();
     const sections = cleanedPlan.split("\n\n");
     return sections.map((section, index) => {
+      // Check for sections that should be entirely bold
       const titleMatch = section.match(/^\*\*(.*)\*\*$/);
       if (titleMatch) {
         return (
-          <Typography variant="h6" key={index} style={{ marginTop: "20px" }}>
+          <Typography variant="h6" key={index} style={{ marginTop: "20px", fontWeight: 'bold' }}>
             {titleMatch[1]}
           </Typography>
         );
@@ -92,16 +93,28 @@ function SavedPlansComponent() {
         return (
           <ul key={index} style={{ marginLeft: "20px" }}>
             {listMatch.map((item, i) => (
-              <li key={i}>{item.replace(/^\*\s/, "")}</li>
+              <li key={i}>{parseBoldText(item.replace(/^\*\s/, ""))}</li>
             ))}
           </ul>
         );
       }
+      // Handle mixed content with bold and regular text
       return (
         <Typography key={index} paragraph>
-          {section}
+          {parseBoldText(section)}
         </Typography>
       );
+    });
+  };
+  
+  // Helper function to parse **bold** text
+  const parseBoldText = (text) => {
+    const parts = text.split(/(\*\*.*?\*\*)/g); // Split text at **bold** parts
+    return parts.map((part, index) => {
+      if (part.startsWith("**") && part.endsWith("**")) {
+        return <span key={index} style={{ fontWeight: 'bold' }}>{part.slice(2, -2)}</span>;
+      }
+      return part; // Return regular text as is
     });
   };
 
@@ -160,7 +173,7 @@ function SavedPlansComponent() {
             {currentPlans.map((plan) => (
               <Box item key={plan._id} onClick={() => handleOpenModal(plan)}>
                 <Card className="cardHoverEffect plan-card">
-                  <CardContent style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <CardContent style={{ display: 'flex', alignItems: 'center', gap: '5px', padding:'20px' }}>
                     <Typography>{getIconForPlanTitle(plan.title)}</Typography>
                     <Typography variant="body2" component="h3">
                       {plan.title}    
