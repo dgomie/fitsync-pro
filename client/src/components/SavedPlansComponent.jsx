@@ -9,6 +9,7 @@ import {
   CircularProgress,
   Button,
 } from "@mui/material";
+import { FitnessCenter, DirectionsRun, Speed, SportsGymnastics } from '@mui/icons-material';
 import { useQuery, useMutation } from "@apollo/client";
 import { GET_AI_PLANS } from "../utils/queries";
 import { DELETE_AI_PLAN } from "../utils/mutations";
@@ -109,6 +110,23 @@ function SavedPlansComponent() {
     setSelectedPlan(null);
   };
 
+  const getIconForPlanTitle = (title) => {
+    const words = title.split(' '); 
+    const keyword = words[1];
+    switch (keyword) {
+      case 'Endurance':
+        return <DirectionsRun />;
+      case 'Strength':
+        return <FitnessCenter />;
+      case 'Speed':
+        return <Speed />;
+      case 'Flexibility':
+        return <SportsGymnastics />;
+      default:
+        return null; // or a default icon
+    }
+  };
+
   const style = {
     position: "absolute",
     top: "50%",
@@ -141,9 +159,10 @@ function SavedPlansComponent() {
             {currentPlans.map((plan) => (
               <Box item key={plan._id} onClick={() => handleOpenModal(plan)}>
                 <Card className="cardHoverEffect plan-card">
-                  <CardContent>
-                    <Typography variant="body2" component="h2">
-                      {plan.title}
+                  <CardContent style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <Typography>{getIconForPlanTitle(plan.title)}</Typography>
+                    <Typography variant="body2" component="h3">
+                      {plan.title}    
                     </Typography>
                   </CardContent>
                 </Card>
