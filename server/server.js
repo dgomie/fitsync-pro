@@ -57,7 +57,7 @@ const startApolloServer = async () => {
     }
   
     try {
-      const workoutPlan = await generateAIresponse(`Create a ${location} ${workoutType} workout plan focusing on ${bodyPart} for the week. The user is ${age} and is at a ${activityLevel} exercise level. This is week ${week} of the plan`);
+      const workoutPlan = await generateAIresponse(`Create a ${week} week ${location} ${workoutType} workout plan with detailed exercises focusing on ${bodyPart}. The user is ${age} and is at a ${activityLevel} exercise level.`);
       if (workoutPlan) {
         res.json({ workoutPlan });
       } else {

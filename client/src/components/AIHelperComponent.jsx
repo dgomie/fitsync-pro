@@ -15,6 +15,7 @@ import {
   TextField,
   Paper
 } from "@mui/material";
+import Divider from '@mui/material/Divider';
 import axios from "axios";
 import { useMutation } from "@apollo/client";
 import { CREATE_AI_PLAN } from "../utils/mutations";
@@ -26,7 +27,7 @@ function AIHelperComponent() {
   const [isLoading, setIsLoading] = useState(false);
   const [workoutType, setWorkoutType] = useState("");
   const [location, setLocation] = useState("");
-  const [week, setWeek] = useState(1);
+  const [week, setWeek] = useState("");
   const [bodyPart, setBodyPart] = useState("");
   const [token, setToken] = useState("");
   const [userId, setId] = useState("");
@@ -197,6 +198,9 @@ function AIHelperComponent() {
 
   return (
     <Paper elevation={3} sx={{ padding: 2, borderRadius: '15px' }}>
+   <Typography variant="h5" component="div" align="center">
+                  Create Your Fit-AI Plan
+                </Typography>
     <form onSubmit={handleSubmit}>
       <Box
         sx={{
@@ -272,6 +276,7 @@ function AIHelperComponent() {
             <MenuItem value="" disabled>
               Select Target Muscle Group
             </MenuItem>
+            <MenuItem value="full body">Full Body</MenuItem>
             <MenuItem value="upper body">Upper Body</MenuItem>
             <MenuItem value="lower body">Lower Body</MenuItem>
             <MenuItem value="arms">Arms</MenuItem>
@@ -283,25 +288,26 @@ function AIHelperComponent() {
           )}
         </FormControl>
 
-        <InputLabel style={{ marginRight: "8px", marginBottom: "2px" }}>
-          Week Number:
+        <InputLabel style={{ marginRight: "8px" }}>
+          Plan Duration:
         </InputLabel>
         <FormControl error={errors.week}>
-          <TextField
-            type="number"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            variant="outlined"
+          <Select
             value={week}
             onChange={handleWeekChange}
-            error={errors.week}
-            helperText={errors.week ? "Please select a week number." : ""}
-            inputProps={{ min: "1", max: "100", "aria-label": "Without label" }}
-            style={{ marginRight: "8px", marginBottom: "2px" }}
-          />
+            displayEmpty
+            inputProps={{ "aria-label": "Without label" }}
+          >
+            <MenuItem value="" disabled>
+              Select Plan Duration
+            </MenuItem>
+            <MenuItem value="one">One Week</MenuItem>
+            <MenuItem value="two">Two Weeks</MenuItem>
+            <MenuItem value="three">Three Weeks</MenuItem>
+            <MenuItem value="four">Four Weeks</MenuItem>
+          </Select>
           {errors.week && (
-            <FormHelperText>Please select an week.</FormHelperText>
+            <FormHelperText>Please select a plan duration.</FormHelperText>
           )}
         </FormControl>
 
@@ -312,12 +318,13 @@ function AIHelperComponent() {
         {isLoading ? (
           <CircularProgress color="success" />
         ) : data ? (
-          <Box sx={{ width: "100%", maxWidth: 600 }}>
-            <Card elevation={3} sx={{ padding: 2, borderRadius: '15px' }}>
+          <Box sx={{ width: "100%", maxWidth: 6800 }}>
+            <div>
               <CardContent>
-                <Typography variant="h5" component="div">
-                  Your Workout Plan
+                <Typography variant="h5" component="div" align="center">
+                  Your Fit-AI Workout
                 </Typography>
+                <Divider style={{ margin: '8px 0' }} />
                 {renderWorkoutPlan(data.workoutPlan)}
               </CardContent>
               <Box display="flex" justifyContent="center" p={1}>
@@ -343,7 +350,7 @@ function AIHelperComponent() {
                   </Alert>
                 </Snackbar>
               </Box>
-            </Card>
+            </div>
           </Box>
         ) : null}
       </Box>
