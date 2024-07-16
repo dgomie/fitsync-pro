@@ -15,7 +15,7 @@ import AuthService from "../utils/auth";
 import { useState, useEffect, useRef } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import FullCalendar from "@fullcalendar/react";
-import { Gauge } from "@mui/x-charts/Gauge";
+import { Gauge, gaugeClasses } from "@mui/x-charts/Gauge";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_WORKOUT } from "../utils/mutations";
@@ -53,8 +53,6 @@ function ProfilePageComponent() {
   const [events, setEvents] = React.useState("");
   const [eventsLoaded, setEventsLoaded] = useState(false);
   const [dateError, setDateError] = useState("");
-
-  const [workouts, setWorkouts] = useState([]);
   const [createWorkout] = useMutation(CREATE_WORKOUT);
   const { data } = useQuery(GET_WORKOUTS_BY_USER, { variables: { userId } });
 
@@ -65,13 +63,12 @@ function ProfilePageComponent() {
         date: workout.dateOfWorkout,
       }));
       setEvents(formattedEvents);
-      setWorkouts(formattedEvents);
       setEventsLoaded(true);
     }
   }, [data]);
 
   const WorkoutGraph = ({ events }) => {
-    console.log("events", events)
+    console.log("events", events);
     if (!events || events.length === 0) {
       return null; // Return null or a loading indicator if events are not ready
     }
@@ -100,6 +97,14 @@ function ProfilePageComponent() {
         value={workoutProgress}
         startAngle={-90}
         endAngle={90}
+        sx={() => ({
+          [`& .${gaugeClasses.valueText}`]: {
+            fontSize: 25,
+          },
+          [`& .${gaugeClasses.valueArc}`]: {
+            fill: "#52b202",
+          },
+        })}
       />
     );
   };
