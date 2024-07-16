@@ -42,21 +42,27 @@ const Signup = () => {
   const [addUser] = useMutation(ADD_USER);
   const [showPassword, setShowPassword] = useState(false);
   const [dobError, setDobError] = useState('');
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleDateOfBirthChange = (event) => {
+    const dateOfBirth = event.target.value;
+    const age = calculateAge(new Date(dateOfBirth));
+
+    if (age < 13 || age > 150) {
+      setDobError('You must be at least 13 years old and less than 150 years old to sign up.');
+      setIsButtonDisabled(true);
+    } else {
+      setDobError('');
+      setIsButtonDisabled(false);
+    }
+  };
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
     const dateOfBirth = event.target.dateOfBirth.value;
-    const age = calculateAge(new Date(dateOfBirth));
-
-    if (age < 13 || age > 150) {
-      setDobError('You must be at least 13 years old and less than 150 years old to sign up.');
-      return;
-    }
-
-    setDobError('');
 
     const userData = {
       username: event.target.username.value,
@@ -148,6 +154,7 @@ const Signup = () => {
                   }}
                   error={Boolean(dobError)}
                   helperText={dobError}
+                  onChange={handleDateOfBirthChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -205,6 +212,7 @@ const Signup = () => {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              disabled={isButtonDisabled}
             >
               Sign Up
             </Button>

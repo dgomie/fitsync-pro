@@ -87,29 +87,7 @@ const AboutUs = () => {
                                         </Typography>
                                     </Box>
                                 </Grid>
-                                <Grid item xs={12} sm={6} md={4}>
-                                    <Box textAlign="center">
-                                        <Avatar
-                                            alt="Andre Santos"
-                                            src="/src/images/antonycat.jpg"
-                                            sx={{
-                                                width: { xs: 100, sm: 120 },
-                                                height: { xs: 100, sm: 120 },
-                                                margin: '0 auto',
-                                                transition: 'transform 0.3s',
-                                                '&:hover': {
-                                                    transform: 'scale(1.1)',
-                                                },
-                                            }}
-                                        />
-                                        <Typography variant="h6" component="h3" mt={2}>
-                                            Andre Santos
-                                        </Typography>
-                                        <Typography variant="body2">
-                                            Full-stack Developer
-                                        </Typography>
-                                    </Box>
-                                </Grid>
+                                
                                 <Grid item xs={12} sm={6} md={4}>
                                     <Box textAlign="center">
                                         <Avatar
