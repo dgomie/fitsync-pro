@@ -43,7 +43,7 @@ function WelcomeComponent() {
       <Grid item xs={12} sm={6}>
         <Paper elevation={0} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', backgroundColor: 'rgb(246, 246, 241)' }}>
           <Typography variant="h6" component="h3" padding={2}>
-Transform your fitness journey with fitsync Pro. Whether you're aiming for strength, flexibility, or just a healthier lifestyle, we provide tailored workouts and progress tracking. Join our community and start achieving your goals today!
+Transform your fitness journey with FitSync Pro. Whether you're aiming for strength, flexibility, or just a healthier lifestyle, we provide tailored workouts and progress tracking. Join our community and start achieving your goals today!
           </Typography>
         </Paper>
       </Grid>

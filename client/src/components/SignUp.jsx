@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -92,8 +92,17 @@ const Signup = () => {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
+      <Container component="main" maxWidth="sm" sx={{
+        marginTop: { xs: '10px', sm: '10rem', md: '8rem' },
+        backgroundColor: '#b4c4ab',
+        borderRadius: '8px',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+
+      }}>
+      <CssBaseline />
         <Box
           sx={{
             marginTop: 8,
@@ -102,7 +111,7 @@ const Signup = () => {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <Avatar sx={{ m: 1, bgcolor: '#46563c' }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
@@ -119,6 +128,9 @@ const Signup = () => {
                   id="firstName"
                   label="First Name"
                   autoFocus
+                  InputProps={{
+                    style: { backgroundColor: 'white' },
+                  }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -129,6 +141,9 @@ const Signup = () => {
                   label="Last Name"
                   name="lastName"
                   autoComplete="family-name"
+                  InputProps={{
+                    style: { backgroundColor: 'white' },
+                  }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -139,6 +154,9 @@ const Signup = () => {
                   label="Username"
                   name="username"
                   autoComplete="username"
+                  InputProps={{
+                    style: { backgroundColor: 'white' },
+                  }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -155,10 +173,13 @@ const Signup = () => {
                   error={Boolean(dobError)}
                   helperText={dobError}
                   onChange={handleDateOfBirthChange}
+                  InputProps={{
+                    style: { backgroundColor: 'white' },
+                  }}
                 />
               </Grid>
               <Grid item xs={12}>
-                <FormControl fullWidth>
+                <FormControl fullWidth sx={{ backgroundColor: 'white'}}>
                   <InputLabel id="activity-level-label">Exercise Experience</InputLabel>
                   <Select
                     labelId="activity-level-label"
@@ -180,6 +201,9 @@ const Signup = () => {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  InputProps={{
+                    style: { backgroundColor: 'white' },
+                  }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -203,6 +227,7 @@ const Signup = () => {
                         </IconButton>
                       </InputAdornment>
                     ),
+                    style: { backgroundColor: 'white' },
                   }}
                 />
               </Grid>
@@ -211,12 +236,14 @@ const Signup = () => {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 3, mb: 2, backgroundColor: '#46563c', '&:hover': {
+                backgroundColor: '#869f76'
+            } }}
               disabled={isButtonDisabled}
             >
               Sign Up
             </Button>
-            <Grid container justifyContent="flex-end">
+            <Grid container justifyContent="center">
               <Grid item>
                 <Link href="/login" variant="body2">
                   Already have an account? Sign in

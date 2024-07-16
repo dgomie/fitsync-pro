@@ -42,7 +42,7 @@ function LoginComponent() {
   };
   
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '9rem' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '9rem', height: '100vh', }}>
           <Typography variant="h4" component="h1" gutterBottom sx={{ textAlign: 'center' }}>
             Login
           </Typography>
@@ -58,6 +58,7 @@ function LoginComponent() {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
+              maxWidth: '50rem'
             }}
           >
             <TextField
@@ -91,7 +92,7 @@ function LoginComponent() {
               Login
             </Button>
             {errorMessage && (
-              <Typography color="error" sx={{ mb: 2 }}>
+              <Typography color="error" sx={{ mt: 2 }}>
                 {errorMessage}
               </Typography>
     )}
