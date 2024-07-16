@@ -14,15 +14,14 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 import { useMutation } from '@apollo/client';
 import { ADD_USER } from '../utils/mutations';
 import Auth from '../utils/auth';
-
 
 function Copyright(props) {
   return (
@@ -37,18 +36,27 @@ function Copyright(props) {
   );
 }
 
-
 const defaultTheme = createTheme();
 
 const Signup = () => {
-
   const [addUser] = useMutation(ADD_USER);
-  const [showPassword, setShowPassword] = useState (false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [dobError, setDobError] = useState('');
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+
+    const dateOfBirth = event.target.dateOfBirth.value;
+    const age = calculateAge(new Date(dateOfBirth));
+
+    if (age < 13 || age > 150) {
+      setDobError('You must be at least 13 years old and less than 150 years old to sign up.');
+      return;
+    }
+
+    setDobError('');
 
     const userData = {
       username: event.target.username.value,
@@ -56,7 +64,7 @@ const Signup = () => {
       lastName: event.target.lastName.value,
       email: event.target.email.value,
       password: event.target.password.value,
-      dateOfBirth: event.target.dateOfBirth.value,
+      dateOfBirth,
       activityLevel: event.target.activityLevel.value,
     };
 
@@ -69,6 +77,13 @@ const Signup = () => {
     }
   };
 
+  const calculateAge = (dob) => {
+    const diffMs = Date.now() - dob.getTime();
+    const ageDt = new Date(diffMs);
+
+    return Math.abs(ageDt.getUTCFullYear() - 1970);
+  };
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
@@ -76,23 +91,18 @@ const Signup = () => {
         <Box
           sx={{
             marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleFormSubmit}
-            sx={{ mt: 3 }}
-          >
+          <Box component="form" noValidate onSubmit={handleFormSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -120,7 +130,7 @@ const Signup = () => {
                   required
                   fullWidth
                   id="username"
-                  label="username"
+                  label="Username"
                   name="username"
                   autoComplete="username"
                 />
@@ -136,19 +146,18 @@ const Signup = () => {
                   InputLabelProps={{
                     shrink: true,
                   }}
+                  error={Boolean(dobError)}
+                  helperText={dobError}
                 />
               </Grid>
               <Grid item xs={12}>
                 <FormControl fullWidth>
-                  <InputLabel id="activity-level-label">
-                    Exercise Experience
-                  </InputLabel>
+                  <InputLabel id="activity-level-label">Exercise Experience</InputLabel>
                   <Select
                     labelId="activity-level-label"
                     id="activityLevel"
                     name="activityLevel"
                     defaultValue=""
-
                   >
                     <MenuItem value="Beginner">Beginner</MenuItem>
                     <MenuItem value="Intermediate">Intermediate</MenuItem>
@@ -164,7 +173,6 @@ const Signup = () => {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
-
                 />
               </Grid>
               <Grid item xs={12}>
@@ -213,6 +221,6 @@ const Signup = () => {
       </Container>
     </ThemeProvider>
   );
-}
+};
 
-export default Signup
+export default Signup;
