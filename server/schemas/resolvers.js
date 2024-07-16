@@ -83,12 +83,16 @@ const resolvers = {
       return id;
     },
     createWorkout: async (_, { input }) => {
+      console.log("createWorkout resolver called"); // Log to confirm resolver is called
       try {
+        console.log("input", input); // Log the input to check the received data
         const newWorkout = new Workout(input);
+        console.log("newWorkout instance created"); // Log to confirm instance creation
         const savedWorkout = await newWorkout.save();
+        console.log("Workout saved", savedWorkout); // Log the saved workout
         return savedWorkout;
       } catch (error) {
-        console.error(error);
+        console.error("Error in createWorkout resolver:", error); // Log the error
         throw new Error('Failed to create workout');
       }
     },

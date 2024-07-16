@@ -63,11 +63,11 @@ export const DELETE_AI_PLAN = gql`
 `;
 
 export const CREATE_WORKOUT = gql`
-  mutation createWorkout($input: WorkoutInput!) {
+  mutation createWorkout($input: CreateWorkoutInput!) {
     createWorkout(input: $input) {
       _id
       workoutTitle
-      dateofWorkout
+      dateOfWorkout
       duration
       caloriesBurned
     }
@@ -85,7 +85,7 @@ export const UPDATE_WORKOUT = gql`
     updateWorkout(id: $id, input: $input) {
       _id
       workoutTitle
-      dateofWorkout
+      dateOfWorkout
       duration
       caloriesBurned
     }
