@@ -42,7 +42,7 @@ function LoginComponent() {
   };
   
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '9rem', height: '100vh', }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh', paddingTop: "100px"}}>
           <Typography variant="h4" component="h1" gutterBottom sx={{ textAlign: 'center' }}>
             Login
           </Typography>
@@ -58,7 +58,7 @@ function LoginComponent() {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              maxWidth: '50rem'
+              maxWidth: '25rem'
             }}
           >
             <TextField

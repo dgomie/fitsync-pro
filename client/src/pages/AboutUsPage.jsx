@@ -3,6 +3,7 @@ import { Container, Box, Typography, Grid, Link, Paper, Card, CardContent, CardM
 
 const AboutUs = () => {
     return (
+        <div style={{ paddingTop: "100px", paddingBottom: "100px"}}>
         <Box
             display="flex"
             flexDirection="column"
@@ -10,12 +11,11 @@ const AboutUs = () => {
             alignItems="center"
             minHeight="105vh"
             textAlign="center"
-            p={{ xs: 2, sm: 4, md: 10 }}
         >
             <Container maxWidth="lg">
-                <Paper elevation={3} sx={{ padding: { xs: 2, sm: 4, md: 6 }, marginTop: '20px' }}>
+                <Paper elevation={3} sx={{ padding: { xs: 2, sm: 4, md: 6 }}}>
                     <Typography variant="h2" component="header" gutterBottom>
-                        About Fitsync-PRO
+                        About Fitsync-Pro
                     </Typography>
                     <Box component="main">
                         <Box mb={4} id="company-history">
@@ -23,7 +23,7 @@ const AboutUs = () => {
                                 Our History
                             </Typography>
                             <Typography variant="body1">
-                                Fitsync-PRO started its journey in...
+                                Fitsync-Pro started its journey in...
                             </Typography>
                         </Box>
                         <Box mb={4} id="mission-values">
@@ -128,8 +128,8 @@ const AboutUs = () => {
                             </Typography>
                             <Typography variant="body1">
                                 For inquiries, please email us at{' '}
-                                <Link href="mailto:info@fitsyncpro.com" underline="hover">
-                                    info@fitsyncpro.com
+                                <Link href="mailto:devs.fitsyncpro@gmail.com" underline="hover">
+                                    devs.fitsyncpro@gmail.com
                                 </Link>.
                             </Typography>
                         </Box>
@@ -142,6 +142,7 @@ const AboutUs = () => {
                 </Paper>
             </Container>
         </Box>
+        </div>
     );
 };
 

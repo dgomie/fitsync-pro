@@ -21,7 +21,7 @@ const AIHelperPage = () => {
   }
 
   return (
-    <div style={{ marginTop: "100px" }}>
+    <div style={{paddingTop:"100px" }}>
         <div style={{ flex: 1 }}>
         <SavedPlansComponent />
       </div>
