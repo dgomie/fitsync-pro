@@ -51,14 +51,13 @@ function Nav() {
                 transition: 'background-color 0.3s ease, backdrop-filter 0.3s ease',
                 borderRadius: '30px',
                 marginTop: '1rem',
-                marginX: 'auto'
+                marginX: 'auto',
+                cursor: 'arrow'
             }}>
                 <Toolbar>
-                    {!matches && (
-                        <Box sx={{ color: 'white', cursor: 'pointer', marginX: { sm: '0', md: '4rem' } }} onClick={() => navigate('/')}>
-                            <img src={logo} alt="Logo" style={{ height: '50px', backgroundColor: 'white', borderRadius: '50%', padding: '10px' }} />
-                        </Box>
-                    )}
+                    <Box sx={{ color: 'white', cursor: 'pointer', marginX: { sm: '0', md: '4rem' } }} onClick={() => navigate('/')}>
+                        <img src={logo} alt="Logo" style={{ height: matches ? '45px' : '50px', backgroundColor: 'white', borderRadius: '50%', padding: matches ? '10px' : '5px' }} />
+                    </Box>
                     {matches ? (
                         <>
                             <IconButton
@@ -107,7 +106,9 @@ function Nav() {
                     ) : (
                         <>
                             {!isLoggedIn && location.pathname !== '/login' && (
-                                <Button sx={{ color: 'white', marginX: '2rem' }} onClick={() => navigate('/login')}>Login</Button>
+                                <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end', marginX: '2rem' }}>
+                                    <Button sx={{ color: 'white' }} onClick={() => navigate('/login')}>Login</Button>
+                                </Box>
                             )}
                             {isLoggedIn && (
                                 <>
