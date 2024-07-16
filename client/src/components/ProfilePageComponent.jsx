@@ -95,21 +95,27 @@ function ProfilePageComponent() {
     const workoutProgress = (currentNumWorkouts / numWorkoutGoal) * 100;
 
     return (
-      <Gauge
-        width={200}
-        height={100}
-        value={workoutProgress}
-        startAngle={-90}
-        endAngle={90}
-        sx={() => ({
-          [`& .${gaugeClasses.valueText}`]: {
-            fontSize: 25,
-          },
-          [`& .${gaugeClasses.valueArc}`]: {
-            fill: "#52b202",
-          },
-        })}
-      />
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div style={{ marginLeft: '20px' }}>Your Month At A Glance</div>
+        <Gauge
+          width={200}
+          height={100}
+          value={workoutProgress}
+          startAngle={-90}
+          endAngle={90}
+          sx={() => ({
+            [`& .${gaugeClasses.valueText}`]: {
+              fontSize: 25,
+            },
+            [`& .${gaugeClasses.valueArc}`]: {
+              fill: "#52b202",
+            },
+          })}
+          text={
+            ({ value, valueMax }) => `${value/10} / ${valueMax/10}`
+          }
+        />
+      </div>
     );
   };
 
