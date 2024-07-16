@@ -58,7 +58,7 @@ function Nav() {
                     <Box sx={{ color: 'white', cursor: 'pointer', marginX: { sm: '0', md: '4rem' } }} onClick={() => navigate('/')}>
                         <img src={logo} alt="Logo" style={{ height: matches ? '45px' : '50px', backgroundColor: 'white', borderRadius: '50%', padding: matches ? '10px' : '5px' }} />
                     </Box>
-                    {matches ? (
+                    {matches && location.pathname !== '/login' ? (
                         <>
                             <IconButton
                                 color="inherit"
