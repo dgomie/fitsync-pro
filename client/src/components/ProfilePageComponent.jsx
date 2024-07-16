@@ -1,4 +1,3 @@
-// on reload we need the workouts to stay and save with user
 import React from 'react';
 import { Grid, Paper, Avatar, Typography, Box, useMediaQuery, useTheme, TextField, Button } from '@mui/material';
 import AuthService from '../utils/auth';
@@ -6,13 +5,16 @@ import { useState, useEffect, useRef } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { CREATE_WORKOUT } from "../utils/mutations";
+import { GET_WORKOUTS_BY_USER } from '../utils/queries';
 
 // chart js
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+
+
 
 
 function ProfilePageComponent() {
@@ -27,8 +29,18 @@ function ProfilePageComponent() {
 
     const [workouts, setWorkouts] = useState([]);
     const [createWorkout] = useMutation(CREATE_WORKOUT);
+    const { data } = useQuery(GET_WORKOUTS_BY_USER, { variables: {userId}})
 
-
+    useEffect(() => {
+        if (data && data.workouts) {
+          const formattedEvents = data.workouts.map(workout => ({
+            title: workout.workoutTitle,
+            date: workout.dateOfWorkout,
+          }));
+          console.log(formattedEvents)
+          setEvents(formattedEvents);
+        }
+      }, [data]);
 
     function WorkoutGraph({ workouts }) {
         const [chartData, setChartData] = useState({
@@ -182,6 +194,8 @@ function ProfilePageComponent() {
         }
     };
 
+    
+
 
     return (
         <>
@@ -210,7 +224,7 @@ function ProfilePageComponent() {
     </style> 
         <Grid container spacing={2} padding={2} sx={{ marginTop: '5rem', justifyContent: matches ? 'center' : 'flex-start' }}>
             <Grid item xs={12} md={4}>
-                <Paper elevation={3} sx={{ padding: 2, borderRadius: '5%' }}>
+                <Paper elevation={3} sx={{ padding: 2, borderRadius: '5px' }}>
                     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                         <input
                             type="file"
@@ -268,6 +282,11 @@ function ProfilePageComponent() {
                         </Box>
                     </Box>
                     <Typography variant="h6" sx={{ textAlign: 'center', padding: '1rem', fontWeight: 'bold' }}>{username}</Typography>
+                </Paper>
+                <Paper elevation={3} sx={{ padding: 2, borderRadius: '5px', marginTop: "20px"}}>
+                    <WorkoutGraph workouts={workouts} /> 
+                </Paper>
+                <Paper elevation={3} sx={{ padding: 2, borderRadius: '5px', marginTop: "20px"}}>
                     <WorkoutGraph workouts={workouts} /> 
                 </Paper>
             </Grid>
