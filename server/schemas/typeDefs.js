@@ -83,7 +83,7 @@ input ExerciseInput {
 }
 
 input CreateWorkoutInput {
-  userId: String!
+  userId: ID!
   workoutTitle: String!
   dateOfWorkout: String!
   duration: Int

@@ -6,67 +6,14 @@ import { useState, useEffect, useRef } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import { useMutation } from '@apollo/client';
+import { CREATE_WORKOUT } from "../utils/mutations";
 
 // chart js
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-function WorkoutGraph({ workouts }) {
-    const [chartData, setChartData] = useState({
-      labels: [],
-      datasets: [
-        {
-          label: 'Number of Workouts',
-          data: [],
-          borderColor: 'rgb(70, 86, 60)',
-          backgroundColor: 'rgba(134, 159, 118, 0.5)',
-        },
-      ],
-    });
-
-    const options = {
-      scales: {
-        x: {
-            beginAtZero: true,
-            title: {
-              display: true,
-              text: 'Number of Workouts'
-            }
-          },
-        y:
-        {
-            type: 'linear', 
-            ticks: {
-              stepSize: 1,
-              min: 1, 
-              max: 30, 
-              callback: function(value) {
-                if (value % 1 === 0) { 
-                  return value;
-                }
-              }
-            },
-          title: {
-            display: true,
-            text: 'Date'
-          }
-        },
-      },
-      plugins: {
-        legend: {
-          display: true,
-          position: 'top',
-        },
-        title: {
-          display: true,
-          text: 'Last 30 Days'
-        }
-      }
-    };
-  
-    return <Line data={chartData} options={options} />;
-}
 
 function ProfilePageComponent() {
     const [username, setUsername] = useState('');
@@ -79,29 +26,88 @@ function ProfilePageComponent() {
     const [dateError, setDateError] = useState('');
 
     const [workouts, setWorkouts] = useState([]);
+    const [createWorkout] = useMutation(CREATE_WORKOUT);
 
+
+
+    function WorkoutGraph({ workouts }) {
+        const [chartData, setChartData] = useState({
+          labels: [],
+          datasets: [
+            {
+              label: 'Number of Workouts',
+              data: [],
+              borderColor: 'rgb(70, 86, 60)',
+              backgroundColor: 'rgba(134, 159, 118, 0.5)',
+            },
+          ],
+        });
+    
+        const options = {
+          scales: {
+            x: {
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: 'Number of Workouts'
+                }
+              },
+            y:
+            {
+                type: 'linear', 
+                ticks: {
+                  stepSize: 1,
+                  min: 1, 
+                  max: 30, 
+                  callback: function(value) {
+                    if (value % 1 === 0) { 
+                      return value;
+                    }
+                  }
+                },
+              title: {
+                display: true,
+                text: 'Date'
+              }
+            },
+          },
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top',
+            },
+            title: {
+              display: true,
+              text: 'Last 30 Days'
+            }
+          }
+        };
+      
+        return <Line data={chartData} options={options} />;
+    }
     // event handler that checks for date validation when adding a workout to the calender
-    const handleAddEvent = () => {
-        const currentDate = new Date();
-        const currentYear = new Date().getFullYear();
-        const eventYear = newEventDate.split('-')[0];
+    const handleAddEvent = async () => {
         const newEvent = { title: newEventTitle, date: newEventDate };
-        const eventDate = new Date(newEventDate);
-
-        if (eventDate < currentDate) {
-            setDateError('Invalid date');
-            return; 
+    
+        try {
+            console.log("title", newEventTitle, "date", newEventDate, "userId", userId )
+            const { data } = await createWorkout({
+                variables: {
+                    input: {
+                        userId,
+                        workoutTitle: newEventTitle,
+                        dateOfWorkout: newEventDate,
+                    },
+                },
+            });
+    
+            setEvents([...events, newEvent]);
+            setDateError('');
+            setNewEventTitle('');
+            setNewEventDate('');
+        } catch (error) {
+            console.error('Error creating workout:', error);
         }
-
-        setEvents([...events, newEvent]);
-        // Reset form
-        if (parseInt(eventYear, 10) !== currentYear) {
-            setDateError('You can only add workouts for the current year.');
-            return;
-        }
-        setDateError('');
-        setNewEventTitle('');
-        setNewEventDate('');
     };
 
     // profile picture
