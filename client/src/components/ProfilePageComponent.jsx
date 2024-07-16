@@ -291,7 +291,7 @@ function ProfilePageComponent() {
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
-                                sx={{ margin: '1rem', maxWidth: '17rem', width: '17rem' }}
+                                sx={{ margin: '1rem', maxWidth: '17rem', width: '12rem' }}
                                 helperText={dateError}
                             />
                             <Button onClick={handleAddEvent} sx={{ 
