@@ -105,14 +105,14 @@ function ProfilePageComponent() {
           endAngle={90}
           sx={() => ({
             [`& .${gaugeClasses.valueText}`]: {
-              fontSize: 25,
+              fontSize: 20,
             },
             [`& .${gaugeClasses.valueArc}`]: {
               fill: "#52b202",
             },
           })}
           text={
-            ({ value, valueMax }) => `${value/10} / ${valueMax/10}`
+            ({ value, valueMax }) => `${value/10} / ${valueMax/10} \nWorkouts`
           }
         />
       </div>
