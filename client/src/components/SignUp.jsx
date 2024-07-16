@@ -91,21 +91,21 @@ const Signup = () => {
   };
 
   return (
+    <div style={{ paddingTop: "100px", paddingBottom: "25px"}}>
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="sm" sx={{
-        marginTop: { xs: '10px', sm: '10rem', md: '8rem' },
         backgroundColor: '#b4c4ab',
         borderRadius: '8px',
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        padding: '10px'
 
       }}>
       <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -255,6 +255,7 @@ const Signup = () => {
         <Copyright sx={{ mt: 5 }} />
       </Container>
     </ThemeProvider>
+    </div>
   );
 };
 

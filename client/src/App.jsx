@@ -41,17 +41,16 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <div className="min-100-vh">
-      <Layout>
-        <Nav />
-        {/* <Header /> */}
-        <div className="container">
-          <Outlet />
+        <Layout>
+          <Nav />
+          {/* <Header /> */}
+          <div className="container">
+            <Outlet />
           </div>
-        {/* <Footer /> */}
+          {/* <Footer /> */}
         </Layout>
       </div>
     </ApolloProvider>
   );
 }
-
 export default App;

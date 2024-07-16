@@ -88,7 +88,10 @@ function Nav() {
                                 onClose={handleClose}
                             >
                                 {!isLoggedIn && location.pathname !== '/login' && (
+                                    <>
+                                    <MenuItem onClick={() => { handleClose(); navigate('/about-us'); }}>About Us</MenuItem>
                                     <MenuItem onClick={() => { handleClose(); navigate('/login'); }}>Login</MenuItem>
+                                    </>
                                 )}
                                 {isLoggedIn && (
                                     <>
@@ -107,6 +110,7 @@ function Nav() {
                         <>
                             {!isLoggedIn && location.pathname !== '/login' && (
                                 <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end', marginX: '2rem' }}>
+                                    <Button sx={{ color: 'white', mx: '1rem' }} onClick={() => navigate('/about-us')}>About Us</Button>
                                     <Button sx={{ color: 'white' }} onClick={() => navigate('/login')}>Login</Button>
                                 </Box>
                             )}

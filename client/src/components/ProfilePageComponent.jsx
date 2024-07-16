@@ -95,15 +95,15 @@ function ProfilePageComponent() {
     const workoutProgress = (currentNumWorkouts / numWorkoutGoal) * 100;
 
     return (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-        <div style={{ marginLeft: '20px' }}>Your Month At A Glance</div>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+        <div><strong>Your Month At A Glance:</strong></div>
         <Gauge
           width={200}
-          height={100}
+          height={200}
           value={workoutProgress}
           startAngle={-90}
           endAngle={90}
-          sx={() => ({
+          sx={() => ({ 
             [`& .${gaugeClasses.valueText}`]: {
               fontSize: 20,
             },
@@ -238,13 +238,11 @@ function ProfilePageComponent() {
   };
 
   return (
-    <>
+    <div style={{ paddingTop: "100px", paddingBottom: "100px" }}>
       <Grid
         container
         spacing={2}
-        padding={2}
         sx={{
-          marginTop: "5rem",
           justifyContent: matches ? "center" : "flex-start",
         }}
       >
@@ -384,7 +382,7 @@ function ProfilePageComponent() {
           </Grid>
         </Grid>
       </Grid>
-    </>
+    </div>
   );
 }
 

@@ -985,6 +985,13 @@ a:hover {
   margin-right: 20px; /* Space between cards */
   /* Add more styling for your cards here */
 }
+/* App.css */
+.layout-full-height {
+  min-height: 100vh; /* Make Layout component take up the full viewport height */
+  display: flex;
+  flex-direction: column; /* Ensures that children of Layout are laid out in a column */
+}
+
 
 .btn {
   text-align: center;
