@@ -10,6 +10,7 @@ import {
   TextField,
   CircularProgress,
   Button,
+
 } from "@mui/material";
 import AuthService from "../utils/auth";
 import { useState, useEffect, useRef } from "react";
@@ -53,6 +54,7 @@ function ProfilePageComponent() {
   const [events, setEvents] = React.useState("");
   const [eventsLoaded, setEventsLoaded] = useState(false);
   const [dateError, setDateError] = useState("");
+  const [titleError, setTitleError] = useState("");
   const [createWorkout] = useMutation(CREATE_WORKOUT);
   const { data } = useQuery(GET_WORKOUTS_BY_USER, { variables: { userId } });
 
@@ -67,7 +69,7 @@ function ProfilePageComponent() {
     }
   }, [data]);
 
-  const WorkoutGraph = ({ events }) => {
+  const WorkoutGauge = ({ events }) => {
     console.log("events", events);
     if (!events || events.length === 0) {
       return null; // Return null or a loading indicator if events are not ready
@@ -111,17 +113,32 @@ function ProfilePageComponent() {
 
   // event handler that checks for date validation when adding a workout to the calender
   const handleAddEvent = async () => {
-    const newEvent = { title: newEventTitle, date: newEventDate };
-
+    let isValid = true;
+  
+    // Validate title
+    if (!newEventTitle.trim()) {
+      setTitleError("Workout title cannot be empty.");
+      isValid = false;
+    } else {
+      setTitleError("");
+    }
+  
+    // Validate date
+    const selectedDate = new Date(newEventDate);
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0); // Remove time part
+  
+    if (!newEventDate) {
+      setDateError("Workout date cannot be empty.");
+      isValid = false;
+    } else {
+      setDateError("");
+    }
+  
+    if (!isValid) return; // Stop if validation fails
+  
+    // Proceed with adding the event if validation passes
     try {
-      console.log(
-        "title",
-        newEventTitle,
-        "date",
-        newEventDate,
-        "userId",
-        userId
-      );
       const { data } = await createWorkout({
         variables: {
           input: {
@@ -131,15 +148,15 @@ function ProfilePageComponent() {
           },
         },
       });
-
-      setEvents([...events, newEvent]);
-      setDateError("");
+  
+      setEvents([...events, { title: newEventTitle, date: newEventDate }]);
       setNewEventTitle("");
       setNewEventDate("");
     } catch (error) {
       console.error("Error creating workout:", error);
     }
   };
+  
 
   // profile picture
   const fileInputRef = useRef(null); // file input
@@ -297,7 +314,7 @@ function ProfilePageComponent() {
             sx={{ padding: 2, borderRadius: "5px", marginTop: "20px" }}
           >
             {eventsLoaded ? (
-              <WorkoutGraph events={events} /> // Render workoutGraph with events
+              <WorkoutGauge events={events} /> // Render workoutGraph with events
             ) : (
               <CircularProgress /> // Show loading indicator while events are not loaded
             )}
@@ -319,6 +336,8 @@ function ProfilePageComponent() {
                 sx={{ marginTop: 2 }}
               >
                 <TextField
+                  error={!!titleError}
+                  helperText={titleError}
                   label="Workout Title"
                   type="title"
                   value={newEventTitle}
@@ -326,6 +345,8 @@ function ProfilePageComponent() {
                   sx={{ margin: "1rem" }}
                 />
                 <TextField
+                  error={!!dateError}
+                  helperText={dateError}
                   label="Workout Date"
                   type="date"
                   value={newEventDate}
@@ -334,7 +355,6 @@ function ProfilePageComponent() {
                     shrink: true,
                   }}
                   sx={{ margin: "1rem", maxWidth: "17rem", width: "12rem" }}
-                  helperText={dateError}
                 />
                 <Button
                   onClick={handleAddEvent}
