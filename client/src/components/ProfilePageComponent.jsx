@@ -71,10 +71,7 @@ function ProfilePageComponent() {
 
   const WorkoutGauge = ({ events }) => {
     console.log("events", events);
-    if (!events || events.length === 0) {
-      return null; // Return null or a loading indicator if events are not ready
-    }
-
+ 
     const numWorkoutGoal = 10;
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth();
