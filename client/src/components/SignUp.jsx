@@ -1,4 +1,4 @@
-// import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -14,6 +14,10 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 import { useMutation } from '@apollo/client';
 import { ADD_USER } from '../utils/mutations';
@@ -39,10 +43,13 @@ const defaultTheme = createTheme();
 const Signup = () => {
 
   const [addUser] = useMutation(ADD_USER);
+  const [showPassword, setShowPassword] = useState (false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    
+
     const userData = {
       username: event.target.username.value,
       firstName: event.target.firstName.value,
@@ -54,7 +61,7 @@ const Signup = () => {
     };
 
     try {
-      const {data} = await addUser({ variables: { userData } });
+      const { data } = await addUser({ variables: { userData } });
 
       Auth.login(data.addUser.token);
     } catch (err) {
@@ -115,7 +122,7 @@ const Signup = () => {
                   id="username"
                   label="username"
                   name="username"
-                  autoComplete="username"                
+                  autoComplete="username"
                 />
               </Grid>
               <Grid item xs={12}>
@@ -166,10 +173,22 @@ const Signup = () => {
                   fullWidth
                   name="password"
                   label="Password"
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   id="password"
                   autoComplete="new-password"
-
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Grid>
             </Grid>
