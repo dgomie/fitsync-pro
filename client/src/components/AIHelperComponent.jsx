@@ -13,9 +13,9 @@ import {
   FormControl,
   FormHelperText,
   TextField,
-  Paper
+  Paper,
 } from "@mui/material";
-import Divider from '@mui/material/Divider';
+import Divider from "@mui/material/Divider";
 import axios from "axios";
 import { useMutation } from "@apollo/client";
 import { CREATE_AI_PLAN } from "../utils/mutations";
@@ -48,7 +48,6 @@ function AIHelperComponent() {
     if (token) {
       setToken(token);
       const payload = JSON.parse(atob(token.split(".")[1]));
-      console.log("payload:", payload);
       const { _id, age, activityLevel } = payload.data;
       setId(_id);
       setAge(age);
@@ -65,7 +64,7 @@ function AIHelperComponent() {
       workoutType,
       location,
       week,
-      bodyPart
+      bodyPart,
     };
 
     const hostUrl = import.meta.env.VITE_HOST_URL;
@@ -174,7 +173,11 @@ function AIHelperComponent() {
       const titleMatch = section.match(/^\*\*(.*)\*\*$/);
       if (titleMatch) {
         return (
-          <Typography variant="h6" key={index} style={{ marginTop: "20px", fontWeight: 'bold' }}>
+          <Typography
+            variant="h6"
+            key={index}
+            style={{ marginTop: "20px", fontWeight: "bold" }}
+          >
             {titleMatch[1]}
           </Typography>
         );
@@ -197,177 +200,229 @@ function AIHelperComponent() {
       );
     });
   };
-  
+
   // Helper function to parse **bold** text
   const parseBoldText = (text) => {
     const parts = text.split(/(\*\*.*?\*\*)/g); // Split text at **bold** parts
     return parts.map((part, index) => {
       if (part.startsWith("**") && part.endsWith("**")) {
-        return <span key={index} style={{ fontWeight: 'bold' }}>{part.slice(2, -2)}</span>;
+        return (
+          <span key={index} style={{ fontWeight: "bold" }}>
+            {part.slice(2, -2)}
+          </span>
+        );
       }
       return part; // Return regular text as is
     });
   };
 
   return (
-    <Paper elevation={3} sx={{ padding: 2, borderRadius: '15px' }}>
-   <Typography variant="h5" component="div" align="center">
-                  Create Your Fit-AI Plan
-                </Typography>
-    <form onSubmit={handleSubmit}>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          mb: 1,
-        }}
-      >
-        <InputLabel style={{ marginRight: "8px" }}>Workout Type:</InputLabel>
-        <FormControl error={errors.workoutType}>
-          <Select
-            value={workoutType}
-            onChange={handleWorkoutTypeChange}
-            displayEmpty
-            inputProps={{ "aria-label": "Without label" }}
+    <Paper elevation={3} sx={{ padding: 2, borderRadius: "15px" }}>
+      <Typography variant="h5" component="div" align="center">
+        Create Your Fit-AI Plan
+      </Typography>
+      <form onSubmit={handleSubmit}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: {
+              xs: "column", // On extra-small screens, use column layout
+              md: "row", // On small screens (and up), use row layout
+            },
+            justifyContent: {
+              md: "space-around", // On small screens (and up), use space-around
+              xs: "center", // On extra-small screens, center content
+            },
+            alignItems: "center", // Center-align items vertically
+            mb: 1,
+            mt: 2,
+          }}
+        >
+          <FormControl
+            error={errors.workoutType}
+            sx={{
+              width: {
+                xs: '80%', 
+                md: '20%'  
+              },
+              marginBottom: {
+                xs: '5px'
+              }
+            }}
           >
-            <MenuItem value="" disabled>
-              Select Workout Type
-            </MenuItem>
-            <MenuItem value="Endurance">Endurance</MenuItem>
-            <MenuItem value="Strength">Strength</MenuItem>
-            <MenuItem value="Speed">Speed</MenuItem>
-            <MenuItem value="Flexibility">Flexibility</MenuItem>
-          </Select>
-          {errors.workoutType && (
-            <FormHelperText>Please select a workout type.</FormHelperText>
-          )}
-        </FormControl>
-      </Box>
+            <InputLabel id="location-label">Workout Type</InputLabel>
+            <Select
+              labelId="location-label"
+              value={workoutType}
+              onChange={handleWorkoutTypeChange}
+              displayEmpty
+              inputProps={{ "aria-label": "Without label" }}
+            >
+              <MenuItem value="" disabled></MenuItem>
+              <MenuItem value="Endurance">Endurance</MenuItem>
+              <MenuItem value="Strength">Strength</MenuItem>
+              <MenuItem value="Speed">Speed</MenuItem>
+              <MenuItem value="Flexibility">Flexibility</MenuItem>
+            </Select>
+            {errors.workoutType && (
+              <FormHelperText>Please select a workout type.</FormHelperText>
+            )}
+          </FormControl>
 
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          mb: 2,
-        }}
-      >
-        <InputLabel style={{ marginRight: "8px" }}>
-          Workout Location:
-        </InputLabel>
-        <FormControl error={errors.location}>
-          <Select
-            value={location}
-            onChange={handleLocationChange}
-            displayEmpty
-            inputProps={{ "aria-label": "Without label" }}
+          <FormControl
+            error={errors.location}
+            sx={{
+              width: {
+                xs: '80%', 
+                md: '20%' 
+              },
+              marginBottom: {
+                xs: '5px'
+              }
+            }}
           >
-            <MenuItem value="" disabled>
-              Select Workout Location
-            </MenuItem>
-            <MenuItem value="Home">Home</MenuItem>
-            <MenuItem value="Gym">Gym</MenuItem>
-            <MenuItem value="Park">Park</MenuItem>
-            <MenuItem value="Office">Office</MenuItem>
-          </Select>
-          {errors.location && (
-            <FormHelperText>Please select a workout location.</FormHelperText>
-          )}
-        </FormControl>
+            <InputLabel id="location-label">Workout Location</InputLabel>
+            <Select
+              labelId="location-label"
+              value={location}
+              onChange={handleLocationChange}
+              displayEmpty
+              inputProps={{ "aria-label": "Without label" }}
+            >
+              <MenuItem value="" disabled></MenuItem>
+              <MenuItem value="Home">Home</MenuItem>
+              <MenuItem value="Gym">Gym</MenuItem>
+              <MenuItem value="Park">Park</MenuItem>
+            </Select>
+            {errors.location && (
+              <FormHelperText>Please select a workout location.</FormHelperText>
+            )}
+          </FormControl>
 
-        <InputLabel style={{ marginRight: "8px" }}>
-          Target Muscle Group:
-        </InputLabel>
-        <FormControl error={errors.bodyPart}>
-          <Select
-            value={bodyPart}
-            onChange={handleBodyPartChange}
-            displayEmpty
-            inputProps={{ "aria-label": "Without label" }}
+          <FormControl
+            error={errors.bodyPart}
+            sx={{
+              width: {
+                xs: '80%', 
+                md: '20%'  
+              },
+              marginBottom: {
+                xs: '5px'
+              }
+            }}
           >
-            <MenuItem value="" disabled>
-              Select Target Muscle Group
-            </MenuItem>
-            <MenuItem value="full body">Full Body</MenuItem>
-            <MenuItem value="upper body">Upper Body</MenuItem>
-            <MenuItem value="lower body">Lower Body</MenuItem>
-            <MenuItem value="arms">Arms</MenuItem>
-            <MenuItem value="legs">Legs</MenuItem>
-            <MenuItem value="core">Core</MenuItem>
-          </Select>
-          {errors.bodyPart && (
-            <FormHelperText>Please select a target muscle group.</FormHelperText>
-          )}
-        </FormControl>
+            <InputLabel id="body-part-label">Target Muscle Group</InputLabel>
+            <Select
+              labelId="body-part-label"
+              value={bodyPart}
+              onChange={handleBodyPartChange}
+              displayEmpty
+              inputProps={{ "aria-label": "Without label" }}
+            >
+              <MenuItem value="" disabled></MenuItem>
+              <MenuItem value="full body">Full Body</MenuItem>
+              <MenuItem value="upper body">Upper Body</MenuItem>
+              <MenuItem value="lower body">Lower Body</MenuItem>
+              <MenuItem value="arms">Arms</MenuItem>
+              <MenuItem value="legs">Legs</MenuItem>
+              <MenuItem value="core">Core</MenuItem>
+            </Select>
+            {errors.bodyPart && (
+              <FormHelperText>
+                Please select target muscle group.
+              </FormHelperText>
+            )}
+          </FormControl>
 
-        <InputLabel style={{ marginRight: "8px" }}>
-          Plan Duration:
-        </InputLabel>
-        <FormControl error={errors.week}>
-          <Select
-            value={week}
-            onChange={handleWeekChange}
-            displayEmpty
-            inputProps={{ "aria-label": "Without label" }}
+          <FormControl
+            error={errors.week}
+            sx={{
+              width: {
+                xs: '80%', 
+                md: '20%'  
+              },
+              marginBottom: {
+                xs: '5px'
+              }
+            }}
           >
-            <MenuItem value="" disabled>
-              Select Plan Duration
-            </MenuItem>
-            <MenuItem value="one">One Week</MenuItem>
-            <MenuItem value="two">Two Weeks</MenuItem>
-            <MenuItem value="three">Three Weeks</MenuItem>
-            <MenuItem value="four">Four Weeks</MenuItem>
-          </Select>
-          {errors.week && (
-            <FormHelperText>Please select a plan duration.</FormHelperText>
-          )}
-        </FormControl>
+            <InputLabel id="week-label">Plan Duration</InputLabel>
+            <Select
+              labelId="week-label"
+              value={week}
+              onChange={handleWeekChange}
+              displayEmpty
+              inputProps={{ "aria-label": "Without label" }}
+            >
+              <MenuItem value="" disabled></MenuItem>
+              <MenuItem value="one">One Week</MenuItem>
+              <MenuItem value="two">Two Weeks</MenuItem>
+              <MenuItem value="three">Three Weeks</MenuItem>
+              <MenuItem value="four">Four Weeks</MenuItem>
+            </Select>
+            {errors.week && (
+              <FormHelperText>Please select a plan duration.</FormHelperText>
+            )}
+          </FormControl>
+        </Box>
 
-        <Button type="submit" variant="contained" color="success" sx={{ m: 2 }}>
-          Generate Workout Plan
-        </Button>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
+          <Button
+            type="submit"
+            variant="contained"
+            color="success"
+            sx={{ m: 2 }}
+          >
+            Generate Workout Plan
+          </Button>
 
-        {isLoading ? (
-          <CircularProgress color="success" />
-        ) : data ? (
-          <Box sx={{ width: "100%", maxWidth: 6800 }}>
-            <div>
-              <CardContent>
-                <Typography variant="h5" component="div" align="center">
-                  Your Fit-AI Workout
-                </Typography>
-                <Divider style={{ margin: '8px 0' }} />
-                {renderWorkoutPlan(data.workoutPlan)}
-              </CardContent>
-              <Box display="flex" justifyContent="center" p={1}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleSave}
-                >
-                  Save Plan
-                </Button>
-                <Snackbar
-                  open={openSnackbar}
-                  autoHideDuration={3000}
-                  onClose={handleCloseSnackbar}
-                >
-                  <Alert
-                    onClose={handleCloseSnackbar}
-                    severity={saveSuccess ? "success" : "error"}
+          {isLoading ? (
+            <CircularProgress color="success" />
+          ) : data ? (
+            <Box sx={{ width: "100%", maxWidth: 6800 }}>
+              <div>
+                <CardContent>
+                  <Typography variant="h5" component="div" align="center">
+                    Your Fit-AI Workout
+                  </Typography>
+                  <Divider style={{ margin: "8px 0" }} />
+                  {renderWorkoutPlan(data.workoutPlan)}
+                </CardContent>
+                <Box display="flex" justifyContent="center" p={1}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleSave}
                   >
-                    {saveSuccess
-                      ? "Plan saved successfully!"
-                      : "Error saving plan."}
-                  </Alert>
-                </Snackbar>
-              </Box>
-            </div>
-          </Box>
-        ) : null}
-      </Box>
-    </form>
+                    Save Plan
+                  </Button>
+                  <Snackbar
+                    open={openSnackbar}
+                    autoHideDuration={3000}
+                    onClose={handleCloseSnackbar}
+                  >
+                    <Alert
+                      onClose={handleCloseSnackbar}
+                      severity={saveSuccess ? "success" : "error"}
+                    >
+                      {saveSuccess
+                        ? "Plan saved successfully!"
+                        : "Error saving plan."}
+                    </Alert>
+                  </Snackbar>
+                </Box>
+              </div>
+            </Box>
+          ) : null}
+        </Box>
+      </form>
     </Paper>
   );
 }

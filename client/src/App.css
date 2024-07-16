@@ -1141,7 +1141,24 @@ a:hover {
   margin-top: '20px' 
 }
 
-
+    .fc .fc-button-primary {
+            background-color: #46563c; /* New primary button color */
+            border-color: #46563c; /* New primary button border color */
+            color: white; /* Text color */
+        }
+        .fc .fc-button-primary:hover {
+            background-color: #869f76; /* New hover state color */
+            border-color: #869f76; /* New hover state border color */
+        }
+        .fc-daygrid-day-number {
+            color: #46563c !important;
+        }
+        .fc .fc-col-header-cell-cushion {
+            color: #46563c;
+        }
+        .fc .fc-day-today {
+            background-color: #ddf2d1 !important;
+        }
 
 form {
   width: 100%;
