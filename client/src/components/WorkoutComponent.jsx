@@ -1,5 +1,4 @@
-import { Container, Box, Typography, Paper, Grid, Card, CardContent, LinearProgress, List, ListItem, ListItemText, Avatar, Divider, CardMedia } from '@mui/material';
-import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
+import { Container, Box, Typography, Paper, Grid, Card, CardContent, LinearProgress, List, ListItem, ListItemText, Avatar, Divider } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const dailyRoutines = [

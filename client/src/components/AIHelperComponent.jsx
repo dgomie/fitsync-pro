@@ -269,7 +269,6 @@ function AIHelperComponent() {
             <MenuItem value="Home">Home</MenuItem>
             <MenuItem value="Gym">Gym</MenuItem>
             <MenuItem value="Park">Park</MenuItem>
-            <MenuItem value="Office">Office</MenuItem>
           </Select>
           {errors.location && (
             <FormHelperText>Please select a workout location.</FormHelperText>

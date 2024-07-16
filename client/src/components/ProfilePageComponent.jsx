@@ -1,339 +1,358 @@
-import React from 'react';
-import { Grid, Paper, Avatar, Typography, Box, useMediaQuery, useTheme, TextField, Button } from '@mui/material';
-import AuthService from '../utils/auth';
-import { useState, useEffect, useRef } from 'react';
-import EditIcon from '@mui/icons-material/Edit';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import { useMutation, useQuery } from '@apollo/client';
+import React from "react";
+import {
+  Grid,
+  Paper,
+  Avatar,
+  Typography,
+  Box,
+  useMediaQuery,
+  useTheme,
+  TextField,
+  CircularProgress,
+  Button,
+} from "@mui/material";
+import AuthService from "../utils/auth";
+import { useState, useEffect, useRef } from "react";
+import EditIcon from "@mui/icons-material/Edit";
+import FullCalendar from "@fullcalendar/react";
+import { Gauge } from "@mui/x-charts/Gauge";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_WORKOUT } from "../utils/mutations";
-import { GET_WORKOUTS_BY_USER } from '../utils/queries';
+import { GET_WORKOUTS_BY_USER } from "../utils/queries";
 
 // chart js
-import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
-
-
-
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 function ProfilePageComponent() {
-    const [username, setUsername] = useState('');
-    const [userId, setUserId] = useState('');
-    
-    // Date states for calender
-    const [newEventTitle, setNewEventTitle] = React.useState('');
-    const [newEventDate, setNewEventDate] = React.useState('');
-    const [events, setEvents] = React.useState('');
-    const [dateError, setDateError] = useState('');
+  const [username, setUsername] = useState("");
+  const [userId, setUserId] = useState("");
 
-    const [workouts, setWorkouts] = useState([]);
-    const [createWorkout] = useMutation(CREATE_WORKOUT);
-    const { data } = useQuery(GET_WORKOUTS_BY_USER, { variables: {userId}})
+  // Date states for calender
+  const [newEventTitle, setNewEventTitle] = React.useState("");
+  const [newEventDate, setNewEventDate] = React.useState("");
+  const [events, setEvents] = React.useState("");
+  const [eventsLoaded, setEventsLoaded] = useState(false);
+  const [dateError, setDateError] = useState("");
 
-    useEffect(() => {
-        if (data && data.workouts) {
-          const formattedEvents = data.workouts.map(workout => ({
-            title: workout.workoutTitle,
-            date: workout.dateOfWorkout,
-          }));
-          console.log(formattedEvents)
-          setEvents(formattedEvents);
-        }
-      }, [data]);
+  const [workouts, setWorkouts] = useState([]);
+  const [createWorkout] = useMutation(CREATE_WORKOUT);
+  const { data } = useQuery(GET_WORKOUTS_BY_USER, { variables: { userId } });
 
-    function WorkoutGraph({ workouts }) {
-        const [chartData, setChartData] = useState({
-          labels: [],
-          datasets: [
-            {
-              label: 'Number of Workouts',
-              data: [],
-              borderColor: 'rgb(70, 86, 60)',
-              backgroundColor: 'rgba(134, 159, 118, 0.5)',
-            },
-          ],
-        });
-    
-        const options = {
-          scales: {
-            x: {
-                beginAtZero: true,
-                title: {
-                  display: true,
-                  text: 'Number of Workouts'
-                }
-              },
-            y:
-            {
-                type: 'linear', 
-                ticks: {
-                  stepSize: 1,
-                  min: 1, 
-                  max: 30, 
-                  callback: function(value) {
-                    if (value % 1 === 0) { 
-                      return value;
-                    }
-                  }
-                },
-              title: {
-                display: true,
-                text: 'Date'
-              }
-            },
-          },
-          plugins: {
-            legend: {
-              display: true,
-              position: 'top',
-            },
-            title: {
-              display: true,
-              text: 'Last 30 Days'
-            }
-          }
-        };
-      
-        return <Line data={chartData} options={options} />;
+  useEffect(() => {
+    if (data && data.workouts) {
+      const formattedEvents = data.workouts.map((workout) => ({
+        title: workout.workoutTitle,
+        date: workout.dateOfWorkout,
+      }));
+      setEvents(formattedEvents);
+      setWorkouts(formattedEvents);
+      setEventsLoaded(true);
     }
-    // event handler that checks for date validation when adding a workout to the calender
-    const handleAddEvent = async () => {
-        const newEvent = { title: newEventTitle, date: newEventDate };
-    
-        try {
-            console.log("title", newEventTitle, "date", newEventDate, "userId", userId )
-            const { data } = await createWorkout({
-                variables: {
-                    input: {
-                        userId,
-                        workoutTitle: newEventTitle,
-                        dateOfWorkout: newEventDate,
-                    },
-                },
-            });
-    
-            setEvents([...events, newEvent]);
-            setDateError('');
-            setNewEventTitle('');
-            setNewEventDate('');
-        } catch (error) {
-            console.error('Error creating workout:', error);
-        }
-    };
+  }, [data]);
 
-    // profile picture
-    const fileInputRef = useRef(null); // file input
-    const [avatarUrl, setAvatarUrl] = useState(''); // avatar urls
-    const [isHovering, setIsHovering] = useState(false); // setting state for hovers for profile picture
-
-    const theme = useTheme();
-    const matches = useMediaQuery(theme.breakpoints.down('sm'));
-
-
-    useEffect(() => {
-        const profile = AuthService.getProfile();
-        setUsername(profile.data.username);
-        setUserId(profile.data._id);
-        getImage(profile.data._id);
-    }, []);
-
-
-    // profile picture handlers
-    const handleAvatarClick = () => {
-        fileInputRef.current.click();
-    };
-
-    // Function to fetch user image
-    function getImage(userId) {
-        if (!userId) return;
-        const hostUrl = import.meta.env.VITE_HOST_URL;
-        fetch(`${hostUrl}/profileImage/${userId}`, {
-            method: 'GET',
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                setAvatarUrl(data.data.profilePicture);
-            })
-            .catch((error) => console.error('Error fetching image:', error));
+  const WorkoutGraph = ({ events }) => {
+    console.log("events", events)
+    if (!events || events.length === 0) {
+      return null; // Return null or a loading indicator if events are not ready
     }
 
-    // function to upload user image
-    const uploadImage = async (imageString) => {
-        const hostUrl = import.meta.env.VITE_HOST_URL;
-        fetch(`${hostUrl}/upload`, {
-            method: 'POST',
-            crossDomain: true,
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-                'Access-Control-Allow-Origin': '*',
-            },
-            body: JSON.stringify({
-                avatarUrl: imageString,
-                userId
-            })
-        }).then((res) => res.json())
-            .then((data) => console.log(data))
-            .catch(err => {
-                console.log(err)
-            });
-    }
+    const numWorkoutGoal = 10;
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth();
+    const currentYear = currentDate.getFullYear();
 
-    // handler for file changes
-    const handleFileChange = async (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const imageString = reader.result;
-                setAvatarUrl(imageString);
-                uploadImage(imageString);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
+    // Filter events to include only those within the current month
+    const filteredEvents = events.filter((event) => {
+      const eventDate = new Date(event.date);
+      return (
+        eventDate.getMonth() === currentMonth &&
+        eventDate.getFullYear() === currentYear
+      );
+    });
 
-    
-
+    const currentNumWorkouts = filteredEvents.length;
+    const workoutProgress = (currentNumWorkouts / numWorkoutGoal) * 100;
 
     return (
-        <>
-        {/* FullCalendar styling (does not use material ui) */}
-        <style>
-        {`
-        .fc .fc-button-primary {
-            background-color: #46563c; /* New primary button color */
-            border-color: #46563c; /* New primary button border color */
-            color: white; /* Text color */
-        }
-        .fc .fc-button-primary:hover {
-            background-color: #869f76; /* New hover state color */
-            border-color: #869f76; /* New hover state border color */
-        }
-        .fc-daygrid-day-number {
-            color: #46563c !important;
-        }
-        .fc .fc-col-header-cell-cushion {
-            color: #46563c;
-        }
-        .fc .fc-day-today {
-            background-color: #ddf2d1 !important;
-        }
-        `}
-    </style> 
-        <Grid container spacing={2} padding={2} sx={{ marginTop: '5rem', justifyContent: matches ? 'center' : 'flex-start' }}>
-            <Grid item xs={12} md={4}>
-                <Paper elevation={3} sx={{ padding: 2, borderRadius: '5px' }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                        <input
-                            type="file"
-                            ref={fileInputRef}
-                            onChange={handleFileChange}
-                            style={{ display: 'none' }}
-                            accept="image/*"
-                        />
-                        <Box
-                            sx={{
-                                position: 'relative', width: 100, height: 100,
-                                '&:hover': {
-                                    '& .editIcon': {
-                                        display: 'flex',
-                                    },
-                                    '&:hover': {
-                                        filter: 'grayscale(30%) brightness(70%)',
-                                        'svg': {
-                                            fill: '#696969'
-                                        }
-                                    }
-                                },
-                            }}
-                            onMouseEnter={() => setIsHovering(true)}
-                            onMouseLeave={() => setIsHovering(false)}
-                        >
-                            <Avatar
-                                alt="Profile Picture"
-                                className="avatar"
-                                sx={{
-                                    width: 100, height: 100, marginBottom: 2, cursor: 'pointer',
-                                }}
-                                onClick={handleAvatarClick}
-                                src={avatarUrl}
-                            >
-                                {!avatarUrl && <EditIcon />}
-                            </Avatar>
-                            {avatarUrl && isHovering && (
-                                <EditIcon
-                                    className="editIcon"
-                                    sx={{
-                                        position: 'absolute',
-                                        top: '50%',
-                                        left: '50%',
-                                        transform: 'translate(-50%, -50%)',
-                                        width: 24,
-                                        height: 24,
-                                        color: 'white',
-                                        zIndex: 2,
-                                        cursor: 'pointer'
-                                    }}
-
-                                />
-                            )}
-                        </Box>
-                    </Box>
-                    <Typography variant="h6" sx={{ textAlign: 'center', padding: '1rem', fontWeight: 'bold' }}>{username}</Typography>
-                </Paper>
-                <Paper elevation={3} sx={{ padding: 2, borderRadius: '5px', marginTop: "20px"}}>
-                    <WorkoutGraph workouts={workouts} /> 
-                </Paper>
-                <Paper elevation={3} sx={{ padding: 2, borderRadius: '5px', marginTop: "20px"}}>
-                    <WorkoutGraph workouts={workouts} /> 
-                </Paper>
-            </Grid>
-            <Grid item xs={12} md={8} container spacing={2}>
-                <Grid item xs={12}>
-                    <Paper elevation={3} sx={{ padding: 2 }}>
-                        <FullCalendar
-                            key={events.length}
-                            plugins={[dayGridPlugin]}
-                            initialView="dayGridMonth"
-                            weekends={true}
-                            events={events}
-                        />
-                        <Box component="form" onSubmit={(e) => e.preventDefault()} sx={{ marginTop: 2 }}>
-                            <TextField
-                                label="Workout Title"
-                                type="title"
-                                value={newEventTitle}
-                                onChange={(e) => setNewEventTitle(e.target.value)}
-                                sx={{ margin: '1rem' }}
-                            />
-                            <TextField
-                                label="Workout Date"
-                                type="date"
-                                value={newEventDate}
-                                onChange={(e) => setNewEventDate(e.target.value)}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                sx={{ margin: '1rem', maxWidth: '17rem', width: '12rem' }}
-                                helperText={dateError}
-                            />
-                            <Button onClick={handleAddEvent} sx={{ 
-                                margin: '1rem', 
-                                marginTop: '1.5rem', 
-                                backgroundColor: '#46563c', 
-                                '&:hover': {
-                                backgroundColor: '#869f76'
-                                }, 
-                                color: 'white' }}> + Add Workout</Button>
-                        </Box>
-                    </Paper>
-                </Grid>
-            </Grid>
-        </Grid>
-        </>
+      <Gauge
+        width={200}
+        height={100}
+        value={workoutProgress}
+        startAngle={-90}
+        endAngle={90}
+      />
     );
+  };
+
+  // event handler that checks for date validation when adding a workout to the calender
+  const handleAddEvent = async () => {
+    const newEvent = { title: newEventTitle, date: newEventDate };
+
+    try {
+      console.log(
+        "title",
+        newEventTitle,
+        "date",
+        newEventDate,
+        "userId",
+        userId
+      );
+      const { data } = await createWorkout({
+        variables: {
+          input: {
+            userId,
+            workoutTitle: newEventTitle,
+            dateOfWorkout: newEventDate,
+          },
+        },
+      });
+
+      setEvents([...events, newEvent]);
+      setDateError("");
+      setNewEventTitle("");
+      setNewEventDate("");
+    } catch (error) {
+      console.error("Error creating workout:", error);
+    }
+  };
+
+  // profile picture
+  const fileInputRef = useRef(null); // file input
+  const [avatarUrl, setAvatarUrl] = useState(""); // avatar urls
+  const [isHovering, setIsHovering] = useState(false); // setting state for hovers for profile picture
+
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.down("sm"));
+
+  useEffect(() => {
+    const profile = AuthService.getProfile();
+    setUsername(profile.data.username);
+    setUserId(profile.data._id);
+    getImage(profile.data._id);
+  }, []);
+
+  // profile picture handlers
+  const handleAvatarClick = () => {
+    fileInputRef.current.click();
+  };
+
+  // Function to fetch user image
+  function getImage(userId) {
+    if (!userId) return;
+    const hostUrl = import.meta.env.VITE_HOST_URL;
+    fetch(`${hostUrl}/profileImage/${userId}`, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setAvatarUrl(data.data.profilePicture);
+      })
+      .catch((error) => console.error("Error fetching image:", error));
+  }
+
+  // function to upload user image
+  const uploadImage = async (imageString) => {
+    const hostUrl = import.meta.env.VITE_HOST_URL;
+    fetch(`${hostUrl}/upload`, {
+      method: "POST",
+      crossDomain: true,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify({
+        avatarUrl: imageString,
+        userId,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data))
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  // handler for file changes
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const imageString = reader.result;
+        setAvatarUrl(imageString);
+        uploadImage(imageString);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  return (
+    <>
+      <Grid
+        container
+        spacing={2}
+        padding={2}
+        sx={{
+          marginTop: "5rem",
+          justifyContent: matches ? "center" : "flex-start",
+        }}
+      >
+        <Grid item xs={12} md={4}>
+          <Paper elevation={3} sx={{ padding: 2, borderRadius: "5px" }}>
+            <Box sx={{ display: "flex", justifyContent: "center" }}>
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                style={{ display: "none" }}
+                accept="image/*"
+              />
+              <Box
+                sx={{
+                  position: "relative",
+                  width: 100,
+                  height: 100,
+                  "&:hover": {
+                    "& .editIcon": {
+                      display: "flex",
+                    },
+                    "&:hover": {
+                      filter: "grayscale(30%) brightness(70%)",
+                      svg: {
+                        fill: "#696969",
+                      },
+                    },
+                  },
+                }}
+                onMouseEnter={() => setIsHovering(true)}
+                onMouseLeave={() => setIsHovering(false)}
+              >
+                <Avatar
+                  alt="Profile Picture"
+                  className="avatar"
+                  sx={{
+                    width: 100,
+                    height: 100,
+                    marginBottom: 2,
+                    cursor: "pointer",
+                  }}
+                  onClick={handleAvatarClick}
+                  src={avatarUrl}
+                >
+                  {!avatarUrl && <EditIcon />}
+                </Avatar>
+                {avatarUrl && isHovering && (
+                  <EditIcon
+                    className="editIcon"
+                    sx={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                      width: 24,
+                      height: 24,
+                      color: "white",
+                      zIndex: 2,
+                      cursor: "pointer",
+                    }}
+                  />
+                )}
+              </Box>
+            </Box>
+            <Typography
+              variant="h6"
+              sx={{ textAlign: "center", padding: "1rem", fontWeight: "bold" }}
+            >
+              {username}
+            </Typography>
+          </Paper>
+          <Paper
+            elevation={3}
+            sx={{ padding: 2, borderRadius: "5px", marginTop: "20px" }}
+          >
+            {eventsLoaded ? (
+              <WorkoutGraph events={events} /> // Render workoutGraph with events
+            ) : (
+              <CircularProgress /> // Show loading indicator while events are not loaded
+            )}
+          </Paper>
+        </Grid>
+        <Grid item xs={12} md={8} container spacing={2}>
+          <Grid item xs={12}>
+            <Paper elevation={3} sx={{ padding: 2 }}>
+              <FullCalendar
+                key={events.length}
+                plugins={[dayGridPlugin]}
+                initialView="dayGridMonth"
+                weekends={true}
+                events={events}
+              />
+              <Box
+                component="form"
+                onSubmit={(e) => e.preventDefault()}
+                sx={{ marginTop: 2 }}
+              >
+                <TextField
+                  label="Workout Title"
+                  type="title"
+                  value={newEventTitle}
+                  onChange={(e) => setNewEventTitle(e.target.value)}
+                  sx={{ margin: "1rem" }}
+                />
+                <TextField
+                  label="Workout Date"
+                  type="date"
+                  value={newEventDate}
+                  onChange={(e) => setNewEventDate(e.target.value)}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  sx={{ margin: "1rem", maxWidth: "17rem", width: "12rem" }}
+                  helperText={dateError}
+                />
+                <Button
+                  onClick={handleAddEvent}
+                  sx={{
+                    margin: "1rem",
+                    marginTop: "1.5rem",
+                    backgroundColor: "#46563c",
+                    "&:hover": {
+                      backgroundColor: "#869f76",
+                    },
+                    color: "white",
+                  }}
+                >
+                  {" "}
+                  + Add Workout
+                </Button>
+              </Box>
+            </Paper>
+          </Grid>
+        </Grid>
+      </Grid>
+    </>
+  );
 }
 
 export default ProfilePageComponent;
