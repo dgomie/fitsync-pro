@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Box, Typography, Grid, Link, Paper, Avatar } from '@mui/material';
+import { Container, Box, Typography, Grid, Link, Paper, Card, CardContent, CardMedia } from '@mui/material';
 
 const AboutUs = () => {
     return (
@@ -10,7 +10,6 @@ const AboutUs = () => {
             alignItems="center"
             minHeight="105vh"
             textAlign="center"
-
             p={{ xs: 2, sm: 4, md: 10 }}
         >
             <Container maxWidth="lg">
@@ -42,74 +41,76 @@ const AboutUs = () => {
                             </Typography>
                             <Grid container spacing={4} justifyContent="center">
                                 <Grid item xs={12} sm={6} md={4}>
-                                    <Box textAlign="center">
-                                        <Avatar
+                                    <Card sx={{ maxWidth: 345, mx: 'auto' }}>
+                                        <CardMedia
+                                            component="img"
+                                            height="200"
+                                            image="/src/images/danscat.jpg"
                                             alt="Daniel Gomez"
-                                            src="/src/images/danscat.jpg"
                                             sx={{
-                                                width: { xs: 100, sm: 120 },
-                                                height: { xs: 100, sm: 120 },
-                                                margin: '0 auto',
                                                 transition: 'transform 0.3s',
                                                 '&:hover': {
                                                     transform: 'scale(1.1)',
                                                 },
                                             }}
                                         />
-                                        <Typography variant="h6" component="h3" mt={2}>
-                                            Daniel Gomez
-                                        </Typography>
-                                        <Typography variant="body2">
-                                            Back-end Developer
-                                        </Typography>
-                                    </Box>
+                                        <CardContent>
+                                            <Typography variant="h6" component="h3">
+                                                Daniel Gomez
+                                            </Typography>
+                                            <Typography variant="body2" color="textSecondary">
+                                                Back-end Developer
+                                            </Typography>
+                                        </CardContent>
+                                    </Card>
                                 </Grid>
                                 <Grid item xs={12} sm={6} md={4}>
-                                    <Box textAlign="center">
-                                        <Avatar
+                                    <Card sx={{ maxWidth: 345, mx: 'auto' }}>
+                                        <CardMedia
+                                            component="img"
+                                            height="200"
+                                            image="/src/images/kaylacat.jpg"
                                             alt="Kayla Freeman"
-                                            src="/src/images/kaylacat.jpg"
                                             sx={{
-                                                width: { xs: 100, sm: 120 },
-                                                height: { xs: 100, sm: 120 },
-                                                margin: '0 auto',
                                                 transition: 'transform 0.3s',
                                                 '&:hover': {
                                                     transform: 'scale(1.1)',
                                                 },
                                             }}
                                         />
-                                        <Typography variant="h6" component="h3" mt={2}>
-                                            Kayla Freeman
-                                        </Typography>
-                                        <Typography variant="body2">
-                                            Front-end Developer
-                                        </Typography>
-                                    </Box>
+                                        <CardContent>
+                                            <Typography variant="h6" component="h3">
+                                                Kayla Freeman
+                                            </Typography>
+                                            <Typography variant="body2" color="textSecondary">
+                                                Front-end Developer
+                                            </Typography>
+                                        </CardContent>
+                                    </Card>
                                 </Grid>
-                                
                                 <Grid item xs={12} sm={6} md={4}>
-                                    <Box textAlign="center">
-                                        <Avatar
+                                    <Card sx={{ maxWidth: 345, mx: 'auto' }}>
+                                        <CardMedia
+                                            component="img"
+                                            height="200"
+                                            image="/src/images/dogs.jpg"
                                             alt="Francisco Ortiz"
-                                            src="/src/images/dogs.jpg"
                                             sx={{
-                                                width: { xs: 100, sm: 120 },
-                                                height: { xs: 100, sm: 120 },
-                                                margin: '0 auto',
                                                 transition: 'transform 0.3s',
                                                 '&:hover': {
                                                     transform: 'scale(1.1)',
                                                 },
                                             }}
                                         />
-                                        <Typography variant="h6" component="h3" mt={2}>
-                                            Francisco Ortiz
-                                        </Typography>
-                                        <Typography variant="body2">
-                                            Designer & Developer
-                                        </Typography>
-                                    </Box>
+                                        <CardContent>
+                                            <Typography variant="h6" component="h3">
+                                                Francisco Ortiz
+                                            </Typography>
+                                            <Typography variant="body2" color="textSecondary">
+                                                Designer & Developer
+                                            </Typography>
+                                        </CardContent>
+                                    </Card>
                                 </Grid>
                             </Grid>
                         </Box>
