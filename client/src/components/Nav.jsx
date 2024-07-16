@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { AppBar, Toolbar, Typography, Button, ThemeProvider, createTheme, useMediaQuery, IconButton, Menu, MenuItem, Box } from '@mui/material';
+import { AppBar, Toolbar, Button, ThemeProvider, createTheme, useMediaQuery, IconButton, Menu, MenuItem, Box } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Auth from '../utils/auth';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
+import logo from '../images/fitsync-pro-transparent.png'
 
 const theme = createTheme({
     palette: {
@@ -18,7 +19,7 @@ function Nav() {
     const navigate = useNavigate(); // navigates pages
     const location = useLocation();
     const isLoggedIn = Auth.loggedIn(); // checks if user is logged in
-    const matches = useMediaQuery(theme.breakpoints.down('sm')); // checks for screen size
+    const matches = useMediaQuery(theme.breakpoints.down('md')); // checks for screen size
     const [anchorEl, setAnchorEl] = useState(null);
     const [isScrolled, setIsScrolled] = useState(false);
 
@@ -53,17 +54,22 @@ function Nav() {
                 marginX: 'auto'
             }}>
                 <Toolbar>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: 'white', cursor: 'pointer', marginX: { sm: '0', md: '4rem' } }} onClick={() => navigate('/')}>
-                        FitSync Pro
-                    </Typography>
+                    {!matches && (
+                        <Box sx={{ color: 'white', cursor: 'pointer', marginX: { sm: '0', md: '4rem' } }} onClick={() => navigate('/')}>
+                            <img src={logo} alt="Logo" style={{ height: '50px', backgroundColor: 'white', borderRadius: '50%', padding: '10px' }} />
+                        </Box>
+                    )}
                     {matches ? (
                         <>
                             <IconButton
                                 color="inherit"
                                 aria-label="open drawer"
-                                edge="end"
+                                edge="start"
                                 onClick={handleMenu}
-                                sx={{ color: 'white' }}
+                                sx={{
+                                    color: 'white',
+                                    marginLeft: 'auto'
+                                }}
                             >
                                 <MenuIcon />
                             </IconButton>
@@ -105,7 +111,7 @@ function Nav() {
                             )}
                             {isLoggedIn && (
                                 <>
-                                    <Box sx={{ display: 'flex', justifyContent: 'center', flexGrow: 1, marginRight: '25rem' }}>
+                                    <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', marginLeft: '10rem' }}>
                                         <Button sx={{ color: 'white', mx: '1rem' }} onClick={() => navigate('/about-us')}>About Us</Button>
                                         <Button sx={{ color: 'white', mx: '1rem' }} onClick={() => navigate('/workout')}>Workout</Button>
                                         <Button sx={{ color: 'white', mx: '1rem' }} onClick={() => navigate('/fit-ai')}>Fit-AI</Button>

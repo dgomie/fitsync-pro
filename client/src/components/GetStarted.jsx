@@ -1,8 +1,10 @@
-import React from 'react';
+
 import { Container, Box, Typography, Button, Paper, Card, CardMedia, CardContent } from '@mui/material';
 
 const GetStartedPage = () => {
     return (
+        <>
+
         <Box
             display="flex"
             flexDirection="column"
@@ -10,10 +12,15 @@ const GetStartedPage = () => {
             alignItems="center"
             minHeight="100vh"
             textAlign="center"
-            bgcolor="#f0f4f8"
+            // bgcolor="#f0f4f8"
             p={2}
             position="relative"
+            // sx={{ marginTop: '25rem'}}
         >
+                    <Box sx={{ width: '100%', height: '2rem', backgroundColor: 'rgb(246, 246, 241)', marginBottom: '2rem', marginTop: '2rem'}}
+        
+        
+    />
             <Container maxWidth="md">
                 <Paper elevation={3} style={{ padding: '2rem', margin: '0 auto', position: 'relative' }}>
 
@@ -72,6 +79,7 @@ const GetStartedPage = () => {
                 </Paper>
             </Container>
         </Box>
+        </>
     );
 };
 
