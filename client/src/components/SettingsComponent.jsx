@@ -17,7 +17,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  FormControl
+  FormControl,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useMutation, useQuery } from "@apollo/client";
@@ -35,6 +35,8 @@ const SettingsComponent = () => {
   const [lastName, setLastName] = useState("Last Name");
   const [email, setEmail] = useState("Email");
   const [activityLevel, setActivityLevel] = useState("");
+  const [workoutGoal, setWorkoutGoal] = useState("");
+  const [durationGoal, setDurationGoal] = useState("")
   const [userId, setUserId] = useState("");
   const [updateSuccess, setUpdateSuccess] = useState(false);
 
@@ -55,8 +57,8 @@ const SettingsComponent = () => {
       setFirstName(data.user.firstName);
       setLastName(data.user.lastName);
       setEmail(data.user.email);
-      setActivityLevel(data.user.activityLevel)
-      setUserId(data.user._id)
+      setActivityLevel(data.user.activityLevel);
+      setUserId(data.user._id);
     }
   }, [data]);
 
@@ -72,7 +74,6 @@ const SettingsComponent = () => {
   };
 
   const handleDelete = () => {
-
     removeUserMutation({ variables: { userId } })
       .then((response) => {
         console.log("User removed:", response.data.removeUser);
@@ -84,18 +85,18 @@ const SettingsComponent = () => {
       });
   };
 
-  const handleUpdateProfile = async () => { 
+  const handleUpdateProfile = async () => {
     const updateData = {
       firstName,
       lastName,
       email,
-      activityLevel
-    }
+      activityLevel,
+    };
     try {
       const response = await updateUser({
         variables: { userId, updateData },
       });
-      console.log('Update successful', response);
+      console.log("Update successful", response);
       setUpdateSuccess(true);
       setTimeout(() => setUpdateSuccess(false), 5000);
     } catch (error) {
@@ -116,75 +117,106 @@ const SettingsComponent = () => {
       alignItems="center"
       minHeight="100vh"
       textAlign="center"
-      sx={{ paddingTop: "100px", paddingBottom: "100px"}}
+      sx={{ paddingTop: "100px", paddingBottom: "100px" }}
     >
       <Container maxWidth="md">
-        <Paper
-          elevation={3}
-          sx={{ padding: { xs: 2, sm: 4, md: 6 }}}
-        >
+        <Paper elevation={3} sx={{ padding: { xs: 2, sm: 4, md: 6 } }}>
           <Typography variant="h2" component="header" gutterBottom>
             Settings
           </Typography>
           <Box component="main" sx={{ width: "100%" }}>
-          <Box mb={4}>
-      <Typography variant="h4" component="h2" gutterBottom>
-        Profile Information
-      </Typography>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            label="First Name"
-            variant="outlined"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            label="Last Name"
-            variant="outlined"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            fullWidth
-            label="Email"
-            variant="outlined"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <FormControl fullWidth variant="outlined">
-            <InputLabel id="exercise-experience-select-label">Exercise Experience</InputLabel>
-            <Select
-              labelId="exercise-experience-label"
-              id="exercise-experience-select"
-              value={activityLevel}
-              onChange={(e) => setActivityLevel(e.target.value)}
-              label="Exercise Experience"
-            >
-              <MenuItem value="Beginner">Beginner</MenuItem>
-              <MenuItem value="Intermediate">Intermediate</MenuItem>
-              <MenuItem value="Advanced">Advanced</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
-      </Grid>
-      <Box mt={2}>
-        <Button variant="contained" color="primary" onClick={handleUpdateProfile}>
-          Update Profile
-        </Button>
-        <div>
-      {updateSuccess && <div className="mt-1">Profile updated successfully!</div>}
-    </div>
-      </Box>
-    </Box>
+            <Box mb={4}>
+              <Typography variant="h4" component="h2" gutterBottom>
+                Profile Information
+              </Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label="First Name"
+                    variant="outlined"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label="Last Name"
+                    variant="outlined"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Email"
+                    variant="outlined"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControl fullWidth variant="outlined">
+                    <InputLabel id="exercise-experience-select-label">
+                      Exercise Experience
+                    </InputLabel>
+                    <Select
+                      labelId="exercise-experience-label"
+                      id="exercise-experience-select"
+                      value={activityLevel}
+                      onChange={(e) => setActivityLevel(e.target.value)}
+                      label="Exercise Experience"
+                    >
+                      <MenuItem value="Beginner">Beginner</MenuItem>
+                      <MenuItem value="Intermediate">Intermediate</MenuItem>
+                      <MenuItem value="Advanced">Advanced</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <FormControl fullWidth variant="outlined">
+                    <TextField
+                      id="workout-goal-input"
+                      label="Monthly Workout Goal"
+                      type="number"
+                      value={workoutGoal}
+                      onChange={(e) => setWorkoutGoal(Number(e.target.value))}
+                      variant="outlined"
+                      inputProps={{ min: "0" }}
+                    />
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <FormControl fullWidth variant="outlined">
+                    <TextField
+                      id="duration-goal-input"
+                      label="Monthly Duration Goal (mins)"
+                      type="number"
+                      value={durationGoal}
+                      onChange={(e) => setDurationGoal(Number(e.target.value))}
+                      variant="outlined"
+                      inputProps={{ min: "0" }}
+                    />
+                  </FormControl>
+                </Grid>
+              </Grid>
+              <Box mt={2}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleUpdateProfile}
+                >
+                  Update Profile
+                </Button>
+                <div>
+                  {updateSuccess && (
+                    <div className="mt-1">Profile updated successfully!</div>
+                  )}
+                </div>
+              </Box>
+            </Box>
             <Box mb={4}>
               <Typography variant="h4" component="h2" gutterBottom>
                 Change Password

@@ -309,8 +309,9 @@ const WorkoutComponent = () => {
                   margin="dense"
                   name="duration"
                   label="Duration (mins)"
-                  type="text"
+                  type="number"
                   fullWidth
+                  inputProps={{ min: "1" }} 
                   value={formData.duration}
                   onChange={handleChange}
                   error={!!errors.duration}
@@ -320,7 +321,8 @@ const WorkoutComponent = () => {
                   margin="dense"
                   name="calories"
                   label="Calories Burned"
-                  type="text"
+                  type="number"
+                  inputProps={{ min: "0" }} 
                   fullWidth
                   value={formData.calories}
                   onChange={handleChange}
