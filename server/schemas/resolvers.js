@@ -31,6 +31,8 @@ const resolvers = {
         email: userData.email,
         dateOfBirth: userData.dateOfBirth,
         activityLevel: userData.activityLevel,
+        durationGoal: userData.durationGoal,
+        workoutGoal: userData.workoutGoal
       });
       const token = signToken(newUser);
       return { token, user: newUser };
