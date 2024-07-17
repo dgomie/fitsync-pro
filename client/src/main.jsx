@@ -11,13 +11,14 @@ import AboutUs from './pages/AboutUsPage.jsx';
 import SettingsPage from './pages/settingsPage.jsx';
 import AIHelperPage from './pages/AIHelperPage.jsx'
 import WorkoutPage from './pages/WorkoutPage.jsx';
-
+import ErrorPage from './pages/ErrorPage.jsx';
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
-
+    errorElement: <ErrorPage />,
+    
     children: [
       {
         index: true,
