@@ -150,7 +150,6 @@ const WorkoutComponent = () => {
         caloriesBurned: parsedCalories,
       };
 
-      console.log(input);
       await createWorkout({
         variables: {
           input,
