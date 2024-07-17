@@ -10,7 +10,6 @@ import {
   TextField,
   CircularProgress,
   Button,
-
 } from "@mui/material";
 import AuthService from "../utils/auth";
 import { useState, useEffect, useRef } from "react";
@@ -20,10 +19,8 @@ import { Gauge, gaugeClasses } from "@mui/x-charts/Gauge";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_WORKOUT } from "../utils/mutations";
-import { GET_WORKOUTS_BY_USER } from "../utils/queries";
+import { GET_WORKOUTS_BY_USER, GET_USER } from "../utils/queries";
 
-// chart js
-import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -47,6 +44,8 @@ ChartJS.register(
 function ProfilePageComponent() {
   const [username, setUsername] = useState("");
   const [userId, setUserId] = useState("");
+  const [calorieGoal, setCalorieGoal] = useState("");
+  const [workoutGoal, setWorkoutGoal] = useState("");
 
   // Date states for calender
   const [newEventTitle, setNewEventTitle] = React.useState("");
@@ -70,12 +69,17 @@ function ProfilePageComponent() {
   }, [data]);
 
   const WorkoutGauge = ({ events }) => {
-    console.log("events", events);
-    if (!events || events.length === 0) {
-      return null; // Return null or a loading indicator if events are not ready
-    }
+    const { data, loading, error } = useQuery(GET_USER, {
+      variables: { userId },
+    });
 
-    const numWorkoutGoal = 10;
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error.message}</p>;
+
+    let userWorkoutGoal = 0;
+    if (data.user.workoutGoal) {
+      userWorkoutGoal = data.user.workoutGoal;
+    }
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth();
     const currentYear = currentDate.getFullYear();
@@ -83,27 +87,36 @@ function ProfilePageComponent() {
     // Filter events to include only those within the current month
     const filteredEvents = events.filter((event) => {
       const eventDate = new Date(event.date);
-      console.log(eventDate.getMonth())
-      const eventMonth = event.date.split('-')[1]-1
+      const eventMonth = event.date.split("-")[1] - 1;
       return (
-        eventMonth === currentMonth &&
-        eventDate.getFullYear() === currentYear
+        eventMonth === currentMonth && eventDate.getFullYear() === currentYear
       );
     });
 
     const currentNumWorkouts = filteredEvents.length;
-    const workoutProgress = (currentNumWorkouts / numWorkoutGoal) * 100;
+    const workoutProgress = (currentNumWorkouts / userWorkoutGoal) * 100;
 
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-        <div><strong>Your Month At A Glance:</strong></div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div>
+          <strong>Your Month At A Glance:</strong>
+        </div>
         <Gauge
-          width={200}
+          width={250}
+          maxWidth={250}
           height={200}
-          value={workoutProgress}
+          value={Math.min(currentNumWorkouts, userWorkoutGoal)}
+          valueMax={userWorkoutGoal}
           startAngle={-90}
           endAngle={90}
-          sx={() => ({ 
+          sx={() => ({
             [`& .${gaugeClasses.valueText}`]: {
               fontSize: 20,
             },
@@ -111,9 +124,7 @@ function ProfilePageComponent() {
               fill: "#52b202",
             },
           })}
-          text={
-            ({ value, valueMax }) => `${value/10} / ${valueMax/10} \nWorkouts`
-          }
+          text={() => `${currentNumWorkouts} / ${userWorkoutGoal}\n\nWorkouts\n\n`}
         />
       </div>
     );
@@ -122,7 +133,7 @@ function ProfilePageComponent() {
   // event handler that checks for date validation when adding a workout to the calender
   const handleAddEvent = async () => {
     let isValid = true;
-  
+
     // Validate title
     if (!newEventTitle.trim()) {
       setTitleError("Workout title cannot be empty.");
@@ -130,21 +141,20 @@ function ProfilePageComponent() {
     } else {
       setTitleError("");
     }
-  
+
     // Validate date
-    const selectedDate = new Date(newEventDate);
     const currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0); // Remove time part
-  
+
     if (!newEventDate) {
       setDateError("Workout date cannot be empty.");
       isValid = false;
     } else {
       setDateError("");
     }
-  
+
     if (!isValid) return; // Stop if validation fails
-  
+
     // Proceed with adding the event if validation passes
     try {
       const { data } = await createWorkout({
@@ -156,7 +166,7 @@ function ProfilePageComponent() {
           },
         },
       });
-  
+
       setEvents([...events, { title: newEventTitle, date: newEventDate }]);
       setNewEventTitle("");
       setNewEventDate("");
@@ -164,7 +174,6 @@ function ProfilePageComponent() {
       console.error("Error creating workout:", error);
     }
   };
-  
 
   // profile picture
   const fileInputRef = useRef(null); // file input

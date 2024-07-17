@@ -1,36 +1,36 @@
-import ReactDOM from 'react-dom/client'
+import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { PlansProvider } from './context/plans-context.jsx';
+import { PlansProvider } from "./context/plansContext.jsx";
 
-import App from './App.jsx'
-import HomePage from './pages/HomePage';
-import LoginPage from './pages/loginPage.jsx';
-import SignUpPage from './pages/signUpPage.jsx';
-import ProfilePage from './pages/ProfilePage.jsx';
-import AboutUs from './pages/AboutUsPage.jsx';
-import SettingsPage from './pages/settingsPage.jsx';
-import AIHelperPage from './pages/AIHelperPage.jsx'
-import WorkoutPage from './pages/WorkoutPage.jsx';
-import ErrorPage from './pages/ErrorPage.jsx';
+import App from "./App.jsx";
+import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage.jsx";
+import SignUpPage from "./pages/SignUpPage.jsx";
+import ProfilePage from "./pages/ProfilePage.jsx";
+import AboutUs from "./pages/AboutUsPage.jsx";
+import SettingsPage from "./pages/SettingsPage.jsx";
+import AIHelperPage from "./pages/AIHelperPage.jsx";
+import WorkoutPage from "./pages/WorkoutPage.jsx";
+import ErrorPage from "./pages/ErrorPage.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     errorElement: <ErrorPage />,
-    
+
     children: [
       {
         index: true,
-        element: <HomePage />
+        element: <HomePage />,
       },
       {
         path: "login",
-        element: <LoginPage />
+        element: <LoginPage />,
       },
       {
         path: "signUp",
-        element: <SignUpPage />
+        element: <SignUpPage />,
       },
       {
         path: "profile",
@@ -38,30 +38,26 @@ const router = createBrowserRouter([
       },
       {
         path: "about-us",
-        element: <AboutUs />
+        element: <AboutUs />,
       },
       {
         path: "settings",
-        element: <SettingsPage />
+        element: <SettingsPage />,
       },
       {
         path: "fit-ai",
-        element: <AIHelperPage />
+        element: <AIHelperPage />,
       },
       {
         path: "workout",
-        element: <WorkoutPage />
-      }
+        element: <WorkoutPage />,
+      },
     ],
   },
 ]);
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <PlansProvider>
-      <RouterProvider router={router} />
+    <RouterProvider router={router} />
   </PlansProvider>
-
 );
-
-
-
