@@ -179,7 +179,7 @@ const SettingsComponent = () => {
                   <FormControl fullWidth variant="outlined">
                     <TextField
                       id="workout-goal-input"
-                      label="Monthly Workout Goal"
+                      label="Monthly Workouts Goal"
                       type="number"
                       value={workoutGoal}
                       onChange={(e) => setWorkoutGoal(Number(e.target.value))}
@@ -192,7 +192,7 @@ const SettingsComponent = () => {
                   <FormControl fullWidth variant="outlined">
                     <TextField
                       id="duration-goal-input"
-                      label="Monthly Duration Goal (mins)"
+                      label="Monthly Active Minutes Goal"
                       type="number"
                       value={durationGoal}
                       onChange={(e) => setDurationGoal(Number(e.target.value))}
