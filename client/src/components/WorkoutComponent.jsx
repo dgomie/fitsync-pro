@@ -128,8 +128,8 @@ const WorkoutComponent = () => {
     ) {
       setErrors({
         ...errors,
-        calories: isNaN(parsedCalories) ? "Calories must be an integer" : "",
-        duration: isNaN(parsedDuration) ? "Duration must be an integer" : "",
+        calories: isNaN(parsedCalories) ? "Calories must be a number greater than 0" : "",
+        duration: isNaN(parsedDuration) ? "Duration must be a number greater than 0" : "",
       });
       setErrorMessage("Please ensure all fields are correctly filled out.");
       return;
@@ -151,6 +151,12 @@ const WorkoutComponent = () => {
         },
       });
       setOpen(false);
+      setFormData({
+        workoutTitle: "",
+        dateOfWorkout: "",
+        duration: "",
+        calories: "",
+      });
     } catch (error) {
       console.error("Error creating workout:", error);
       setErrorMessage("Error creating workout. Please try again.");
@@ -313,7 +319,7 @@ const WorkoutComponent = () => {
                 <TextField
                   margin="dense"
                   name="calories"
-                  label="Calories"
+                  label="Calories Burned"
                   type="text"
                   fullWidth
                   value={formData.calories}

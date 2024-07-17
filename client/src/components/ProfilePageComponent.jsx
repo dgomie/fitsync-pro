@@ -21,8 +21,6 @@ import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_WORKOUT } from "../utils/mutations";
 import { GET_WORKOUTS_BY_USER, GET_USER } from "../utils/queries";
 
-// chart js
-import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -82,7 +80,6 @@ function ProfilePageComponent() {
     if (data.user.workoutGoal) {
       userWorkoutGoal = data.user.workoutGoal;
     }
-    
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth();
     const currentYear = currentDate.getFullYear();
@@ -112,9 +109,10 @@ function ProfilePageComponent() {
           <strong>Your Month At A Glance:</strong>
         </div>
         <Gauge
-          width={200}
+          width={250}
+          maxWidth={250}
           height={200}
-          value={currentNumWorkouts}
+          value={Math.min(currentNumWorkouts, userWorkoutGoal)}
           valueMax={userWorkoutGoal}
           startAngle={-90}
           endAngle={90}
@@ -126,9 +124,7 @@ function ProfilePageComponent() {
               fill: "#52b202",
             },
           })}
-          text={({ value, valueMax }) =>
-            `${value} / ${valueMax} \nWorkouts`
-          }
+          text={() => `${currentNumWorkouts} / ${userWorkoutGoal}\n\nWorkouts\n\n`}
         />
       </div>
     );
