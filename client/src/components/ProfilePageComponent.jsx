@@ -70,7 +70,6 @@ function ProfilePageComponent() {
   }, [data]);
 
   const WorkoutGauge = ({ events }) => {
-    console.log("events", events);
  
     const numWorkoutGoal = 10;
     const currentDate = new Date();
