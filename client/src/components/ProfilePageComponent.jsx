@@ -44,8 +44,6 @@ ChartJS.register(
 function ProfilePageComponent() {
   const [username, setUsername] = useState("");
   const [userId, setUserId] = useState("");
-  const [calorieGoal, setCalorieGoal] = useState("");
-  const [workoutGoal, setWorkoutGoal] = useState("");
 
   // Date states for calender
   const [newEventTitle, setNewEventTitle] = React.useState("");
@@ -94,7 +92,7 @@ function ProfilePageComponent() {
     });
 
     const currentNumWorkouts = filteredEvents.length;
-    const workoutProgress = (currentNumWorkouts / userWorkoutGoal) * 100;
+
 
     return (
       <div
@@ -157,7 +155,7 @@ function ProfilePageComponent() {
 
     // Proceed with adding the event if validation passes
     try {
-      const { data } = await createWorkout({
+      await createWorkout({
         variables: {
           input: {
             userId,

@@ -11,7 +11,7 @@ const typeDefs = `
     nutrition: Nutrition
     workouts: [Workout]
     profilePicture: String
-    calorieGoal: Int,
+    durationGoal: Int,
     workoutGoal: Int,
   }
 
@@ -64,6 +64,8 @@ type Workout {
     email: String!
     dateOfBirth: String!
     activityLevel: String!
+    durationGoal: Int
+    workoutGoal: Int
   }
 
   input UpdateUserInput {
@@ -75,7 +77,7 @@ type Workout {
   weight: Int
   activityLevel: String
   profilePicture: String
-  calorieGoal: Int
+  durationGoal: Int
   workoutGoal: Int
 }
 

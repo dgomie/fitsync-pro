@@ -79,7 +79,6 @@ function AIHelperComponent() {
         },
       })
       .then((response) => {
-        console.log(response);
         setData(response.data);
         setIsLoading(false);
       })
