@@ -4,11 +4,11 @@ import { PlansProvider } from "./context/plansContext.jsx";
 
 import App from "./App.jsx";
 import HomePage from "./pages/HomePage";
-import LoginPage from "./pages/LoginPage.jsx";
-import SignUpPage from "./pages/SignUpPage.jsx";
+import LoginPage from "./pages/loginPage.jsx";
+import SignUpPage from "./pages/signUpPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import AboutUs from "./pages/AboutUsPage.jsx";
-import SettingsPage from "./pages/SettingsPage.jsx";
+import SettingsPage from "./pages/settingsPage.jsx";
 import AIHelperPage from "./pages/AIHelperPage.jsx";
 import WorkoutPage from "./pages/WorkoutPage.jsx";
 import ErrorPage from "./pages/ErrorPage.jsx";
