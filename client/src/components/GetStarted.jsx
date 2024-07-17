@@ -8,7 +8,7 @@ import {
   CardMedia,
   CardContent,
 } from "@mui/material";
-
+import image from "../images/fitsync-pro1.png"
 const GetStartedPage = () => {
   return (
     <div style={{paddingBottom:'50px'}}>
@@ -19,7 +19,7 @@ const GetStartedPage = () => {
         alignItems="center"
         minHeight="100vh"
         textAlign="center"
-        // bgcolor="#f0f4f8"
+        // bgcolor="#F0F4F8"
         position="relative"
       >
         <Box
@@ -44,7 +44,7 @@ const GetStartedPage = () => {
                 <CardMedia
                   component="img"
                   lenght="300"
-                  image="../src/images/fitsync-pro1.png"
+                  image={image}
                   alt="Fitsync-Pro"
                 />
                 <CardContent>
@@ -96,12 +96,12 @@ const GetStartedPage = () => {
               size="large"
               href="/signUp"
               color="primary"
-              sx={{ 
-                bottom: 20, 
-                backgroundColor: '#46563c', 
+              sx={{
+                bottom: 20,
+                backgroundColor: '#46563C',
                 '&:hover': {
                     color: 'white',
-                    backgroundColor: '#869f76' } }}
+                    backgroundColor: '#869F76' } }}
             >
               Get Started Now
             </Button>
@@ -111,5 +111,4 @@ const GetStartedPage = () => {
     </div>
   );
 };
-
 export default GetStartedPage;
