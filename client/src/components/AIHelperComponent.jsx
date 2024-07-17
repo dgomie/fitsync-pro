@@ -20,7 +20,7 @@ import axios from "axios";
 import { useMutation } from "@apollo/client";
 import { CREATE_AI_PLAN } from "../utils/mutations";
 import MuiAlert from "@mui/material/Alert";
-import { usePlans } from "../context/plans-context";
+import { usePlans } from "../context/plansContext";
 
 function AIHelperComponent() {
   const [data, setData] = useState(null);
@@ -242,12 +242,12 @@ function AIHelperComponent() {
             error={errors.workoutType}
             sx={{
               width: {
-                xs: '80%', 
-                md: '20%'  
+                xs: "80%",
+                md: "20%",
               },
               marginBottom: {
-                xs: '5px'
-              }
+                xs: "5px",
+              },
             }}
           >
             <InputLabel id="location-label">Workout Type</InputLabel>
@@ -273,12 +273,12 @@ function AIHelperComponent() {
             error={errors.location}
             sx={{
               width: {
-                xs: '80%', 
-                md: '20%' 
+                xs: "80%",
+                md: "20%",
               },
               marginBottom: {
-                xs: '5px'
-              }
+                xs: "5px",
+              },
             }}
           >
             <InputLabel id="location-label">Workout Location</InputLabel>
@@ -303,12 +303,12 @@ function AIHelperComponent() {
             error={errors.bodyPart}
             sx={{
               width: {
-                xs: '80%', 
-                md: '20%'  
+                xs: "80%",
+                md: "20%",
               },
               marginBottom: {
-                xs: '5px'
-              }
+                xs: "5px",
+              },
             }}
           >
             <InputLabel id="body-part-label">Target Muscle Group</InputLabel>
@@ -338,12 +338,12 @@ function AIHelperComponent() {
             error={errors.week}
             sx={{
               width: {
-                xs: '80%', 
-                md: '20%'  
+                xs: "80%",
+                md: "20%",
               },
               marginBottom: {
-                xs: '5px'
-              }
+                xs: "5px",
+              },
             }}
           >
             <InputLabel id="week-label">Plan Duration</InputLabel>

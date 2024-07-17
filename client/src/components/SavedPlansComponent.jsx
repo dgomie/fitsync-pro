@@ -9,12 +9,17 @@ import {
   CircularProgress,
   Button,
 } from "@mui/material";
-import { FitnessCenter, DirectionsRun, Speed, SportsGymnastics } from '@mui/icons-material';
+import {
+  FitnessCenter,
+  DirectionsRun,
+  Speed,
+  SportsGymnastics,
+} from "@mui/icons-material";
 import { useQuery, useMutation } from "@apollo/client";
 import { GET_AI_PLANS } from "../utils/queries";
 import { DELETE_AI_PLAN } from "../utils/mutations";
 import Auth from "../utils/auth";
-import { usePlans } from "../context/plans-context"; // Import the context
+import { usePlans } from "../context/plansContext"; // Import the context
 
 function SavedPlansComponent() {
   const token = Auth.getToken();
@@ -83,7 +88,11 @@ function SavedPlansComponent() {
       const titleMatch = section.match(/^\*\*(.*)\*\*$/);
       if (titleMatch) {
         return (
-          <Typography variant="h6" key={index} style={{ marginTop: "20px", fontWeight: 'bold' }}>
+          <Typography
+            variant="h6"
+            key={index}
+            style={{ marginTop: "20px", fontWeight: "bold" }}
+          >
             {titleMatch[1]}
           </Typography>
         );
@@ -106,13 +115,17 @@ function SavedPlansComponent() {
       );
     });
   };
-  
+
   // Helper function to parse **bold** text
   const parseBoldText = (text) => {
     const parts = text.split(/(\*\*.*?\*\*)/g); // Split text at **bold** parts
     return parts.map((part, index) => {
       if (part.startsWith("**") && part.endsWith("**")) {
-        return <span key={index} style={{ fontWeight: 'bold' }}>{part.slice(2, -2)}</span>;
+        return (
+          <span key={index} style={{ fontWeight: "bold" }}>
+            {part.slice(2, -2)}
+          </span>
+        );
       }
       return part; // Return regular text as is
     });
@@ -124,16 +137,16 @@ function SavedPlansComponent() {
   };
 
   const getIconForPlanTitle = (title) => {
-    const words = title.split(' '); 
+    const words = title.split(" ");
     const keyword = words[1];
     switch (keyword) {
-      case 'Endurance':
+      case "Endurance":
         return <DirectionsRun />;
-      case 'Strength':
+      case "Strength":
         return <FitnessCenter />;
-      case 'Speed':
+      case "Speed":
         return <Speed />;
-      case 'Flexibility':
+      case "Flexibility":
         return <SportsGymnastics />;
       default:
         return null; // or a default icon
@@ -155,54 +168,72 @@ function SavedPlansComponent() {
   };
 
   return (
-    <Paper Paper elevation={3} sx={{ padding: 2, borderRadius: '15px', marginBottom: '25px' }}>
+    <Paper
+      Paper
+      elevation={3}
+      sx={{ padding: 2, borderRadius: "15px", marginBottom: "25px" }}
+    >
       <Box
         container
         spacing={2}
         justifyContent="center"
         className="mt-5 pt-5"
         direction="column"
-        Paper elevation={3} sx={{ padding: 2, borderRadius: '15px' }}
+        Paper
+        elevation={3}
+        sx={{ padding: 2, borderRadius: "15px" }}
       >
         <Typography variant="h6" component="h2" align="center">
           Your Saved Workouts
         </Typography>
         {currentPlans.length > 0 ? (
           <>
-          <div className="scroll-container">
-            {currentPlans.map((plan) => (
-              <Box item key={plan._id} onClick={() => handleOpenModal(plan)}>
-                <Card className="cardHoverEffect plan-card">
-                  <CardContent style={{ display: 'flex', alignItems: 'center', gap: '5px', padding:'20px' }}>
-                    <Typography>{getIconForPlanTitle(plan.title)}</Typography>
-                    <Typography variant="body2" component="h3">
-                      {plan.title}    
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Box>
-            ))}
-          </div>
-           <div
-           style={{
-             display: "flex",
-             justifyContent: "center",
-             marginTop: "20px",
-           }}
-         >
-           <Button onClick={handlePreviousPage} disabled={currentPage === 1} color="success">
-             Previous
-           </Button>
-           <Button
-             onClick={handleNextPage}
-             disabled={currentPage === Math.ceil(plans.length / itemsPerPage)}
-             color="success"
-           >
-             Next
-           </Button>
-         </div>
-         </>
-
+            <div className="scroll-container">
+              {currentPlans.map((plan) => (
+                <Box item key={plan._id} onClick={() => handleOpenModal(plan)}>
+                  <Card className="cardHoverEffect plan-card">
+                    <CardContent
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "5px",
+                        padding: "20px",
+                      }}
+                    >
+                      <Typography>{getIconForPlanTitle(plan.title)}</Typography>
+                      <Typography variant="body2" component="h3">
+                        {plan.title}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Box>
+              ))}
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "20px",
+              }}
+            >
+              <Button
+                onClick={handlePreviousPage}
+                disabled={currentPage === 1}
+                color="success"
+              >
+                Previous
+              </Button>
+              <Button
+                onClick={handleNextPage}
+                disabled={
+                  currentPage === Math.ceil(plans.length / itemsPerPage)
+                }
+                color="success"
+              >
+                Next
+              </Button>
+            </div>
+          </>
         ) : (
           <div
             className="scroll-container"
@@ -213,7 +244,6 @@ function SavedPlansComponent() {
             </Typography>
           </div>
         )}
-       
       </Box>
       <Modal
         open={openModal}
