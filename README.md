@@ -93,7 +93,7 @@ The Get Started Page welcomes new users to FitSync-PRO. It includes:
 ![Workout Tracker Screenshot](./client/src/images/workout-tracker-screenshot.png)
 
 ### About Us
-<img src='client/src/images/about-us-screenshot.png' width="500px" />
+<img src='client/src/images/Screenshot3pets.png' width="500px" />
 
 ### Settings Page
 <img src='client/src/images/setting-page-screenshot.png' width="500px" />
