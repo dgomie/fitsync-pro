@@ -22,7 +22,7 @@ import {
 import { useMutation, useQuery } from "@apollo/client";
 import AuthService from "../utils/auth";
 import { CREATE_WORKOUT } from "../utils/mutations";
-import { GET_WORKOUTS_BY_USER } from "../utils/queries";
+import { GET_WORKOUTS_BY_USER, GET_USER } from "../utils/queries";
 
 const dailyRoutines = [
   { name: "", duration: "", icon: "" }, // Replace with actual image path
@@ -39,8 +39,10 @@ const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const WorkoutComponent = () => {
   const [username, setUsername] = useState("");
   const [userId, setUserId] = useState("");
+  const [durationGoal, setDurationGoal] = useState("");
+  const [workoutGoal, setWorkoutGoal] = useState("");
   const [createWorkout] = useMutation(CREATE_WORKOUT);
-  const { data } = useQuery(GET_WORKOUTS_BY_USER, { variables: { userId } });
+
   const [open, setOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
@@ -128,26 +130,30 @@ const WorkoutComponent = () => {
     ) {
       setErrors({
         ...errors,
-        calories: isNaN(parsedCalories) ? "Calories must be a number greater than 0" : "",
-        duration: isNaN(parsedDuration) ? "Duration must be a number greater than 0" : "",
+        calories: isNaN(parsedCalories)
+          ? "Calories must be a number greater than 0"
+          : "",
+        duration: isNaN(parsedDuration)
+          ? "Duration must be a number greater than 0"
+          : "",
       });
       setErrorMessage("Please ensure all fields are correctly filled out.");
       return;
     }
 
     try {
-        const input = {
-            userId,
-            "workoutTitle": formData.workoutTitle,
-            "dateOfWorkout": formData.dateOfWorkout,
-            "duration": parsedDuration,
-            "caloriesBurned": parsedCalories
-        }
+      const input = {
+        userId,
+        workoutTitle: formData.workoutTitle,
+        dateOfWorkout: formData.dateOfWorkout,
+        duration: parsedDuration,
+        caloriesBurned: parsedCalories,
+      };
 
-        console.log(input)
+      console.log(input);
       await createWorkout({
         variables: {
-          input
+          input,
         },
       });
       setOpen(false);
@@ -161,6 +167,118 @@ const WorkoutComponent = () => {
       console.error("Error creating workout:", error);
       setErrorMessage("Error creating workout. Please try again.");
     }
+  };
+
+  const { data, loading, error } = useQuery(GET_USER, {
+    variables: { userId },
+    skip: !userId,
+  });
+
+  useEffect(() => {
+    if (data && data.user) {
+      setDurationGoal(data.user.durationGoal);
+      setWorkoutGoal(data.user.workoutGoal);
+    }
+  }, [data]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
+  const WorkoutProgress = ({ workoutSaved }) => {
+    const { data, loading, error, refetch } = useQuery(GET_WORKOUTS_BY_USER, {
+      variables: { userId },
+    });
+    const [totalDuration, setTotalDuration] = useState(0);
+    const [totalCaloriesBurned, setTotalCaloriesBurned] = useState(0);
+    const [totalWorkouts, setTotalWorkouts] = useState(0);
+
+    useEffect(() => {
+      if (data && data.workouts) {
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth(); // 0-11
+        const currentYear = currentDate.getFullYear();
+
+        const filteredWorkouts = data.workouts.filter((workout) => {
+          const workoutDate = new Date(workout.dateOfWorkout);
+          return (
+            workoutDate.getMonth() === currentMonth &&
+            workoutDate.getFullYear() === currentYear
+          );
+        });
+        const totalWorkouts = filteredWorkouts.length
+
+        const totalDuration = filteredWorkouts.reduce(
+          (acc, curr) => acc + curr.duration,
+          0
+        );
+        const totalCaloriesBurned = filteredWorkouts.reduce(
+          (acc, curr) => acc + curr.caloriesBurned,
+          0
+        );
+        setTotalWorkouts(totalWorkouts)
+        setTotalDuration(totalDuration);
+        setTotalCaloriesBurned(totalCaloriesBurned);
+      }
+    }, [data]);
+
+    // Refetch workouts when a new workout is saved
+    useEffect(() => {
+      refetch();
+    }, [workoutSaved, refetch]);
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error.message}</p>;
+
+    return (
+      <div>
+        <Box mt={4} mb={2} width="100%">
+          <Typography variant="h5" gutterBottom>
+            Exercise Progress
+          </Typography>
+          <Typography variant="body1">Workouts Completed</Typography>
+          <LinearProgress
+            variant="determinate"
+            value={Math.min((totalWorkouts / workoutGoal) * 100, 100)}
+            sx={{ height: 20, borderRadius: 5, width:600, 
+              '& .MuiLinearProgress-barColorPrimary': {
+                backgroundColor: '#52b202', // Change the progress bar color
+              }, }}
+          />
+          <Typography variant="body2" color="textSecondary">
+            {totalWorkouts}/{workoutGoal} completed
+          </Typography>
+        </Box>
+        <Box mt={4} mb={2} width="100%">
+          <Typography variant="body1">Monthly Active Minutes</Typography>
+          <LinearProgress
+            variant="determinate"
+            value={Math.min((totalDuration / durationGoal) * 100, 100)}
+            sx={{ height: 20, borderRadius: 5, 
+              '& .MuiLinearProgress-barColorPrimary': {
+                backgroundColor: '#52b202', // Change the progress bar color
+              }, }}
+          />
+          <Typography variant="body2" color="textSecondary">
+            {totalDuration}/{durationGoal} completed
+          </Typography>
+        </Box>
+
+        <Box mt={4} mb={2} width="100%">
+          <Typography variant="body1">Calories Burned</Typography>
+          <LinearProgress
+            variant="determinate"
+            value={(totalCaloriesBurned / 3000) * 100}
+            sx={{ height: 20, borderRadius: 5, 
+            '& .MuiLinearProgress-barColorPrimary': {
+              backgroundColor: '#52b202', // Change the progress bar color
+            }, }}
+          />
+          <Typography variant="body2" color="textSecondary">
+            {totalCaloriesBurned} Cals
+          </Typography>
+        </Box>
+      </div>
+    );
   };
 
   return (
@@ -208,8 +326,9 @@ const WorkoutComponent = () => {
               Add Workout
             </Button>
 
+            <WorkoutProgress></WorkoutProgress>
 
-            <Box mt={4} mb={2} width="100%">
+            {/* <Box mt={4} mb={2} width="100%">
               <Typography variant="h5" gutterBottom>
                 Exercise Progress
               </Typography>
@@ -223,7 +342,7 @@ const WorkoutComponent = () => {
                   />
                 </Box>
               ))}
-            </Box>
+            </Box> */}
 
             <Divider sx={{ width: "100%", my: 4 }} />
 
@@ -311,7 +430,7 @@ const WorkoutComponent = () => {
                   label="Duration (mins)"
                   type="number"
                   fullWidth
-                  inputProps={{ min: "1" }} 
+                  inputProps={{ min: "1" }}
                   value={formData.duration}
                   onChange={handleChange}
                   error={!!errors.duration}
@@ -322,7 +441,7 @@ const WorkoutComponent = () => {
                   name="calories"
                   label="Calories Burned"
                   type="number"
-                  inputProps={{ min: "0" }} 
+                  inputProps={{ min: "0" }}
                   fullWidth
                   value={formData.calories}
                   onChange={handleChange}
