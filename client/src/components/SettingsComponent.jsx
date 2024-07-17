@@ -221,6 +221,8 @@ const SettingsComponent = () => {
                 </div>
               </Box>
             </Box>
+            {/* 
+            TODO:: ADD ABILITY TO CHECK IF CURRENT PASSWORD TO STORED PASSWORD, IF MATCH, NEW PASSWORD AND CONFIRM PASSWORD MUST MATCH, IF MATCH SAVE NEW PASSWORD
             <Box mb={4}>
               <Typography variant="h4" component="h2" gutterBottom>
                 Change Password
@@ -303,7 +305,7 @@ const SettingsComponent = () => {
                   Change Password
                 </Button>
               </Box>
-            </Box>
+            </Box> */}
             <Box mb={4}>
               <Typography variant="h4" component="h2" gutterBottom>
                 Delete Account
