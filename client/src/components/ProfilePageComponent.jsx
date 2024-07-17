@@ -10,7 +10,6 @@ import {
   TextField,
   CircularProgress,
   Button,
-
 } from "@mui/material";
 import AuthService from "../utils/auth";
 import { useState, useEffect, useRef } from "react";
@@ -20,7 +19,7 @@ import { Gauge, gaugeClasses } from "@mui/x-charts/Gauge";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_WORKOUT } from "../utils/mutations";
-import { GET_WORKOUTS_BY_USER } from "../utils/queries";
+import { GET_WORKOUTS_BY_USER, GET_USER } from "../utils/queries";
 
 // chart js
 import { Line } from "react-chartjs-2";
@@ -47,6 +46,8 @@ ChartJS.register(
 function ProfilePageComponent() {
   const [username, setUsername] = useState("");
   const [userId, setUserId] = useState("");
+  const [calorieGoal, setCalorieGoal] = useState("");
+  const [workoutGoal, setWorkoutGoal] = useState("");
 
   // Date states for calender
   const [newEventTitle, setNewEventTitle] = React.useState("");
@@ -70,7 +71,20 @@ function ProfilePageComponent() {
   }, [data]);
 
   const WorkoutGauge = ({ events }) => {
- 
+    const { data, loading, error } = useQuery(GET_USER, {
+      variables: { userId },
+    });
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error.message}</p>;
+
+    let userWorkoutGoal = data.user.workoutGoal;
+    if (isNaN(userWorkoutGoal)) {
+      userWorkoutGoal = 0;
+    }
+
+    console.log(userWorkoutGoal);
+
     const numWorkoutGoal = 10;
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth();
@@ -79,26 +93,35 @@ function ProfilePageComponent() {
     // Filter events to include only those within the current month
     const filteredEvents = events.filter((event) => {
       const eventDate = new Date(event.date);
-      const eventMonth = event.date.split('-')[1]-1
+      const eventMonth = event.date.split("-")[1] - 1;
       return (
-        eventMonth === currentMonth &&
-        eventDate.getFullYear() === currentYear
+        eventMonth === currentMonth && eventDate.getFullYear() === currentYear
       );
     });
 
     const currentNumWorkouts = filteredEvents.length;
-    const workoutProgress = (currentNumWorkouts / numWorkoutGoal) * 100;
+    const workoutProgress = (currentNumWorkouts / userWorkoutGoal) * 100;
 
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-        <div><strong>Your Month At A Glance:</strong></div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div>
+          <strong>Your Month At A Glance:</strong>
+        </div>
         <Gauge
           width={200}
           height={200}
-          value={workoutProgress}
+          value={currentNumWorkouts}
+          valueMax={userWorkoutGoal}
           startAngle={-90}
           endAngle={90}
-          sx={() => ({ 
+          sx={() => ({
             [`& .${gaugeClasses.valueText}`]: {
               fontSize: 20,
             },
@@ -106,8 +129,8 @@ function ProfilePageComponent() {
               fill: "#52b202",
             },
           })}
-          text={
-            ({ value, valueMax }) => `${value/10} / ${valueMax/10} \nWorkouts`
+          text={({ value, valueMax }) =>
+            `${value} / ${valueMax} \nWorkouts`
           }
         />
       </div>
@@ -117,7 +140,7 @@ function ProfilePageComponent() {
   // event handler that checks for date validation when adding a workout to the calender
   const handleAddEvent = async () => {
     let isValid = true;
-  
+
     // Validate title
     if (!newEventTitle.trim()) {
       setTitleError("Workout title cannot be empty.");
@@ -125,21 +148,20 @@ function ProfilePageComponent() {
     } else {
       setTitleError("");
     }
-  
+
     // Validate date
-    const selectedDate = new Date(newEventDate);
     const currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0); // Remove time part
-  
+
     if (!newEventDate) {
       setDateError("Workout date cannot be empty.");
       isValid = false;
     } else {
       setDateError("");
     }
-  
+
     if (!isValid) return; // Stop if validation fails
-  
+
     // Proceed with adding the event if validation passes
     try {
       const { data } = await createWorkout({
@@ -151,7 +173,7 @@ function ProfilePageComponent() {
           },
         },
       });
-  
+
       setEvents([...events, { title: newEventTitle, date: newEventDate }]);
       setNewEventTitle("");
       setNewEventDate("");
@@ -159,7 +181,6 @@ function ProfilePageComponent() {
       console.error("Error creating workout:", error);
     }
   };
-  
 
   // profile picture
   const fileInputRef = useRef(null); // file input

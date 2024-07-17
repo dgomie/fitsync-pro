@@ -18,6 +18,8 @@ export const GET_USER = gql`
       firstName
       lastName
       activityLevel
+      calorieGoal
+      workoutGoal
     }
   }
 `;
