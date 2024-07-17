@@ -8,6 +8,7 @@ import {
   Paper,
   Grid,
   Card,
+  CardActions,
   CardContent,
   LinearProgress,
   Divider,
@@ -204,7 +205,7 @@ const WorkoutComponent = () => {
             workoutDate.getFullYear() === currentYear
           );
         });
-        const totalWorkouts = filteredWorkouts.length
+        const totalWorkouts = filteredWorkouts.length;
 
         const totalDuration = filteredWorkouts.reduce(
           (acc, curr) => acc + curr.duration,
@@ -214,7 +215,7 @@ const WorkoutComponent = () => {
           (acc, curr) => acc + curr.caloriesBurned,
           0
         );
-        setTotalWorkouts(totalWorkouts)
+        setTotalWorkouts(totalWorkouts);
         setTotalDuration(totalDuration);
         setTotalCaloriesBurned(totalCaloriesBurned);
       }
@@ -230,7 +231,7 @@ const WorkoutComponent = () => {
 
     return (
       <div>
-        <Box mt={4} mb={2} width="100%">
+        <Box mt={4} mb={2} >
           <Typography variant="h5" gutterBottom>
             Exercise Progress
           </Typography>
@@ -238,45 +239,102 @@ const WorkoutComponent = () => {
           <LinearProgress
             variant="determinate"
             value={Math.min((totalWorkouts / workoutGoal) * 100, 100)}
-            sx={{ height: 20, borderRadius: 5, width:600, 
-              '& .MuiLinearProgress-barColorPrimary': {
-                backgroundColor: '#52b202', 
-              }, }}
+            sx={{
+              height: 20,
+              borderRadius: 5,
+              width: { xs: '100%', sm: 500, md: 600 },
+              "& .MuiLinearProgress-barColorPrimary": {
+                backgroundColor: "#52b202",
+              },
+              "@media screen and (max-width: 700px)": {
+                width: '100%', 
+              },
+              "@media screen and (min-width: 901px)": {
+                width: 600, 
+              },
+            }}
           />
           <Typography variant="body2" color="textSecondary">
             {totalWorkouts}/{workoutGoal} completed
           </Typography>
         </Box>
-        <Box mt={4} mb={2} width="100%">
+        <Box mt={4} mb={2} >
           <Typography variant="body1">Monthly Active Minutes</Typography>
           <LinearProgress
             variant="determinate"
             value={Math.min((totalDuration / durationGoal) * 100, 100)}
-            sx={{ height: 20, borderRadius: 5, 
-              '& .MuiLinearProgress-barColorPrimary': {
-                backgroundColor: '#52b202', 
-              }, }}
+            sx={{
+              height: 20,
+              borderRadius: 5,
+              "& .MuiLinearProgress-barColorPrimary": {
+                backgroundColor: "#52b202",
+              },
+            }}
           />
           <Typography variant="body2" color="textSecondary">
             {totalDuration}/{durationGoal} completed
           </Typography>
         </Box>
 
-        <Box mt={4} mb={2} width="100%">
+        <Box mt={4} mb={2} >
           <Typography variant="body1">Calories Burned</Typography>
           <LinearProgress
             variant="determinate"
             value={Math.min((totalCaloriesBurned / 3000) * 100, 100)}
-            sx={{ height: 20, borderRadius: 5, 
-            '& .MuiLinearProgress-barColorPrimary': {
-              backgroundColor: '#52b202', 
-            }, }}
+            sx={{
+              height: 20,
+              borderRadius: 5,
+              "& .MuiLinearProgress-barColorPrimary": {
+                backgroundColor: "#52b202",
+              },
+            }}
           />
           <Typography variant="body2" color="textSecondary">
             {totalCaloriesBurned} Cals
           </Typography>
         </Box>
-      </div>
+
+     
+        <Card sx={{padding:'15px'}}>
+            <Typography variant="h6" color="text.secondary" gutterBottom>
+              Average Calories Burned
+            </Typography>
+            <Typography
+              sx={{ fontSize: 28 }}
+              color="text.secondary"
+              gutterBottom
+            >
+              {(totalCaloriesBurned / totalWorkouts).toFixed(2)}
+              <Typography
+                sx={{ fontSize: 14 }}
+                color="text.secondary"
+                gutterBottom
+              >
+                Cals
+              </Typography>
+            </Typography>
+          </Card>
+
+          <Card sx={{padding:'15px'}}>
+            <Typography variant="h6" color="text.secondary" gutterBottom>
+              Average Active Minutes
+            </Typography>
+            <Typography
+              sx={{ fontSize: 28 }}
+              color="text.secondary"
+              gutterBottom
+            >
+              {(totalDuration / totalWorkouts).toFixed(2)}
+              <Typography
+                sx={{ fontSize: 14 }}
+                color="text.secondary"
+                gutterBottom
+              >
+                Active Minutes
+              </Typography>
+            </Typography>
+          </Card>
+        </div>
     );
   };
 
