@@ -1,6 +1,9 @@
-import React from 'react';
-import { Container, Box, Typography, Grid, Link, Paper, Card, CardContent, CardMedia } from '@mui/material';
 
+import React from 'react';
+import dan from '../images/danscat.jpg';
+import kayla from '../images/kaylacat.jpg';
+import francisco from '../images/dogs.jpg';
+import { Container, Box, Typography, Grid, Link, Paper, Card, CardContent, CardMedia } from '@mui/material';
 const AboutUs = () => {
     return (
         <div style={{ paddingTop: "100px", paddingBottom: "100px"}}>
@@ -45,7 +48,7 @@ const AboutUs = () => {
                                         <CardMedia
                                             component="img"
                                             height="200"
-                                            image="/src/images/danscat.jpg"
+                                            image={dan}
                                             alt="Daniel Gomez"
                                             sx={{
                                                 transition: 'transform 0.3s',
@@ -69,7 +72,7 @@ const AboutUs = () => {
                                         <CardMedia
                                             component="img"
                                             height="200"
-                                            image="/src/images/kaylacat.jpg"
+                                            image={kayla}
                                             alt="Kayla Freeman"
                                             sx={{
                                                 transition: 'transform 0.3s',
@@ -93,7 +96,7 @@ const AboutUs = () => {
                                         <CardMedia
                                             component="img"
                                             height="200"
-                                            image="/src/images/dogs.jpg"
+                                            image={francisco}
                                             alt="Francisco Ortiz"
                                             sx={{
                                                 transition: 'transform 0.3s',
@@ -145,5 +148,4 @@ const AboutUs = () => {
         </div>
     );
 };
-
 export default AboutUs;
