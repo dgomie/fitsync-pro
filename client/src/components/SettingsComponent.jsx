@@ -59,6 +59,8 @@ const SettingsComponent = () => {
       setEmail(data.user.email);
       setActivityLevel(data.user.activityLevel);
       setUserId(data.user._id);
+      setDurationGoal(data.user.durationGoal);
+      setWorkoutGoal(data.user.workoutGoal)
     }
   }, [data]);
 
