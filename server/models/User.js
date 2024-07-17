@@ -42,7 +42,7 @@ const userSchema = new Schema(
     activityLevel: {
       type: String,
     },
-    calorieGoal: {
+    durationGoal: {
       type: Number,
     },
     workoutGoal: {

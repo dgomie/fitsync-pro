@@ -75,7 +75,7 @@ function ProfilePageComponent() {
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
-
+    console.log(data)
     let userWorkoutGoal = 0;
     if (data.user.workoutGoal) {
       userWorkoutGoal = data.user.workoutGoal;
@@ -94,7 +94,7 @@ function ProfilePageComponent() {
     });
 
     const currentNumWorkouts = filteredEvents.length;
-    const workoutProgress = (currentNumWorkouts / userWorkoutGoal) * 100;
+
 
     return (
       <div
