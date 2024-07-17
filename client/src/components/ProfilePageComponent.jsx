@@ -79,7 +79,6 @@ function ProfilePageComponent() {
     // Filter events to include only those within the current month
     const filteredEvents = events.filter((event) => {
       const eventDate = new Date(event.date);
-      console.log(eventDate.getMonth())
       const eventMonth = event.date.split('-')[1]-1
       return (
         eventMonth === currentMonth &&

@@ -11,6 +11,8 @@ const typeDefs = `
     nutrition: Nutrition
     workouts: [Workout]
     profilePicture: String
+    calorieGoal: Int,
+    workoutGoal: Int,
   }
 
   type Nutrition {
@@ -73,6 +75,8 @@ type Workout {
   weight: Int
   activityLevel: String
   profilePicture: String
+  calorieGoal: Int
+  workoutGoal: Int
 }
 
 input ExerciseInput {

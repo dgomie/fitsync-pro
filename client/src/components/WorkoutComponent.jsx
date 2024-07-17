@@ -78,14 +78,20 @@ const WorkoutComponent = () => {
     const { name, value } = e.target;
 
     // Allow empty values and validate only if values are provided
-    let error = '';
-    if ((name === 'calories' || name === 'duration') && value !== '' && !/^\d+$/.test(value)) {
-        error = `${name === 'calories' ? 'Calories' : 'Duration'} must be an integer`;
+    let error = "";
+    if (
+      (name === "calories" || name === "duration") &&
+      value !== "" &&
+      !/^\d+$/.test(value)
+    ) {
+      error = `${
+        name === "calories" ? "Calories" : "Duration"
+      } must be an integer`;
     }
 
     setFormData({ ...formData, [name]: value });
     setErrors({ ...errors, [name]: error });
-};
+  };
 
   const validateForm = () => {
     let valid = true;
@@ -107,39 +113,49 @@ const WorkoutComponent = () => {
 
   const handleSubmit = async () => {
     if (!validateForm()) {
-        return;
+      return;
     }
 
     // Check if the parsed values are valid integers or empty
-    const parsedCalories = formData.calories === '' ? null : parseInt(formData.calories, 10);
-    const parsedDuration = formData.duration === '' ? null : parseInt(formData.duration, 10);
+    const parsedCalories =
+      formData.calories === "" ? null : parseInt(formData.calories, 10);
+    const parsedDuration =
+      formData.duration === "" ? null : parseInt(formData.duration, 10);
 
-    if ((formData.calories !== null && isNaN(parsedCalories)) || (formData.duration !== null && isNaN(parsedDuration))) {
-        setErrors({
-            ...errors,
-            calories: isNaN(parsedCalories) ? 'Calories must be an integer' : '',
-            duration: isNaN(parsedDuration) ? 'Duration must be an integer' : ''
-        });
-        setErrorMessage('Please ensure all fields are correctly filled out.');
-        return;
+    if (
+      (formData.calories !== null && isNaN(parsedCalories)) ||
+      (formData.duration !== null && isNaN(parsedDuration))
+    ) {
+      setErrors({
+        ...errors,
+        calories: isNaN(parsedCalories) ? "Calories must be an integer" : "",
+        duration: isNaN(parsedDuration) ? "Duration must be an integer" : "",
+      });
+      setErrorMessage("Please ensure all fields are correctly filled out.");
+      return;
     }
 
     try {
-        await createWorkout({
-            variables: { 
-                workoutTitle: formData.workoutTitle,
-                dateOfWorkout: formData.dateOfWorkout,
-                duration: parsedDuration,
-                calories: parsedCalories,
-                userId: userId
-            }
-        });
-        setOpen(false);
+        const input = {
+            userId,
+            "workoutTitle": formData.workoutTitle,
+            "dateOfWorkout": formData.dateOfWorkout,
+            "duration": parsedDuration,
+            "caloriesBurned": parsedCalories
+        }
+
+        console.log(input)
+      await createWorkout({
+        variables: {
+          input
+        },
+      });
+      setOpen(false);
     } catch (error) {
-        console.error("Error creating workout:", error);
-        setErrorMessage('Error creating workout. Please try again.');
+      console.error("Error creating workout:", error);
+      setErrorMessage("Error creating workout. Please try again.");
     }
-};
+  };
 
   return (
     <Box
@@ -177,6 +193,15 @@ const WorkoutComponent = () => {
             <Typography variant="h6" gutterBottom>
               Track your progress and daily routines
             </Typography>
+
+            <Button
+              variant="contained"
+              color="success"
+              onClick={handleClickOpen}
+            >
+              Add Workout
+            </Button>
+
 
             <Box mt={4} mb={2} width="100%">
               <Typography variant="h5" gutterBottom>
@@ -246,14 +271,6 @@ const WorkoutComponent = () => {
                 ))}
               </Grid>
             </Box>
-
-            <Button
-              variant="contained"
-              color="success"
-              onClick={handleClickOpen}
-            >
-              Add Workout
-            </Button>
 
             <Dialog open={open} onClose={handleClose}>
               <DialogTitle>Add New Workout</DialogTitle>
