@@ -91,6 +91,8 @@ const SettingsComponent = () => {
       lastName,
       email,
       activityLevel,
+      workoutGoal,
+      durationGoal
     };
     try {
       const response = await updateUser({

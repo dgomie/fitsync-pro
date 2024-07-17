@@ -241,7 +241,7 @@ const WorkoutComponent = () => {
             value={Math.min((totalWorkouts / workoutGoal) * 100, 100)}
             sx={{ height: 20, borderRadius: 5, width:600, 
               '& .MuiLinearProgress-barColorPrimary': {
-                backgroundColor: '#52b202', // Change the progress bar color
+                backgroundColor: '#52b202', 
               }, }}
           />
           <Typography variant="body2" color="textSecondary">
@@ -255,7 +255,7 @@ const WorkoutComponent = () => {
             value={Math.min((totalDuration / durationGoal) * 100, 100)}
             sx={{ height: 20, borderRadius: 5, 
               '& .MuiLinearProgress-barColorPrimary': {
-                backgroundColor: '#52b202', // Change the progress bar color
+                backgroundColor: '#52b202', 
               }, }}
           />
           <Typography variant="body2" color="textSecondary">
@@ -267,10 +267,10 @@ const WorkoutComponent = () => {
           <Typography variant="body1">Calories Burned</Typography>
           <LinearProgress
             variant="determinate"
-            value={(totalCaloriesBurned / 3000) * 100}
+            value={Math.min((totalCaloriesBurned / 3000) * 100, 100)}
             sx={{ height: 20, borderRadius: 5, 
             '& .MuiLinearProgress-barColorPrimary': {
-              backgroundColor: '#52b202', // Change the progress bar color
+              backgroundColor: '#52b202', 
             }, }}
           />
           <Typography variant="body2" color="textSecondary">
@@ -327,22 +327,6 @@ const WorkoutComponent = () => {
             </Button>
 
             <WorkoutProgress></WorkoutProgress>
-
-            {/* <Box mt={4} mb={2} width="100%">
-              <Typography variant="h5" gutterBottom>
-                Exercise Progress
-              </Typography>
-              {progress.map((item, index) => (
-                <Box key={index} mb={2}>
-                  <Typography variant="body1">{item.label}</Typography>
-                  <LinearProgress
-                    variant="determinate"
-                    value={item.value}
-                    sx={{ height: 10, borderRadius: 5 }}
-                  />
-                </Box>
-              ))}
-            </Box> */}
 
             <Divider sx={{ width: "100%", my: 4 }} />
 
