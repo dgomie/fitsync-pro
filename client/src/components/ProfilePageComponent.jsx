@@ -78,14 +78,11 @@ function ProfilePageComponent() {
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
 
-    let userWorkoutGoal = data.user.workoutGoal;
-    if (isNaN(userWorkoutGoal)) {
-      userWorkoutGoal = 0;
+    let userWorkoutGoal = 0;
+    if (data.user.workoutGoal) {
+      userWorkoutGoal = data.user.workoutGoal;
     }
-
-    console.log(userWorkoutGoal);
-
-    const numWorkoutGoal = 10;
+    
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth();
     const currentYear = currentDate.getFullYear();
