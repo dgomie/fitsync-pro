@@ -401,16 +401,33 @@ const WorkoutComponent = () => {
 
   const WorkoutsList = () => {
     const [workouts, setWorkouts] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(5); // Adjust based on your preference
+  
     const { data } = useQuery(GET_WORKOUTS_BY_USER, {
       variables: { userId },
     });
-
+  
     useEffect(() => {
       if (data && data.workouts) {
         setWorkouts(data.workouts);
       }
     }, [data]);
-
+  
+    const lastItemIndex = currentPage * itemsPerPage;
+    const firstItemIndex = lastItemIndex - itemsPerPage;
+    const currentItems = workouts.slice(firstItemIndex, lastItemIndex);
+  
+    const totalPages = Math.ceil(workouts.length / itemsPerPage);
+  
+    const handleNext = () => {
+      setCurrentPage((prevPage) => (prevPage < totalPages ? prevPage + 1 : prevPage));
+    };
+  
+    const handlePrevious = () => {
+      setCurrentPage((prevPage) => (prevPage > 1 ? prevPage - 1 : prevPage));
+    };
+  
     if (!workouts || workouts.length === 0) {
       return (
         <Box sx={{ margin: "20px", textAlign: "center" }}>
@@ -420,15 +437,27 @@ const WorkoutComponent = () => {
         </Box>
       );
     }
-
+  
     return (
-      <div className="workouts-scroll-container">
-        {workouts.map((workout) => (
-          <WorkoutCard key={workout._id} workout={workout} />
-        ))}
+      <div>
+        <div className="workouts-scroll-container">
+          {currentItems.map((workout) => (
+            <WorkoutCard key={workout._id} workout={workout} />
+          ))}
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+          <Button onClick={handlePrevious} disabled={currentPage === 1}>
+            Previous
+          </Button>
+          <Button onClick={handleNext} disabled={currentPage === totalPages}>
+            Next
+          </Button>
+        </div>
       </div>
     );
   };
+  
+  // WorkoutCard component remains unchanged
 
   const WorkoutCard = ({ workout }) => {
     const month = workout.dateOfWorkout.split("-")[1];
