@@ -110,7 +110,7 @@ function AIHelperComponent() {
   };
 
   const handleSave = () => {
-    const title = `${location} ${workoutType} Workout`;
+    const title = `${location} ${workoutType} Plan`;
 
     createAIplan({
       variables: {

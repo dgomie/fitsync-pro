@@ -980,6 +980,19 @@ a:hover {
   padding: 20px; /* Adjust based on your design */
 }
 
+.workouts-scroll-container {
+  display: flex;
+  justify-content: flex-start;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 20px; /* Adjust based on your design */
+}
+
+.workouts-scroll-container > * { /* Targeting all direct children */
+  width: 300px;
+  flex-shrink: 0;
+} 
+
 .plan-card {
   width: 300px; /* Adjust based on your design */
   margin-right: 20px; /* Space between cards */

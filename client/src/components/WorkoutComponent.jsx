@@ -5,21 +5,21 @@ import {
   Container,
   Box,
   Typography,
-  Paper,
   Grid,
   Card,
   CardActions,
   CardContent,
   LinearProgress,
   Divider,
-  Avatar,
   Button,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   TextField,
+  IconButton,
 } from "@mui/material";
+import { Edit, Delete, Whatshot, Timer } from "@mui/icons-material";
 import CaloriesBurnedIcon from "../images/fire.svg";
 import ActiveMinutesIcon from "../images/stopwatch.svg";
 import { useMutation, useQuery } from "@apollo/client";
@@ -27,13 +27,10 @@ import AuthService from "../utils/auth";
 import { CREATE_WORKOUT } from "../utils/mutations";
 import { GET_WORKOUTS_BY_USER, GET_USER } from "../utils/queries";
 
-
 const WorkoutComponent = () => {
-  const [username, setUsername] = useState("");
   const [userId, setUserId] = useState("");
   const [durationGoal, setDurationGoal] = useState("");
   const [workoutGoal, setWorkoutGoal] = useState("");
-  const [workouts, setWorkouts] = useState([])
   const [createWorkout] = useMutation(CREATE_WORKOUT);
 
   const [open, setOpen] = useState(false);
@@ -48,7 +45,6 @@ const WorkoutComponent = () => {
 
   useEffect(() => {
     const profile = AuthService.getProfile();
-    setUsername(profile.data.username);
     setUserId(profile.data._id);
   }, []);
 
@@ -67,25 +63,6 @@ const WorkoutComponent = () => {
 
   const handleCloseSnackbar = () => {
     setErrorMessage("");
-  };
-
-  const handleFormChange = (e) => {
-    const { name, value } = e.target;
-
-    // Allow empty values and validate only if values are provided
-    let error = "";
-    if (
-      (name === "calories" || name === "duration") &&
-      value !== "" &&
-      !/^\d+$/.test(value)
-    ) {
-      error = `${
-        name === "calories" ? "Calories" : "Duration"
-      } must be an integer`;
-    }
-
-    setFormData({ ...formData, [name]: value });
-    setErrors({ ...errors, [name]: error });
   };
 
   const validateForm = () => {
@@ -180,10 +157,10 @@ const WorkoutComponent = () => {
     const { data, loading, error, refetch } = useQuery(GET_WORKOUTS_BY_USER, {
       variables: { userId },
     });
+
     const [totalDuration, setTotalDuration] = useState(0);
     const [totalCaloriesBurned, setTotalCaloriesBurned] = useState(0);
     const [totalWorkouts, setTotalWorkouts] = useState(0);
-    
 
     useEffect(() => {
       if (data && data.workouts) {
@@ -225,7 +202,7 @@ const WorkoutComponent = () => {
     return (
       <div>
         <Typography color="text.secondary" variant="h4" gutterBottom>
-          {username}'s Exercise Progress
+          Your Exercise Progress
         </Typography>
         <Grid container spacing={3} sx={{ width: "100%" }}>
           <Grid item xs={12} md={6}>
@@ -317,7 +294,9 @@ const WorkoutComponent = () => {
                   color="text.secondary"
                   gutterBottom
                 >
-                  {isNaN(totalCaloriesBurned / totalWorkouts) ? "0" : (totalCaloriesBurned / totalWorkouts).toFixed(2)}
+                  {isNaN(totalCaloriesBurned / totalWorkouts)
+                    ? "0"
+                    : (totalCaloriesBurned / totalWorkouts).toFixed(2)}
                 </Typography>
               </Box>
             </Card>
@@ -355,7 +334,9 @@ const WorkoutComponent = () => {
                   color="text.secondary"
                   gutterBottom
                 >
-                  {isNaN(totalDuration / totalWorkouts) ? "0" : (totalDuration / totalWorkouts).toFixed(2)}
+                  {isNaN(totalDuration / totalWorkouts)
+                    ? "0"
+                    : (totalDuration / totalWorkouts).toFixed(2)}
                 </Typography>
               </Box>
             </Card>
@@ -364,6 +345,84 @@ const WorkoutComponent = () => {
       </div>
     );
   };
+
+  const WorkoutsList = () => {
+    const [workouts, setWorkouts] = useState([]);
+    const { data, loading, error, refetch } = useQuery(GET_WORKOUTS_BY_USER, {
+      variables: { userId },
+    });
+
+    useEffect(() => {
+      if (data && data.workouts) {
+        setWorkouts(data.workouts);
+      }
+    }, [data]);
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error.message}</p>;
+
+    return (
+      <div className="workouts-scroll-container">
+        {workouts.map((workout) => (
+          <WorkoutCard key={workout._id} workout={workout} />
+        ))}
+      </div>
+    );
+  };
+
+  const WorkoutCard = ({ workout }) => (
+    <div>
+      <Card className="cardHoverEffect" sx={{ maxWidth: 345, margin: "20px" }}>
+        <CardContent>
+          <Box>
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                maxWidth: "100%", // Adjust as needed
+              }}
+            >
+              {workout.workoutTitle}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {new Date(parseInt(workout.dateOfWorkout)).toLocaleDateString()}
+            </Typography>
+          </Box>
+          <Divider sx={{ width: "100%", my: 1 }} />
+          <Box
+            sx={{
+              marginTop: "5px",
+              marginBottom: "5px",
+              display: "flex",
+              justifyContent: "start",
+            }}
+          >
+            <Whatshot />
+            <Typography variant="body1" color="text.secondary" sx={{marginLeft: "10px"}}>
+              {workout.caloriesBurned} cals
+            </Typography>
+          </Box>
+          <Box sx={{ display: "flex", justifyContent: "start" }}>
+            <Timer />
+            <Typography variant="body1" color="text.secondary" sx={{marginLeft: "10px"}}>
+              {workout.duration} minutes
+            </Typography>
+          </Box>
+        </CardContent>
+        <CardActions sx={{display: "flex", justifyContent:"end"}}>
+          <IconButton aria-label="edit">
+            <Edit />
+          </IconButton>
+          <IconButton aria-label="delete">
+            <Delete />
+          </IconButton>
+        </CardActions>
+      </Card>
+    </div>
+  );
 
   return (
     <Box
@@ -402,7 +461,7 @@ const WorkoutComponent = () => {
             <Typography color="text.secondary" variant="h5" gutterBottom>
               Past Workouts
             </Typography>
-            past workouts here
+            <WorkoutsList />
           </Box>
 
           <Dialog open={open} onClose={handleClose}>

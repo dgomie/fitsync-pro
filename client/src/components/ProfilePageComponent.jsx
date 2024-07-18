@@ -348,7 +348,7 @@ function ProfilePageComponent() {
                 onSubmit={(e) => e.preventDefault()}
                 sx={{ marginTop: 2 }}
               >
-                <TextField
+                {/* <TextField
                   error={!!titleError}
                   helperText={titleError}
                   label="Workout Title"
@@ -368,8 +368,8 @@ function ProfilePageComponent() {
                     shrink: true,
                   }}
                   sx={{ margin: "1rem", maxWidth: "17rem", width: "12rem" }}
-                />
-                <Button
+                /> */}
+                {/* <Button
                   onClick={handleAddEvent}
                   sx={{
                     margin: "1rem",
@@ -383,7 +383,7 @@ function ProfilePageComponent() {
                 >
                   {" "}
                   + Add Workout
-                </Button>
+                </Button> */}
               </Box>
             </Paper>
           </Grid>
