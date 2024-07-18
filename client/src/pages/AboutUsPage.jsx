@@ -62,7 +62,7 @@ const AboutUs = () => {
                                                 Daniel Gomez
                                             </Typography>
                                             <Typography variant="body2" color="textSecondary">
-                                                Back-end Developer
+                                                Full-stack Developer
                                             </Typography>
                                         </CardContent>
                                     </Card>
