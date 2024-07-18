@@ -81,9 +81,10 @@ export const DELETE_WORKOUT = gql`
 `;
 
 export const UPDATE_WORKOUT = gql`
-  mutation updateWorkout($id: ID!, $input: WorkoutInput!) {
+  mutation updateWorkout($id: ID!, $input: UpdateWorkoutInput!) {
     updateWorkout(id: $id, input: $input) {
       _id
+      userId
       workoutTitle
       dateOfWorkout
       duration
