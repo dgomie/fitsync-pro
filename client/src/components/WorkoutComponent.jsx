@@ -317,7 +317,7 @@ const WorkoutComponent = () => {
                   color="text.secondary"
                   gutterBottom
                 >
-                  {(totalCaloriesBurned / totalWorkouts).toFixed(2)}
+                  {isNaN(totalCaloriesBurned / totalWorkouts) ? "0" : (totalCaloriesBurned / totalWorkouts).toFixed(2)}
                 </Typography>
               </Box>
             </Card>
@@ -355,7 +355,7 @@ const WorkoutComponent = () => {
                   color="text.secondary"
                   gutterBottom
                 >
-                  {(totalDuration / totalWorkouts).toFixed(2)}
+                  {isNaN(totalDuration / totalWorkouts) ? "0" : (totalDuration / totalWorkouts).toFixed(2)}
                 </Typography>
               </Box>
             </Card>
