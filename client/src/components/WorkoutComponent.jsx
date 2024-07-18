@@ -8,6 +8,7 @@ import {
   Paper,
   Grid,
   Card,
+  CardActions,
   CardContent,
   LinearProgress,
   Divider,
@@ -19,28 +20,20 @@ import {
   DialogActions,
   TextField,
 } from "@mui/material";
+import CaloriesBurnedIcon from "../images/fire.svg";
+import ActiveMinutesIcon from "../images/stopwatch.svg";
 import { useMutation, useQuery } from "@apollo/client";
 import AuthService from "../utils/auth";
 import { CREATE_WORKOUT } from "../utils/mutations";
 import { GET_WORKOUTS_BY_USER, GET_USER } from "../utils/queries";
 
-const dailyRoutines = [
-  { name: "", duration: "", icon: "" }, // Replace with actual image path
-];
-
-const progress = [
-  { label: "Workout Completion", value: 75 },
-  { label: "Calories Burned", value: 60 },
-  { label: "Steps Taken", value: 85 },
-];
-
-const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 const WorkoutComponent = () => {
   const [username, setUsername] = useState("");
   const [userId, setUserId] = useState("");
   const [durationGoal, setDurationGoal] = useState("");
   const [workoutGoal, setWorkoutGoal] = useState("");
+  const [workouts, setWorkouts] = useState([])
   const [createWorkout] = useMutation(CREATE_WORKOUT);
 
   const [open, setOpen] = useState(false);
@@ -190,6 +183,7 @@ const WorkoutComponent = () => {
     const [totalDuration, setTotalDuration] = useState(0);
     const [totalCaloriesBurned, setTotalCaloriesBurned] = useState(0);
     const [totalWorkouts, setTotalWorkouts] = useState(0);
+    
 
     useEffect(() => {
       if (data && data.workouts) {
@@ -204,7 +198,7 @@ const WorkoutComponent = () => {
             workoutDate.getFullYear() === currentYear
           );
         });
-        const totalWorkouts = filteredWorkouts.length
+        const totalWorkouts = filteredWorkouts.length;
 
         const totalDuration = filteredWorkouts.reduce(
           (acc, curr) => acc + curr.duration,
@@ -214,7 +208,7 @@ const WorkoutComponent = () => {
           (acc, curr) => acc + curr.caloriesBurned,
           0
         );
-        setTotalWorkouts(totalWorkouts)
+        setTotalWorkouts(totalWorkouts);
         setTotalDuration(totalDuration);
         setTotalCaloriesBurned(totalCaloriesBurned);
       }
@@ -230,52 +224,143 @@ const WorkoutComponent = () => {
 
     return (
       <div>
-        <Box mt={4} mb={2} width="100%">
-          <Typography variant="h5" gutterBottom>
-            Exercise Progress
-          </Typography>
-          <Typography variant="body1">Workouts Completed</Typography>
-          <LinearProgress
-            variant="determinate"
-            value={Math.min((totalWorkouts / workoutGoal) * 100, 100)}
-            sx={{ height: 20, borderRadius: 5, width:600, 
-              '& .MuiLinearProgress-barColorPrimary': {
-                backgroundColor: '#52b202', 
-              }, }}
-          />
-          <Typography variant="body2" color="textSecondary">
-            {totalWorkouts}/{workoutGoal} completed
-          </Typography>
-        </Box>
-        <Box mt={4} mb={2} width="100%">
-          <Typography variant="body1">Monthly Active Minutes</Typography>
-          <LinearProgress
-            variant="determinate"
-            value={Math.min((totalDuration / durationGoal) * 100, 100)}
-            sx={{ height: 20, borderRadius: 5, 
-              '& .MuiLinearProgress-barColorPrimary': {
-                backgroundColor: '#52b202', 
-              }, }}
-          />
-          <Typography variant="body2" color="textSecondary">
-            {totalDuration}/{durationGoal} completed
-          </Typography>
-        </Box>
+        <Typography color="text.secondary" variant="h4" gutterBottom>
+          {username}'s Exercise Progress
+        </Typography>
+        <Grid container spacing={3} sx={{ width: "100%" }}>
+          <Grid item xs={12} md={6}>
+            <Box mt={4} mb={2}>
+              <Typography variant="body1">Workouts Completed</Typography>
+              <LinearProgress
+                variant="determinate"
+                value={Math.min((totalWorkouts / workoutGoal) * 100, 100)}
+                sx={{
+                  height: 20,
+                  borderRadius: 5,
+                  width: "100%",
+                  "& .MuiLinearProgress-barColorPrimary": {
+                    backgroundColor: "#52b202",
+                  },
+                }}
+              />
+              <Typography variant="body2" color="textSecondary">
+                {totalWorkouts}/{workoutGoal} completed
+              </Typography>
+              <Box mt={4} mb={2}>
+                <Typography variant="body1">Monthly Active Minutes</Typography>
+                <LinearProgress
+                  variant="determinate"
+                  value={Math.min((totalDuration / durationGoal) * 100, 100)}
+                  sx={{
+                    height: 20,
+                    borderRadius: 5,
+                    width: "100%",
+                    "& .MuiLinearProgress-barColorPrimary": {
+                      backgroundColor: "#52b202",
+                    },
+                  }}
+                />
+                <Typography variant="body2" color="textSecondary">
+                  {totalDuration}/{durationGoal} completed
+                </Typography>
+              </Box>
+              <Box mt={4} mb={2}>
+                <Typography variant="body1">Calories Burned</Typography>
+                <LinearProgress
+                  variant="determinate"
+                  value={Math.min((totalCaloriesBurned / 3000) * 100, 100)}
+                  sx={{
+                    height: 20,
+                    borderRadius: 5,
+                    width: "100%",
+                    "& .MuiLinearProgress-barColorPrimary": {
+                      backgroundColor: "#52b202",
+                    },
+                  }}
+                />
+                <Typography variant="body2" color="textSecondary">
+                  {totalCaloriesBurned} Cals
+                </Typography>
+              </Box>
+            </Box>
+          </Grid>
 
-        <Box mt={4} mb={2} width="100%">
-          <Typography variant="body1">Calories Burned</Typography>
-          <LinearProgress
-            variant="determinate"
-            value={Math.min((totalCaloriesBurned / 3000) * 100, 100)}
-            sx={{ height: 20, borderRadius: 5, 
-            '& .MuiLinearProgress-barColorPrimary': {
-              backgroundColor: '#52b202', 
-            }, }}
-          />
-          <Typography variant="body2" color="textSecondary">
-            {totalCaloriesBurned} Cals
-          </Typography>
-        </Box>
+          <Grid item xs={12} md={3}>
+            <Card
+              sx={{
+                padding: "15px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                height: "100%",
+              }}
+            >
+              <Box sx={{ padding: "15px", marginRight: "15px" }}>
+                <img src={CaloriesBurnedIcon} alt="Calories Burned Icon" />
+              </Box>
+              <Box>
+                <Typography variant="h6" color="text.secondary">
+                  Average
+                </Typography>
+                <Typography variant="h6" color="text.secondary" gutterBottom>
+                  Calories Burned
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: 28,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "8px",
+                  }}
+                  color="text.secondary"
+                  gutterBottom
+                >
+                  {(totalCaloriesBurned / totalWorkouts).toFixed(2)}
+                </Typography>
+              </Box>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} md={3}>
+            <Card
+              sx={{
+                padding: "15px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                height: "100%",
+              }}
+            >
+              <Box sx={{ padding: "15px", marginRight: "15px" }}>
+                <img src={ActiveMinutesIcon} alt="Active Minutes Icon" />
+              </Box>
+              <Box>
+                <Typography variant="h6" color="text.secondary">
+                  Average
+                </Typography>
+                <Typography variant="h6" color="text.secondary" gutterBottom>
+                  Active Minutes
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: 28,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "8px",
+                  }}
+                  color="text.secondary"
+                  gutterBottom
+                >
+                  {(totalDuration / totalWorkouts).toFixed(2)}
+                </Typography>
+              </Box>
+            </Card>
+          </Grid>
+        </Grid>
       </div>
     );
   };
@@ -294,164 +379,103 @@ const WorkoutComponent = () => {
         fontFamily: "Roboto, sans-serif",
       }}
     >
-      <Container maxWidth="lg">
-        <Paper
-          elevation={3}
-          sx={{
-            padding: { xs: 2, sm: 4, md: 6 },
-            margin: "0 auto",
-            backgroundColor: "white",
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Typography variant="h4" component="header" gutterBottom>
-              Workout Tracker
-            </Typography>
-            <Typography variant="h6" gutterBottom>
-              Track your progress and daily routines
-            </Typography>
+      <Container>
+        <Box>
+          <WorkoutProgress></WorkoutProgress>
 
+          <Divider sx={{ width: "100%", my: 4 }} />
+
+          <Box mt={4} mb={2} width="100%">
             <Button
               variant="contained"
               color="success"
               onClick={handleClickOpen}
+              sx={{ fontSize: "1.25rem", padding: "10px 20px" }} // Example of custom size
             >
               Add Workout
             </Button>
-
-            <WorkoutProgress></WorkoutProgress>
-
-            <Divider sx={{ width: "100%", my: 4 }} />
-
-            <Box mt={4} mb={2} width="100%">
-              <Typography variant="h5" gutterBottom>
-                Weekly Calendar
-              </Typography>
-              <Grid container spacing={2}>
-                {daysOfWeek.map((day, index) => (
-                  <Grid item xs key={index}>
-                    <Paper
-                      elevation={2}
-                      sx={{
-                        padding: { xs: 1, sm: 2 },
-                        backgroundColor: "#e0f7fa",
-                      }}
-                    >
-                      <Typography variant="h6">{day}</Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        {dailyRoutines[index % dailyRoutines.length].name}
-                      </Typography>
-                    </Paper>
-                  </Grid>
-                ))}
-              </Grid>
-            </Box>
-
-            <Divider sx={{ width: "100%", my: 4 }} />
-
-            <Box mt={4} mb={2} width="100%">
-              <Typography variant="h5" gutterBottom>
-                Past Workouts
-              </Typography>
-              <Grid container spacing={4}>
-                {dailyRoutines.map((routine, index) => (
-                  <Grid item xs={12} sm={6} md={4} key={index}>
-                    <Card>
-                      <CardContent>
-                        <Box display="flex" alignItems="center">
-                          <Avatar src={routine.icon} sx={{ mr: 2 }} />
-                          <Box>
-                            <Typography variant="h6">{routine.name}</Typography>
-                            <Typography variant="body2" color="textSecondary">
-                              {routine.duration}
-                            </Typography>
-                          </Box>
-                        </Box>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
-            </Box>
-
-            <Dialog open={open} onClose={handleClose}>
-              <DialogTitle>Add New Workout</DialogTitle>
-              <DialogContent>
-                <TextField
-                  autoFocus
-                  margin="dense"
-                  name="workoutTitle"
-                  label="Workout Title"
-                  type="text"
-                  fullWidth
-                  value={formData.workoutTitle}
-                  onChange={handleChange}
-                  error={!!errors.workoutTitle}
-                  helperText={errors.workoutTitle}
-                />
-                <TextField
-                  margin="dense"
-                  name="dateOfWorkout"
-                  label="Date of Workout"
-                  type="date"
-                  fullWidth
-                  InputLabelProps={{ shrink: true }}
-                  value={formData.dateOfWorkout}
-                  onChange={handleChange}
-                  error={!!errors.dateOfWorkout}
-                  helperText={errors.dateOfWorkout}
-                />
-                <TextField
-                  margin="dense"
-                  name="duration"
-                  label="Duration (mins)"
-                  type="number"
-                  fullWidth
-                  inputProps={{ min: "1" }}
-                  value={formData.duration}
-                  onChange={handleChange}
-                  error={!!errors.duration}
-                  helperText={errors.duration}
-                />
-                <TextField
-                  margin="dense"
-                  name="calories"
-                  label="Calories Burned"
-                  type="number"
-                  inputProps={{ min: "0" }}
-                  fullWidth
-                  value={formData.calories}
-                  onChange={handleChange}
-                  error={!!errors.calories}
-                  helperText={errors.calories}
-                />
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleClose} color="primary">
-                  Cancel
-                </Button>
-                <Button onClick={handleSubmit} color="primary">
-                  Submit
-                </Button>
-              </DialogActions>
-              <Snackbar
-                open={!!errorMessage}
-                autoHideDuration={3000}
-                onClose={handleCloseSnackbar}
-              >
-                <Alert onClose={handleCloseSnackbar} severity="error">
-                  {errorMessage}
-                </Alert>
-              </Snackbar>
-            </Dialog>
           </Box>
-        </Paper>
+
+          <Divider sx={{ width: "100%", my: 4 }} />
+
+          <Box mt={4} mb={2} width="100%">
+            <Typography color="text.secondary" variant="h5" gutterBottom>
+              Past Workouts
+            </Typography>
+            past workouts here
+          </Box>
+
+          <Dialog open={open} onClose={handleClose}>
+            <DialogTitle>Add New Workout</DialogTitle>
+            <DialogContent>
+              <TextField
+                autoFocus
+                margin="dense"
+                name="workoutTitle"
+                label="Workout Title"
+                type="text"
+                fullWidth
+                value={formData.workoutTitle}
+                onChange={handleChange}
+                error={!!errors.workoutTitle}
+                helperText={errors.workoutTitle}
+              />
+              <TextField
+                margin="dense"
+                name="dateOfWorkout"
+                label="Date of Workout"
+                type="date"
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+                value={formData.dateOfWorkout}
+                onChange={handleChange}
+                error={!!errors.dateOfWorkout}
+                helperText={errors.dateOfWorkout}
+              />
+              <TextField
+                margin="dense"
+                name="duration"
+                label="Duration (mins)"
+                type="number"
+                fullWidth
+                inputProps={{ min: "1" }}
+                value={formData.duration}
+                onChange={handleChange}
+                error={!!errors.duration}
+                helperText={errors.duration}
+              />
+              <TextField
+                margin="dense"
+                name="calories"
+                label="Calories Burned"
+                type="number"
+                inputProps={{ min: "0" }}
+                fullWidth
+                value={formData.calories}
+                onChange={handleChange}
+                error={!!errors.calories}
+                helperText={errors.calories}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose} color="primary">
+                Cancel
+              </Button>
+              <Button onClick={handleSubmit} color="primary">
+                Submit
+              </Button>
+            </DialogActions>
+            <Snackbar
+              open={!!errorMessage}
+              autoHideDuration={3000}
+              onClose={handleCloseSnackbar}
+            >
+              <Alert onClose={handleCloseSnackbar} severity="error">
+                {errorMessage}
+              </Alert>
+            </Snackbar>
+          </Dialog>
+        </Box>
       </Container>
     </Box>
   );
