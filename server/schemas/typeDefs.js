@@ -97,6 +97,7 @@ input CreateWorkoutInput {
 }
 
 input UpdateWorkoutInput {
+  userId: ID
   workoutTitle: String
   dateOfWorkout: String
   duration: Int

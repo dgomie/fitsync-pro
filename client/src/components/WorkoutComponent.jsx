@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, refetch } from "react";
 import {
   Snackbar,
   Alert,
@@ -24,7 +24,11 @@ import CaloriesBurnedIcon from "../images/fire.svg";
 import ActiveMinutesIcon from "../images/stopwatch.svg";
 import { useMutation, useQuery } from "@apollo/client";
 import AuthService from "../utils/auth";
-import { CREATE_WORKOUT } from "../utils/mutations";
+import {
+  CREATE_WORKOUT,
+  DELETE_WORKOUT,
+  UPDATE_WORKOUT,
+} from "../utils/mutations";
 import { GET_WORKOUTS_BY_USER, GET_USER } from "../utils/queries";
 
 const WorkoutComponent = () => {
@@ -32,8 +36,13 @@ const WorkoutComponent = () => {
   const [durationGoal, setDurationGoal] = useState("");
   const [workoutGoal, setWorkoutGoal] = useState("");
   const [createWorkout] = useMutation(CREATE_WORKOUT);
+  const [deleteWorkout] = useMutation(DELETE_WORKOUT, {
+    onCompleted: () => refetch(),
+  });
+  const [updateWorkout] = useMutation(UPDATE_WORKOUT, {});
 
   const [open, setOpen] = useState(false);
+  const [editMode, setEditMode] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
     workoutTitle: "",
@@ -42,6 +51,7 @@ const WorkoutComponent = () => {
     calories: "",
   });
   const [errors, setErrors] = useState({ workoutTitle: "", dateOfWorkout: "" });
+  const [workoutToEdit, setWorkoutToEdit] = useState(null);
 
   useEffect(() => {
     const profile = AuthService.getProfile();
@@ -50,8 +60,26 @@ const WorkoutComponent = () => {
 
   const handleClickOpen = () => {
     setOpen(true);
+    setEditMode(false);
+    setFormData({
+      workoutTitle: "",
+      dateOfWorkout: "",
+      duration: "",
+      calories: "",
+    });
   };
 
+  const handleEditOpen = (workout) => {
+    setOpen(true);
+    setEditMode(true);
+    setWorkoutToEdit(workout);
+    setFormData({
+      workoutTitle: workout.workoutTitle,
+      dateOfWorkout: workout.dateOfWorkout,
+      duration: workout.duration,
+      calories: workout.caloriesBurned,
+    });
+  };
   const handleClose = () => {
     setOpen(false);
   };
@@ -83,12 +111,20 @@ const WorkoutComponent = () => {
     return valid;
   };
 
+  const handleDelete = async (id) => {
+    try {
+      console.log(id);
+      await deleteWorkout({ variables: { id } });
+    } catch (error) {
+      console.error("Error deleting workout:", error);
+    }
+  };
+
   const handleSubmit = async () => {
     if (!validateForm()) {
       return;
     }
 
-    // Check if the parsed values are valid integers or empty
     const parsedCalories =
       formData.calories === "" ? null : parseInt(formData.calories, 10);
     const parsedDuration =
@@ -120,11 +156,22 @@ const WorkoutComponent = () => {
         caloriesBurned: parsedCalories,
       };
 
-      await createWorkout({
-        variables: {
-          input,
-        },
-      });
+      if (editMode) {
+        console.log("input", input);
+        await updateWorkout({
+          variables: {
+            id: workoutToEdit._id,
+            input,
+          },
+        });
+      } else {
+        await createWorkout({
+          variables: {
+            input,
+          },
+        });
+      }
+
       setOpen(false);
       setFormData({
         workoutTitle: "",
@@ -133,8 +180,8 @@ const WorkoutComponent = () => {
         calories: "",
       });
     } catch (error) {
-      console.error("Error creating workout:", error);
-      setErrorMessage("Error creating workout. Please try again.");
+      console.error("Error creating/updating workout:", error);
+      setErrorMessage("Error creating/updating workout. Please try again.");
     }
   };
 
@@ -170,8 +217,9 @@ const WorkoutComponent = () => {
 
         const filteredWorkouts = data.workouts.filter((workout) => {
           const workoutDate = new Date(workout.dateOfWorkout);
+          const workoutMonth = workout.dateOfWorkout.split("-")[1] - 1;
           return (
-            workoutDate.getMonth() === currentMonth &&
+            workoutMonth === currentMonth &&
             workoutDate.getFullYear() === currentYear
           );
         });
@@ -201,8 +249,13 @@ const WorkoutComponent = () => {
 
     return (
       <div>
-        <Typography color="text.secondary" variant="h4" gutterBottom>
-          Your Exercise Progress
+        <Typography
+          paddingBottom="25px"
+          color="text.secondary"
+          variant="h4"
+          gutterBottom
+        >
+          Your Monthly Exercise Progress
         </Typography>
         <Grid container spacing={3} sx={{ width: "100%" }}>
           <Grid item xs={12} md={6}>
@@ -348,7 +401,7 @@ const WorkoutComponent = () => {
 
   const WorkoutsList = () => {
     const [workouts, setWorkouts] = useState([]);
-    const { data, loading, error, refetch } = useQuery(GET_WORKOUTS_BY_USER, {
+    const { data } = useQuery(GET_WORKOUTS_BY_USER, {
       variables: { userId },
     });
 
@@ -358,8 +411,15 @@ const WorkoutComponent = () => {
       }
     }, [data]);
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error.message}</p>;
+    if (!workouts || workouts.length === 0) {
+      return (
+        <Box sx={{ margin: "20px", textAlign: "center" }}>
+          <Typography variant="h6" color="text.secondary">
+            No workouts available
+          </Typography>
+        </Box>
+      );
+    }
 
     return (
       <div className="workouts-scroll-container">
@@ -370,59 +430,83 @@ const WorkoutComponent = () => {
     );
   };
 
-  const WorkoutCard = ({ workout }) => (
-    <div>
-      <Card className="cardHoverEffect" sx={{ maxWidth: 345, margin: "20px" }}>
-        <CardContent>
-          <Box>
-            <Typography
-              variant="h6"
-              component="div"
+  const WorkoutCard = ({ workout }) => {
+    const month = workout.dateOfWorkout.split("-")[1];
+    const day = workout.dateOfWorkout.split("-")[2];
+    const year = workout.dateOfWorkout.split("-")[0];
+    const formattedDate = `${month}-${day}-${year}`;
+
+    return (
+      <div>
+        <Card
+          className="cardHoverEffect"
+          sx={{ maxWidth: 345, margin: "20px" }}
+        >
+          <CardContent>
+            <Box>
+              <Typography
+                variant="h6"
+                component="div"
+                sx={{
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  maxWidth: "100%",
+                }}
+              >
+                {workout.workoutTitle}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {formattedDate}
+              </Typography>
+            </Box>
+            <Divider sx={{ width: "100%", my: 1 }} />
+            <Box
               sx={{
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                maxWidth: "100%", // Adjust as needed
+                marginTop: "5px",
+                marginBottom: "5px",
+                display: "flex",
+                justifyContent: "start",
               }}
             >
-              {workout.workoutTitle}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {new Date(parseInt(workout.dateOfWorkout)).toLocaleDateString()}
-            </Typography>
-          </Box>
-          <Divider sx={{ width: "100%", my: 1 }} />
-          <Box
-            sx={{
-              marginTop: "5px",
-              marginBottom: "5px",
-              display: "flex",
-              justifyContent: "start",
-            }}
-          >
-            <Whatshot />
-            <Typography variant="body1" color="text.secondary" sx={{marginLeft: "10px"}}>
-              {workout.caloriesBurned} cals
-            </Typography>
-          </Box>
-          <Box sx={{ display: "flex", justifyContent: "start" }}>
-            <Timer />
-            <Typography variant="body1" color="text.secondary" sx={{marginLeft: "10px"}}>
-              {workout.duration} minutes
-            </Typography>
-          </Box>
-        </CardContent>
-        <CardActions sx={{display: "flex", justifyContent:"end"}}>
-          <IconButton aria-label="edit">
-            <Edit />
-          </IconButton>
-          <IconButton aria-label="delete">
-            <Delete />
-          </IconButton>
-        </CardActions>
-      </Card>
-    </div>
-  );
+              <Whatshot />
+              <Typography
+                variant="body1"
+                color="text.secondary"
+                sx={{ marginLeft: "10px" }}
+              >
+                {workout.caloriesBurned} cals
+              </Typography>
+            </Box>
+            <Box sx={{ display: "flex", justifyContent: "start" }}>
+              <Timer />
+              <Typography
+                variant="body1"
+                color="text.secondary"
+                sx={{ marginLeft: "10px" }}
+              >
+                {workout.duration} minutes
+              </Typography>
+            </Box>
+          </CardContent>
+          <CardActions sx={{ display: "flex", justifyContent: "end" }}>
+            <IconButton
+              aria-label="edit"
+              onClick={() => handleEditOpen(workout)}
+            >
+              <Edit />
+            </IconButton>
+            <IconButton
+              aria-label="delete"
+              onClick={() => handleDelete(workout._id)}
+            >
+              <Delete />
+            </IconButton>
+          </CardActions>
+        </Card>
+      </div>
+    );
+  };
 
   return (
     <Box
@@ -459,13 +543,15 @@ const WorkoutComponent = () => {
 
           <Box mt={4} mb={2} width="100%">
             <Typography color="text.secondary" variant="h5" gutterBottom>
-              Past Workouts
+              Your Workouts
             </Typography>
             <WorkoutsList />
           </Box>
 
           <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>Add New Workout</DialogTitle>
+            <DialogTitle>
+              {editMode ? "Edit Workout" : "Add Workout"}
+            </DialogTitle>
             <DialogContent>
               <TextField
                 autoFocus
@@ -493,18 +579,6 @@ const WorkoutComponent = () => {
               />
               <TextField
                 margin="dense"
-                name="duration"
-                label="Duration (mins)"
-                type="number"
-                fullWidth
-                inputProps={{ min: "1" }}
-                value={formData.duration}
-                onChange={handleChange}
-                error={!!errors.duration}
-                helperText={errors.duration}
-              />
-              <TextField
-                margin="dense"
                 name="calories"
                 label="Calories Burned"
                 type="number"
@@ -514,6 +588,18 @@ const WorkoutComponent = () => {
                 onChange={handleChange}
                 error={!!errors.calories}
                 helperText={errors.calories}
+              />
+              <TextField
+                margin="dense"
+                name="duration"
+                label="Duration (mins)"
+                type="number"
+                fullWidth
+                inputProps={{ min: "1" }}
+                value={formData.duration}
+                onChange={handleChange}
+                error={!!errors.duration}
+                helperText={errors.duration}
               />
             </DialogContent>
             <DialogActions>

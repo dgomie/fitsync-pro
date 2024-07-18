@@ -20,7 +20,7 @@ const WorkoutPage = () => {
   }
 
   return (
-    <div style={{ paddingTop: "70px" }}>
+    <div style={{ paddingTop: "100px" }}>
       <div style={{ flex: 1 }}>
         <WorkoutComponent />
       </div>
