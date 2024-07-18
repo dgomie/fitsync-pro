@@ -1,4 +1,4 @@
-# FitSync-PRO
+# FitSync-Pro
 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -12,21 +12,20 @@
   - [Get Started Page](#get-started-page)
 - [Screenshots](#screenshots)
 - [Technologies](#technologies)
-- [Contributing](#contributing)
-- [License](#license)
+- [Project Contributors](#project-contributors)  
+- [Deployed Site](#deployed-site)   
+- [Pitch Deck](#pitch-deck)  
 
 ## Introduction
 
-FitSync-PRO is a comprehensive fitness application designed to help users track their workout progress, daily routines, exercise completion, and meal plans. This application provides a professional and engaging user experience, making it easier for individuals to stay on top of their fitness goals.
+FitSync-Pro is a comprehensive fitness application designed to help users track their workout progress, daily routines, and exercise completion as well as provides AI generated workout plans curated to the specific goals of the user. This application provides a professional and engaging user experience, making it easier for individuals to stay on top of their fitness goals.
 
 ## Features
 
 - **Progress Tracking**: Monitor workout completion, calories burned, and steps taken.
 - **Exercise Progress**: Track individual exercises with target and completed metrics.
-- **Daily Routines**: View daily workout routines with detailed descriptions and icons.
-- **Weekly Calendar**: A weekly overview of planned routines and activities.
-- **Professional Tracker**: Notifications for updates in workout plans, new exercises, and meal plans.
-- **About Us**: Information about the FitSync-PRO team and company history.
+- **AI Workout Plans**: Create individual workout plans to meet your fitness goals.
+- **About Us**: Information about the FitSync-Pro team and company history.
 - **Settings Page**: Allows users to update profile information, change passwords, and delete profiles.
 - **Get Started Page**: A welcoming page for new users to get started with FitSync-PRO.
 
@@ -90,10 +89,13 @@ The Get Started Page welcomes new users to FitSync-PRO. It includes:
 ## Screenshots
 
 ### Workout Tracker
-![Workout Tracker Screenshot](./client/src/images/workout-tracker-screenshot.png)
+<img src='./client/src/images/workout-tracker-screenshot.png' width="500px" />
+
+### Fit-AI Page 
+<img src='./client/src/images/ai-workout-screenshot.png' width="500px" />
 
 ### About Us
-<img src='client/src/images/Screenshot3pets.png' width="500px" />
+<img src='./client/src/images/Screenshot3pets.png' width="500px" />
 
 ### Settings Page
 <img src='client/src/images/setting-page-screenshot.png' width="500px" />
@@ -107,6 +109,10 @@ The Get Started Page welcomes new users to FitSync-PRO. It includes:
 - **Material-UI**: A popular React UI framework.
 - **Framer Motion**: A library for animations in React.
 - **Git**: Version control system.
+
+## Deployed Site
+Deployed application can be found at:  
+https://fitsync-pro.onrender.com/
 
 ## Contributing
 
@@ -125,6 +131,10 @@ The Get Started Page welcomes new users to FitSync-PRO. It includes:
     ```
 5. Open a pull request.
 
-## License
+## Project Contributors
+- [Kayla Freeman](https://github.com/kaylommy)
+- [Franciso Ortiz](https://github.com/ortzfrancisco)
+- [Daniel Gomez](https://github.com/dgomie)
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+## Pitch Deck
+[Canva Presentation](https://www.canva.com/design/DAGLJqSXxPw/IyJhrV7jC6lMqfAJc0z2Yg/view?utm_content=DAGLJqSXxPw&utm_campaign=designshare&utm_medium=link&utm_source=editor)
