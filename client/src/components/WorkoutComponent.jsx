@@ -27,23 +27,13 @@ import AuthService from "../utils/auth";
 import { CREATE_WORKOUT } from "../utils/mutations";
 import { GET_WORKOUTS_BY_USER, GET_USER } from "../utils/queries";
 
-const dailyRoutines = [
-  { name: "", duration: "", icon: "" }, // Replace with actual image path
-];
-
-const progress = [
-  { label: "Workout Completion", value: 75 },
-  { label: "Calories Burned", value: 60 },
-  { label: "Steps Taken", value: 85 },
-];
-
-const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 const WorkoutComponent = () => {
   const [username, setUsername] = useState("");
   const [userId, setUserId] = useState("");
   const [durationGoal, setDurationGoal] = useState("");
   const [workoutGoal, setWorkoutGoal] = useState("");
+  const [workouts, setWorkouts] = useState([])
   const [createWorkout] = useMutation(CREATE_WORKOUT);
 
   const [open, setOpen] = useState(false);
@@ -193,6 +183,7 @@ const WorkoutComponent = () => {
     const [totalDuration, setTotalDuration] = useState(0);
     const [totalCaloriesBurned, setTotalCaloriesBurned] = useState(0);
     const [totalWorkouts, setTotalWorkouts] = useState(0);
+    
 
     useEffect(() => {
       if (data && data.workouts) {
@@ -234,7 +225,7 @@ const WorkoutComponent = () => {
     return (
       <div>
         <Typography color="text.secondary" variant="h4" gutterBottom>
-          Exercise Progress
+          {username}'s Exercise Progress
         </Typography>
         <Grid container spacing={3} sx={{ width: "100%" }}>
           <Grid item xs={12} md={6}>
@@ -411,25 +402,7 @@ const WorkoutComponent = () => {
             <Typography color="text.secondary" variant="h5" gutterBottom>
               Past Workouts
             </Typography>
-            <Grid container spacing={4}>
-              {dailyRoutines.map((routine, index) => (
-                <Grid item xs={12} sm={6} md={4} key={index}>
-                  <Card>
-                    <CardContent>
-                      <Box display="flex" alignItems="center">
-                        <Avatar src={routine.icon} sx={{ mr: 2 }} />
-                        <Box>
-                          <Typography variant="h6">{routine.name}</Typography>
-                          <Typography variant="body2" color="textSecondary">
-                            {routine.duration}
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
+            past workouts here
           </Box>
 
           <Dialog open={open} onClose={handleClose}>
