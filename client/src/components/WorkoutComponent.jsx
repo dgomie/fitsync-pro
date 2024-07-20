@@ -260,7 +260,7 @@ const WorkoutComponent = () => {
         <Grid container spacing={3} sx={{ width: "100%" }}>
           <Grid item xs={12} md={6}>
             <Box mt={4} mb={2}>
-              <Typography variant="body1">Workouts Completed</Typography>
+              <Typography variant="h6">Workouts Completed</Typography>
               <LinearProgress
                 variant="determinate"
                 value={Math.min((totalWorkouts / workoutGoal) * 100, 100)}
@@ -277,7 +277,7 @@ const WorkoutComponent = () => {
                 {totalWorkouts}/{workoutGoal} completed
               </Typography>
               <Box mt={4} mb={2}>
-                <Typography variant="body1">Monthly Active Minutes</Typography>
+                <Typography variant="h6">Monthly Active Minutes</Typography>
                 <LinearProgress
                   variant="determinate"
                   value={Math.min((totalDuration / durationGoal) * 100, 100)}
@@ -295,7 +295,7 @@ const WorkoutComponent = () => {
                 </Typography>
               </Box>
               <Box mt={4} mb={2}>
-                <Typography variant="body1">Calories Burned</Typography>
+                <Typography variant="h6">Calories Burned</Typography>
                 <LinearProgress
                   variant="determinate"
                   value={Math.min((totalCaloriesBurned / 3000) * 100, 100)}
