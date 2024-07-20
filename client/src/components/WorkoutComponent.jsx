@@ -44,12 +44,7 @@ const WorkoutComponent = () => {
   const [open, setOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [formData, setFormData] = useState({
-    workoutTitle: "",
-    dateOfWorkout: "",
-    duration: "",
-    calories: "",
-  });
+ 
   const [errors, setErrors] = useState({ workoutTitle: "", dateOfWorkout: "" });
   const [workoutToEdit, setWorkoutToEdit] = useState(null);
 
@@ -61,127 +56,30 @@ const WorkoutComponent = () => {
   const handleClickOpen = () => {
     setOpen(true);
     setEditMode(false);
-    setFormData({
-      workoutTitle: "",
-      dateOfWorkout: "",
-      duration: "",
-      calories: "",
-    });
   };
 
   const handleEditOpen = (workout) => {
     setOpen(true);
     setEditMode(true);
     setWorkoutToEdit(workout);
-    setFormData({
-      workoutTitle: workout.workoutTitle,
-      dateOfWorkout: workout.dateOfWorkout,
-      duration: workout.duration,
-      calories: workout.caloriesBurned,
-    });
   };
   const handleClose = () => {
     setOpen(false);
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+ 
 
   const handleCloseSnackbar = () => {
     setErrorMessage("");
   };
 
-  const validateForm = () => {
-    let valid = true;
-    const newErrors = { workoutTitle: "", dateOfWorkout: "" };
 
-    if (!formData.workoutTitle) {
-      newErrors.workoutTitle = "Workout title is required";
-      valid = false;
-    }
-
-    if (!formData.dateOfWorkout) {
-      newErrors.dateOfWorkout = "Date of workout is required";
-      valid = false;
-    }
-
-    setErrors(newErrors);
-    return valid;
-  };
 
   const handleDelete = async (id) => {
     try {
-      console.log(id);
       await deleteWorkout({ variables: { id } });
     } catch (error) {
       console.error("Error deleting workout:", error);
-    }
-  };
-
-  const handleSubmit = async () => {
-    if (!validateForm()) {
-      return;
-    }
-
-    const parsedCalories =
-      formData.calories === "" ? null : parseInt(formData.calories, 10);
-    const parsedDuration =
-      formData.duration === "" ? null : parseInt(formData.duration, 10);
-
-    if (
-      (formData.calories !== null && isNaN(parsedCalories)) ||
-      (formData.duration !== null && isNaN(parsedDuration))
-    ) {
-      setErrors({
-        ...errors,
-        calories: isNaN(parsedCalories)
-          ? "Calories must be a number greater than 0"
-          : "",
-        duration: isNaN(parsedDuration)
-          ? "Duration must be a number greater than 0"
-          : "",
-      });
-      setErrorMessage("Please ensure all fields are correctly filled out.");
-      return;
-    }
-
-    try {
-      const input = {
-        userId,
-        workoutTitle: formData.workoutTitle,
-        dateOfWorkout: formData.dateOfWorkout,
-        duration: parsedDuration,
-        caloriesBurned: parsedCalories,
-      };
-
-      if (editMode) {
-        console.log("input", input);
-        await updateWorkout({
-          variables: {
-            id: workoutToEdit._id,
-            input,
-          },
-        });
-      } else {
-        await createWorkout({
-          variables: {
-            input,
-          },
-        });
-      }
-
-      setOpen(false);
-      setFormData({
-        workoutTitle: "",
-        dateOfWorkout: "",
-        duration: "",
-        calories: "",
-      });
-    } catch (error) {
-      console.error("Error creating/updating workout:", error);
-      setErrorMessage("Error creating/updating workout. Please try again.");
     }
   };
 
@@ -212,7 +110,7 @@ const WorkoutComponent = () => {
     useEffect(() => {
       if (data && data.workouts) {
         const currentDate = new Date();
-        const currentMonth = currentDate.getMonth(); // 0-11
+        const currentMonth = currentDate.getMonth(); 
         const currentYear = currentDate.getFullYear();
 
         const filteredWorkouts = data.workouts.filter((workout) => {
@@ -239,7 +137,7 @@ const WorkoutComponent = () => {
       }
     }, [data]);
 
-    // Refetch workouts when a new workout is saved
+
     useEffect(() => {
       refetch();
     }, [workoutSaved, refetch]);
@@ -402,8 +300,7 @@ const WorkoutComponent = () => {
   const WorkoutsList = () => {
     const [workouts, setWorkouts] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(5); // Adjust based on your preference
-  
+    const [itemsPerPage, setItemsPerPage] = useState(5); 
     const { data } = useQuery(GET_WORKOUTS_BY_USER, {
       variables: { userId },
     });
@@ -456,8 +353,6 @@ const WorkoutComponent = () => {
       </div>
     );
   };
-  
-  // WorkoutCard component remains unchanged
 
   const WorkoutCard = ({ workout }) => {
     const month = workout.dateOfWorkout.split("-")[1];
@@ -536,48 +431,119 @@ const WorkoutComponent = () => {
       </div>
     );
   };
+  
+ const ModalComponent = ({workoutToEdit}) => {
+
+ 
+  const [formData, setFormData] = useState({
+    workoutTitle: "",
+    dateOfWorkout: "",
+    duration: "",
+    calories: "",
+  });
+
+  
+  useEffect(() => {
+    if (workoutToEdit){
+     setFormData({
+      workoutTitle: workoutToEdit.workoutTitle,
+      dateOfWorkout: workoutToEdit.dateOfWorkout,
+      duration: workoutToEdit.duration,
+      calories: workoutToEdit.caloriesBurned,
+    }); 
+  }
+  }, [workoutToEdit]); 
+
+
+  const validateForm = () => {
+    let valid = true;
+    const newErrors = { workoutTitle: "", dateOfWorkout: "" };
+
+    if (!formData.workoutTitle) {
+      newErrors.workoutTitle = "Workout title is required";
+      valid = false;
+    }
+
+    if (!formData.dateOfWorkout) {
+      newErrors.dateOfWorkout = "Date of workout is required";
+      valid = false;
+    }
+
+    setErrors(newErrors);
+    return valid;
+  };
+
+  const handleSubmit = async () => {
+    if (!validateForm()) {
+      return;
+    }
+
+    const parsedCalories =
+      formData.calories === "" ? null : parseInt(formData.calories, 10);
+    const parsedDuration =
+      formData.duration === "" ? null : parseInt(formData.duration, 10);
+
+    if (
+      (formData.calories !== null && isNaN(parsedCalories)) ||
+      (formData.duration !== null && isNaN(parsedDuration))
+    ) {
+      setErrors({
+        ...errors,
+        calories: isNaN(parsedCalories)
+          ? "Calories must be a number greater than 0"
+          : "",
+        duration: isNaN(parsedDuration)
+          ? "Duration must be a number greater than 0"
+          : "",
+      });
+      setErrorMessage("Please ensure all fields are correctly filled out.");
+      return;
+    }
+
+    try {
+      const input = {
+        userId,
+        workoutTitle: formData.workoutTitle,
+        dateOfWorkout: formData.dateOfWorkout,
+        duration: parsedDuration,
+        caloriesBurned: parsedCalories,
+      };
+
+      if (editMode) {
+        await updateWorkout({
+          variables: {
+            id: workoutToEdit._id,
+            input,
+          },
+        });
+      } else {
+        await createWorkout({
+          variables: {
+            input,
+          },
+        });
+      }
+
+      setOpen(false);
+      setFormData({
+        workoutTitle: "",
+        dateOfWorkout: "",
+        duration: "",
+        calories: "",
+      });
+    } catch (error) {
+      console.error("Error creating/updating workout:", error);
+      setErrorMessage("Error creating/updating workout. Please try again.");
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      justifyContent="center"
-      alignItems="center"
-      textAlign="center"
-      sx={{
-        minHeight: "100vh",
-        p: 2,
-        color: "black",
-        fontFamily: "Roboto, sans-serif",
-      }}
-    >
-      <Container>
-        <Box>
-          <WorkoutProgress></WorkoutProgress>
-
-          <Divider sx={{ width: "100%", my: 4 }} />
-
-          <Box mt={4} mb={2} width="100%">
-            <Button
-              variant="contained"
-              color="success"
-              onClick={handleClickOpen}
-              sx={{ fontSize: "1.25rem", padding: "10px 20px" }} // Example of custom size
-            >
-              Add Workout
-            </Button>
-          </Box>
-
-          <Divider sx={{ width: "100%", my: 4 }} />
-
-          <Box mt={4} mb={2} width="100%">
-            <Typography color="text.secondary" variant="h5" gutterBottom>
-              Your Workouts
-            </Typography>
-            <WorkoutsList />
-          </Box>
-
-          <Dialog open={open} onClose={handleClose}>
+    <Dialog open={open} onClose={handleClose}>
             <DialogTitle>
               {editMode ? "Edit Workout" : "Add Workout"}
             </DialogTitle>
@@ -649,6 +615,50 @@ const WorkoutComponent = () => {
               </Alert>
             </Snackbar>
           </Dialog>
+  )
+ }
+
+  return (
+    <Box
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      alignItems="center"
+      textAlign="center"
+      sx={{
+        minHeight: "100vh",
+        p: 2,
+        color: "black",
+        fontFamily: "Roboto, sans-serif",
+      }}
+    >
+      <Container>
+        <Box>
+          <WorkoutProgress></WorkoutProgress>
+
+          <Divider sx={{ width: "100%", my: 4 }} />
+
+          <Box mt={4} mb={2} width="100%">
+            <Button
+              variant="contained"
+              color="success"
+              onClick={handleClickOpen}
+              sx={{ fontSize: "1.25rem", padding: "10px 20px" }} 
+            >
+              Add Workout
+            </Button>
+          </Box>
+
+          <Divider sx={{ width: "100%", my: 4 }} />
+
+          <Box mt={4} mb={2} width="100%">
+            <Typography color="text.secondary" variant="h5" gutterBottom>
+              Your Workouts
+            </Typography>
+            <WorkoutsList />
+          </Box>
+
+          <ModalComponent workoutToEdit={workoutToEdit}/>
         </Box>
       </Container>
     </Box>
@@ -656,3 +666,4 @@ const WorkoutComponent = () => {
 };
 
 export default WorkoutComponent;
+
