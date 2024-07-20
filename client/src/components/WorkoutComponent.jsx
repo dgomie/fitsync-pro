@@ -432,7 +432,7 @@ const WorkoutComponent = () => {
     );
   };
   
- const ModalComponent = ({workoutToEdit}) => {
+ const ModalComponent = () => {
 
  
   const [formData, setFormData] = useState({
@@ -444,7 +444,7 @@ const WorkoutComponent = () => {
 
   
   useEffect(() => {
-    if (workoutToEdit){
+    if (editMode && workoutToEdit){
      setFormData({
       workoutTitle: workoutToEdit.workoutTitle,
       dateOfWorkout: workoutToEdit.dateOfWorkout,
@@ -452,7 +452,7 @@ const WorkoutComponent = () => {
       calories: workoutToEdit.caloriesBurned,
     }); 
   }
-  }, [workoutToEdit]); 
+  }, []); 
 
 
   const validateForm = () => {
@@ -658,7 +658,7 @@ const WorkoutComponent = () => {
             <WorkoutsList />
           </Box>
 
-          <ModalComponent workoutToEdit={workoutToEdit}/>
+          <ModalComponent/>
         </Box>
       </Container>
     </Box>
