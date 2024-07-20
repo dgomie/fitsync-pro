@@ -38,7 +38,7 @@ const startApolloServer = async () => {
 
   app.use(cors());
 
-  app.post("/api/generateWorkoutPlan", verifyJWT, async (req, res) => { \
+  app.post("/api/generateWorkoutPlan", verifyJWT, async (req, res) => { 
     const { age, activityLevel, workoutType, location, week, bodyPart } = req.body;
     const genAI = new GoogleGenerativeAI(process.env.API_KEY);
   
@@ -47,7 +47,7 @@ const startApolloServer = async () => {
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
         const result = await model.generateContent(prompt);
         const response = await result.response;
-        const text = await response.text(); \
+        const text = await response.text(); 
         return text;
       } catch (error) {
         console.error("Error generating AI response:", error);
